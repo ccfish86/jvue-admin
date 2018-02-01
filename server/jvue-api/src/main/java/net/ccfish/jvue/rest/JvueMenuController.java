@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import net.ccfish.jvue.model.JvueMenu;
 import net.ccfish.jvue.service.JvueMenuService;
 import net.ccfish.jvue.service._AbstractService;
@@ -22,6 +23,7 @@ import net.ccfish.jvue.service.acl.AclResc;
 @RestController
 @RequestMapping("menu")
 @AclResc(id = 5200, code = "JvueMenu", name = "画面管理", homePage = "")
+@Api(tags  = "画面管理")
 public class JvueMenuController implements _BaseController<JvueMenu, Integer> {
 
     @Autowired

@@ -19,7 +19,7 @@ public class JvueModule implements Serializable {
 	@Column(unique=true, nullable=false)
 	private Integer id;
 
-	@Column(nullable=false, columnDefinition = "TINYINT(1)")
+	@Column(nullable=false)
 	private byte enabled;
 
 	@Column(nullable=false, length=64)

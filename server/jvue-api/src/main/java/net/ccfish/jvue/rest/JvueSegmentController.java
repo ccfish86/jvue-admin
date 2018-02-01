@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import net.ccfish.jvue.model.JvueSegment;
 import net.ccfish.jvue.service.JvueSegmentService;
 import net.ccfish.jvue.service._AbstractService;
@@ -22,6 +23,7 @@ import net.ccfish.jvue.service.acl.AclResc;
 @RestController
 @RequestMapping("segment")
 @AclResc(id = 5300, code = "JvueSegment", name = "画面片段管理", homePage = "")
+@Api(tags  = "画面片段管理")
 public class JvueSegmentController implements _BaseController<JvueSegment, Integer> {
 
     @Autowired

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import net.ccfish.jvue.model.JvueModule;
 import net.ccfish.jvue.service.JvueModuleService;
 import net.ccfish.jvue.service._AbstractService;
@@ -22,6 +23,7 @@ import net.ccfish.jvue.service.acl.AclResc;
 @RestController
 @RequestMapping("module")
 @AclResc(id = 5000, code = "JvueModule", name = "模块管理", homePage = "")
+@Api(tags = "模块管理")
 public class JvueModuleController implements _BaseController<JvueModule, Integer> {
 
     @Autowired

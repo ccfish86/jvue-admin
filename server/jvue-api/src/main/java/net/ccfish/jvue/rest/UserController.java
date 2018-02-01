@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import net.ccfish.jvue.model.User;
 import net.ccfish.jvue.service.UserService;
 import net.ccfish.jvue.service._AbstractService;
@@ -22,6 +23,7 @@ import net.ccfish.jvue.service.acl.AclResc;
 @RestController
 @RequestMapping("user")
 @AclResc(id = 6000, code = "User", name = "用户管理", homePage = "")
+@Api(tags  = "用户管理")
 public class UserController implements _BaseController<User, Long> {
 
     @Autowired

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.MultiMap;
 
+import io.swagger.annotations.Api;
 import net.ccfish.common.web.BaseModel;
 import net.ccfish.jvue.model.JvueApi;
 import net.ccfish.jvue.service.JvueApiService;
@@ -33,6 +34,7 @@ import net.ccfish.jvue.vm.AclResource;
 @RestController
 @RequestMapping("api")
 @AclResc(id = 5100, code = "JvueApi", name = "接口管理", homePage = "")
+@Api(tags  = "接口管理")
 public class JvueApiController implements _BaseController<JvueApi, Integer> {
 
     @Autowired

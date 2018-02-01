@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import net.ccfish.jvue.model.JvueRole;
 import net.ccfish.jvue.service.JvueRoleService;
 import net.ccfish.jvue.service._AbstractService;
@@ -22,6 +23,7 @@ import net.ccfish.jvue.service.acl.AclResc;
 @RestController
 @RequestMapping("role")
 @AclResc(id = 5300, code = "JvueRole", name = "角色管理", homePage = "")
+@Api(tags  = "角色管理")
 public class JvueRoleController implements _BaseController<JvueRole, Integer> {
 
     @Autowired

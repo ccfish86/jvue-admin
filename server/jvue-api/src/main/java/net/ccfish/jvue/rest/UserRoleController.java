@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import net.ccfish.jvue.model.UserRole;
 import net.ccfish.jvue.service.UserRoleService;
 import net.ccfish.jvue.service._AbstractService;
@@ -22,6 +23,7 @@ import net.ccfish.jvue.service.acl.AclResc;
 @RestController
 @RequestMapping("user-role")
 @AclResc(id = 6100, code = "UserRole", name = "用户角色管理", homePage = "")
+@Api(tags  = "用户角色管理")
 public class UserRoleController implements _BaseController<UserRole, Long> {
 
     @Autowired

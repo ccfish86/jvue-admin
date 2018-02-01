@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.ccfish.jvue.service.AuthService;
 
 /**
@@ -20,6 +22,7 @@ import net.ccfish.jvue.service.AuthService;
  * @since  1.0
  */
 @RestController
+@Api(tags  = "登录")
 public class AuthController {
 
     @Autowired
@@ -33,11 +36,13 @@ public class AuthController {
      * @return 操作结果
      * @throws AuthenticationException 错误信息
      */
+    @ApiOperation(value = "自动登录")
     @GetMapping(value = "/login")
     public String check() throws AuthenticationException {
         // 处理自动登录/记住密码等
         return "";
     }
+    
     /**
      * 用户登录
      *
@@ -46,6 +51,7 @@ public class AuthController {
      * @return 操作结果
      * @throws AuthenticationException 错误信息
      */
+    @ApiOperation(value = "用户登录")
     @PostMapping(value = "/login", params = {"username", "password"})
     public String getToken(String username, String password) throws AuthenticationException {
         return userService.login(username, password);

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import io.swagger.annotations.ApiOperation;
 import net.ccfish.common.web.BaseModel;
 import net.ccfish.common.web.PageParam;
 import net.ccfish.common.web.PagedModel;
@@ -38,6 +39,7 @@ public interface _BaseController<T, ID extends Serializable> {
     
     @GetMapping("")
     @AclResc(id = 1, code = "list", name = "列表")
+    @ApiOperation(value = "列表")
     default PagedModel<T> list(PageParam pageParam) {
 
         Pageable page;
@@ -54,6 +56,7 @@ public interface _BaseController<T, ID extends Serializable> {
 
     @AclResc(id = 2, code = "detail", name = "详情")
     @GetMapping("{id}")
+    @ApiOperation(value = "详情")
     default BaseModel<T> detail(@PathParam("id") ID id) {        
         T result = baseService().getOne(id);
         return new BaseModel<T>().setData(result);
@@ -61,6 +64,7 @@ public interface _BaseController<T, ID extends Serializable> {
 
     @PostMapping("")
     @AclResc(id = 3, code = "add", name = "追加")
+    @ApiOperation(value = "追加")
     default BaseModel<T> add(@RequestBody T data) {
         baseService().save(data);
         return new BaseModel<T>().setData(data);
@@ -68,6 +72,7 @@ public interface _BaseController<T, ID extends Serializable> {
     
     @PutMapping("{id}")
     @AclResc(id = 4, code = "update", name = "更新")
+    @ApiOperation(value = "更新")
     default BaseModel<ID> update(@PathParam("id") ID id, @RequestBody T data) {
         baseService().update(id, data);
         return new BaseModel<ID>().setData(id);
@@ -75,6 +80,7 @@ public interface _BaseController<T, ID extends Serializable> {
     
     @DeleteMapping("{id}")
     @AclResc(id = 5, code = "delete", name = "删除")
+    @ApiOperation(value = "删除")
     default BaseModel<ID> delete(@PathParam("id") ID id) {
         baseService().delete(id);
         return new BaseModel<ID>().setData(id);
