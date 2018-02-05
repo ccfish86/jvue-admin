@@ -4,7 +4,10 @@
 
 package net.ccfish.jvue.service;
 
+import java.util.List;
+
 import net.ccfish.jvue.model.JvueMenu;
+import net.ccfish.jvue.vm.ModuleAndMenus;
 
 /**
  * 
@@ -13,6 +16,6 @@ import net.ccfish.jvue.model.JvueMenu;
  * @since 1.0
  */
 public interface JvueMenuService extends _AbstractService<JvueMenu, Integer> {
-
-
+    List<JvueMenu> findAllRootMenu();
+    public ModuleAndMenus findModuleAndMenu();
 }

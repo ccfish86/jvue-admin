@@ -16,22 +16,26 @@ import java.util.Collection;
  * @version 1.0
  * @since 1.0
  */
-public class JwtTalkUser implements UserDetails {
+public class JwtUserDetails implements UserDetails {
 
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
+    
+    private final Long id;
+    private final String username;
+    private final String password;
+    private final byte superUser;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-    private String username;
-    private String password;
-    private Collection<? extends GrantedAuthority> authorities;
-
-    public JwtTalkUser(String username, String password,
+    public JwtUserDetails(Long id, String username, String password, byte superUser,
             Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.authorities = authorities;
+        this.id = id;
+        this.superUser = superUser;
     }
 
     @Override
@@ -72,6 +76,14 @@ public class JwtTalkUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public byte getSuperUser() {
+        return superUser;
     }
 
 }

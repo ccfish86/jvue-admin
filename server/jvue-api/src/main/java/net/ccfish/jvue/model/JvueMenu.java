@@ -14,6 +14,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 /**
  * The persistent class for the jvue_menu database table.
@@ -50,11 +53,13 @@ public class JvueMenu implements Serializable {
 	private byte type;
 
 	//bi-directional many-to-one association to JvueMenu
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="parent_id")
 	private JvueMenu jvueMenu;
 
 	//bi-directional many-to-one association to JvueMenu
+    @JsonProperty("children")
 	@OneToMany(mappedBy="jvueMenu")
 	private List<JvueMenu> jvueMenus;
 

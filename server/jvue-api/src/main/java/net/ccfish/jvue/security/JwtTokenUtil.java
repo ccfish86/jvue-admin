@@ -132,7 +132,7 @@ public class JwtTokenUtil implements Serializable {
      * @return 是否有效
      */
     public Boolean validateToken(String token, UserDetails userDetails) {
-        JwtTalkUser user = (JwtTalkUser) userDetails;
+        JwtUserDetails user = (JwtUserDetails) userDetails;
         String username = getUsernameFromToken(token);
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }

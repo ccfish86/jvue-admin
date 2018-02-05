@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import net.ccfish.jvue.model.JvueRole;
 import net.ccfish.jvue.model.User;
 import net.ccfish.jvue.repository.UserRepository;
-import net.ccfish.jvue.security.JwtTalkUser;
+import net.ccfish.jvue.security.JwtUserDetails;
 
 /**
  * 用户验证方法
@@ -22,6 +23,7 @@ import net.ccfish.jvue.security.JwtTalkUser;
  * @version 1.0
  * @since 1.0
  */
+@Cacheable("JwtUserDetailsService")
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
@@ -43,7 +45,8 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
             
             Collection<GrantedAuthority> authorities = loadGrantedRoles(user.getRoles());
             
-            return new JwtTalkUser(user.getUsername(), user.getPassword(), authorities);
+            return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(),
+                    user.getSuperUser(), authorities);
         }
     }
 

@@ -8,15 +8,21 @@
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src",
+    "build:gulp-test": "cross-env NODE_ENV=production gulp devDist"
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
     "element-ui": "^2.1.0",
     "nprogress": "^0.2.0",
+    "vee-validate": "^2.0.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vuet": "^1.0.3"
+    "vuet": "^1.0.3",
+    "vuet-store": "0.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -45,6 +51,8 @@
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
     "node-notifier": "^5.1.2",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",

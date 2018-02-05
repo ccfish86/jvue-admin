@@ -40,13 +40,19 @@ public class User implements Serializable {
 	private String email;
 
     @JsonIgnore
-	@Column(length=64, columnDefinition="char")
+	@Column(length=128, columnDefinition="char")
 	private String password;
 
 	private byte status;
 
 	@Column(nullable=false, length=64)
 	private String username;
+	
+    @Column(nullable=false, length=64)
+    private String nickname;
+    
+    @Column(nullable=false, length=1)
+    private byte superUser;
 	
     @JsonIgnore
     @ManyToMany(targetEntity = JvueRole.class, fetch = FetchType.EAGER)
@@ -98,6 +104,23 @@ public class User implements Serializable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public byte getSuperUser() {
+        return superUser;
+    }
+
+    public void setSuperUser(byte superUser) {
+        this.superUser = superUser;
+    }
+
     /**
      * @return the roles
      */

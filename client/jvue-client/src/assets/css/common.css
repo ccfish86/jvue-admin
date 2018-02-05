@@ -1,0 +1,58 @@
+#app{
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  top: 0px;
+  left: 0px;
+}
+div.content-wrapper {
+  background-color: #FFF;
+  box-sizing: border-box;
+  padding: 5px;
+  margin-top: 10px;
+  min-height: 500px;
+}
+.container-form__mid {
+  min-width: 350px;
+  width: 25%;
+  margin: 20px auto;
+}
+.container-table__footer {
+  min-width: 350px;
+  margin: 20px auto;
+}
+.container-table__footer__pagination{
+  text-align: right;
+}
+/* ueditor 工具栏行高 */
+.edui-toolbar {
+  line-height: 120%;
+  min-width: 650px;
+}
+.el-form-item__content>.edui-default {
+  min-width: 666px;
+}
+/* 避免显示的字段多的情况下，表格项目换行 */
+#app .el-table .cell, #app .el-table th>div {
+  padding-left: 6px!important;
+  padding-right: 5px!important;
+}
+.actions-top--edit{
+  position: absolute;
+  width: 70%;
+  margin-top: -40px;
+  margin-left: 30%;
+}
+.el-tag+.el-tag {
+  margin-left: 5px;
+}
+
+.small-form--edit .el-input {
+  margin-right: 10px;
+  width: 380px;
+  vertical-align: top;
+}
+.el-table th{
+  background-color:#eef1f6;
+  color:black
+}
