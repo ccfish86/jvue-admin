@@ -1,5 +1,5 @@
 ﻿# Host: 192.168.10.9  (Version 5.7.18)
-# Date: 2018-02-01 16:35:28
+# Date: 2018-02-05 13:46:00
 # Generator: MySQL-Front 6.0  (Build 1.163)
 
 
@@ -37,12 +37,13 @@ CREATE TABLE `jvue_menu` (
   PRIMARY KEY (`id`),
   KEY `parentId` (`parent_id`),
   CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `jvue_menu` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COMMENT='画面菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COMMENT='画面菜单';
 
 #
 # Data for table "jvue_menu"
 #
 
+INSERT INTO `jvue_menu` VALUES (1,0,1,'/home','home-index','首页',NULL,NULL,1),(29,1,1,'/sys','common-main','模块LAYOUT',NULL,NULL,1),(30,2,1,'/user','common-main','用户LAYOUT',NULL,NULL,1),(31,1,1,'/sys/module','sys-module-index','模块列表',NULL,29,1),(32,2,1,'/user/list','user-index','用户列表',NULL,30,1),(33,1,1,'/sys/menu','sys-munu-index','画面列表',NULL,29,1),(34,1,1,'/sys/api','sys-api-index','接口列表',NULL,29,1);
 
 #
 # Structure for table "jvue_module"
@@ -53,12 +54,13 @@ CREATE TABLE `jvue_module` (
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT '模块名',
   `enabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='模块';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='模块';
 
 #
 # Data for table "jvue_module"
 #
 
+INSERT INTO `jvue_module` VALUES (1,'系统管理',1),(2,'用户管理',1);
 
 #
 # Structure for table "jvue_role"
@@ -146,16 +148,19 @@ CREATE TABLE `jvue_segment` (
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(64) NOT NULL DEFAULT '' COMMENT '用户名',
-  `password` char(64) DEFAULT NULL COMMENT '密码',
+  `password` char(128) DEFAULT NULL COMMENT '密码',
   `email` varchar(64) DEFAULT NULL COMMENT '邮件',
   `status` tinyint(3) DEFAULT NULL COMMENT '状态',
+  `nickname` varchar(64) DEFAULT NULL COMMENT '昵称',
+  `super_user` tinyint(1) NOT NULL DEFAULT '0' COMMENT '超级用户',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='用户';
 
 #
 # Data for table "user"
 #
 
+INSERT INTO `user` VALUES (3,'admin','4ae85175a2fac63b49644969c3e97fb2757b17ceb48a1ab36f16e530963fce41db2b2f40ce911809',NULL,1,'jvue super admin user',1);
 
 #
 # Structure for table "user_role"
