@@ -9,7 +9,7 @@ Vue.use(Router)
 
 NProgress.configure({showSpinner: false})
 
-let initedMenu = false
+// let initedMenu = false
 const router = new Router({
   routes: Routers,
   mode: 'history',
@@ -31,12 +31,12 @@ router.afterEach(router => {
   }
   NProgress.done()
 })
-router.beforeEach((to, from, next) => {
+router.beforeEach(({meta, path, name}, from, next) => {
   NProgress.start()
-  let {meta, path, name} = to
+  // let {meta, path, name} = to
   let userSelf = vuet.getModule('user-self')
   let { auth = true } = meta
-  if (userSelf && userSelf.user) {
+  if (userSelf.user && userSelf.user.token) {
     // 已登录
     return next()
   } else {

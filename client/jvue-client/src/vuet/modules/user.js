@@ -4,11 +4,13 @@ import {utils} from '@/common/'
 export default {
   modules: {
     self: {
-      data() {
+      data () {
         return {
           user: {
             id: null,
-            name: null,
+            username: null,
+            nickname: null,
+            token: null,
             permissions: [],
             menus: [],
             modules: [],
@@ -16,7 +18,6 @@ export default {
             moduleId: null,
             active: ''
           },
-          token: null,
           menus: [],
           modules: [],
           routers: [],
@@ -25,24 +26,24 @@ export default {
           active: ''
         }
       },
-      async fetch() {
+      async fetch () {
         // 登录时处理
       },
-      async login(param) {
+      async login (param) {
         let response = await ApiUtils.post('/api/login', param)
         let {data} = response
         if (data.error === null) {
-          this.token = data.data
+          this.user = data.data
           await this.loadRouters()
           return data.data
         } else {
           return Promise.reject(data.message)
         }
       },
-      async updateToken() {
+      async updateToken () {
         // TODO
       },
-      async loadRouters() {
+      async loadRouters () {
         let response = await ApiUtils.get('/api/auth/menu')
         let {data} = response
         if (data.error === null) {
@@ -59,7 +60,7 @@ export default {
           return Promise.reject(data.message)
         }
       },
-      async loadUser() {
+      async loadUser () {
         let response = await ApiUtils.get('/api/account')
         let {data} = response
         if (data.error === '') {
@@ -68,13 +69,12 @@ export default {
           return Promise.reject(new Error(data.message))
         }
       },
-      async signout() {
+      async signout () {
         // 删除本地存储
-        sessionStorage.removeItem('jvue-admin-self')
-        await ApiUtils.get('/api/logout')
         this.reset()
+        await ApiUtils.get('/api/logout')
       },
-      async changeModule(moduleId = 0) {
+      async changeModule (moduleId = 0) {
         if (this.moduleId !== moduleId) {
           this.moduleId = moduleId
           this.leftRoutes = []
@@ -87,7 +87,7 @@ export default {
           //  FIXME 处理模块后，需要切换到对应的页面
         }
       },
-      reloadRouters() {
+      reloadRouters () {
         if (this.menus && this.menus.length > 0) {
           let userRoutes = utils.toRoutes(this.menus)
           // 追加404

@@ -5,7 +5,6 @@
 package net.ccfish.jvue.rest;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +22,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.ccfish.common.JvueDataStatus;
 import net.ccfish.common.web.BaseModel;
-import net.ccfish.jvue.model.JvueMenu;
 import net.ccfish.jvue.rest.vm.ReqLogin;
 import net.ccfish.jvue.security.JwtUserDetails;
 import net.ccfish.jvue.service.AuthService;
 import net.ccfish.jvue.service.JvueMenuService;
 import net.ccfish.jvue.vm.ModuleAndMenus;
+import net.ccfish.jvue.vm.UserInfo;
 
 /**
  * 登录
@@ -72,20 +71,17 @@ public class AuthController {
      */
     @ApiOperation(value = "用户登录")
     @PostMapping(value = "/login")
-    public BaseModel<String> login(@RequestBody ReqLogin req) throws AuthenticationException {
+    public BaseModel<UserInfo> login(@RequestBody ReqLogin req) throws AuthenticationException {
         try {
-            String token = userService.login(req.getUsername(), req.getPassword());
-            return new BaseModel<String>().setData(token);
+            UserInfo userInfo = userService.login(req.getUsername(), req.getPassword());
+            
+            return new BaseModel<UserInfo>().setData(userInfo);
         } catch (UsernameNotFoundException e) {
-            BaseModel<String> result = new BaseModel<>();
+            BaseModel<UserInfo> result = new BaseModel<>();
             result.setError("401");
             result.setMessage("用户不存在");
             return result;
         }
-    }
-    @GetMapping(value = "/logout")
-    public BaseModel<String> login() throws AuthenticationException {
-        return new BaseModel<String>();
     }
     /**
      * 用户菜单生成

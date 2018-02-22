@@ -61,7 +61,7 @@ export default {
             })
             // 初始化路由
             var path = this.$route.query.redirect
-            this.$router.replace({path: path == '/' || path == undefined ? '/' : path})
+            this.$router.replace({path: path === '/' || path === undefined ? '/' : path})
           }).catch((err) => {
             this.logining = false
             this.$notify({
@@ -89,10 +89,12 @@ export default {
     }
   },
   mounted () {
-    let remembered = Boolean(utils.getCookie('remembered'))
-    if (remembered) {
-      this.checked = remembered
-      this.autoLogin()
+    if (!this.$route.query.logout) {
+      let remembered = Boolean(utils.getCookie('remembered'))
+      if (remembered) {
+        this.checked = remembered
+        this.autoLogin()
+      }
     }
   }
 }

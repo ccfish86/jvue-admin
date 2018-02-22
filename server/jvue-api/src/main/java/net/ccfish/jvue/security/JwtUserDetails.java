@@ -25,14 +25,18 @@ public class JwtUserDetails implements UserDetails {
     
     private final Long id;
     private final String username;
+    private final String nickname;
+    private final String email;
     private final String password;
     private final byte superUser;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public JwtUserDetails(Long id, String username, String password, byte superUser,
+    public JwtUserDetails(Long id, String username, String password, byte superUser, String nickname, String email,
             Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
+        this.nickname = nickname;
+        this.email = email;
         this.authorities = authorities;
         this.id = id;
         this.superUser = superUser;
@@ -84,6 +88,14 @@ public class JwtUserDetails implements UserDetails {
 
     public byte getSuperUser() {
         return superUser;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
 }

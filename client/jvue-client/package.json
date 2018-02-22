@@ -22,6 +22,7 @@
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuet": "^1.0.3",
+    "vuet-route": "^0.1.3",
     "vuet-store": "0.0.2"
   },
   "devDependencies": {

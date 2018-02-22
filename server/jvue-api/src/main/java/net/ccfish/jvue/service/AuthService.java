@@ -1,5 +1,7 @@
 package net.ccfish.jvue.service;
 
+import net.ccfish.jvue.vm.UserInfo;
+
 /**
  * 用户登录接口
  * 
@@ -16,7 +18,7 @@ public interface AuthService {
      * @param password 密码
      * @return 操作结果
      */
-    String login(String username, String password);
+    UserInfo login(String username, String password);
 
     /**
      * 刷新密钥

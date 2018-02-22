@@ -2,8 +2,8 @@
   <el-row>
     <el-col :span="24">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item class="breadcrumb-inner" v-for="item, index in $route.matched" v-if="item.meta.title"
-                            :to="item.path? item: {path: '/'}" :key="'bread' + index">
+        <el-breadcrumb-item class="breadcrumb-inner" v-for="item in $route.matched" v-if="item.meta.title"
+                            :to="item.path? item: {path: '/'}" :key="item">
           {{ item.meta.title }}
         </el-breadcrumb-item>
       </el-breadcrumb>
@@ -19,12 +19,12 @@
   }
 </style>
 <script>
-  export default {
-    data() {
-      return {}
-    },
-    mounted() {
-    },
-    methods: {}
-  }
+export default {
+  data () {
+    return {}
+  },
+  mounted () {
+  },
+  methods: {}
+}
 </script>

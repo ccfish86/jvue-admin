@@ -5,10 +5,10 @@
 </template>
 
 <script>
-  import 'babel-polyfill'
-  export default {
-    name: 'App',
-  }
+import 'babel-polyfill'
+export default {
+  name: 'App'
+}
 </script>
 <style scoped>
   #app {

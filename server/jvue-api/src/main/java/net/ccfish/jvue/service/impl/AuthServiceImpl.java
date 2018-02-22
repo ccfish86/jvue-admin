@@ -14,7 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import net.ccfish.jvue.security.JwtTokenUtil;
+import net.ccfish.jvue.security.JwtUserDetails;
 import net.ccfish.jvue.service.AuthService;
+import net.ccfish.jvue.vm.UserInfo;
 
 /**
  * 用户登录处理
@@ -38,13 +40,23 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(String username, String password) {
+    public UserInfo login(String username, String password) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         
         UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return jwtTokenUtil.generateToken(userDetails);
+        
+        UserInfo userInfo = new UserInfo();
+        String token = jwtTokenUtil.generateToken(userDetails);
+        userInfo.setToken(token);
+        if (userDetails instanceof JwtUserDetails) {
+            JwtUserDetails jwtUser= (JwtUserDetails) userDetails;
+            userInfo.setEmail(jwtUser.getEmail());
+            userInfo.setNickname(jwtUser.getNickname());
+            userInfo.setUsername(username);
+        }
+        return userInfo;
     }
 
     @Override

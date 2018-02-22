@@ -1,10 +1,10 @@
 import ApiUtils from '@/api/'
-import {utils} from '@/common/'
+// import {utils} from '@/common/'
 export default {
   modules: {
     module: {
       modules: {
-        list:{
+        list: {
           data () {
             return {
               searchForm: {

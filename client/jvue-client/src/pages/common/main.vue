@@ -25,8 +25,9 @@
         <el-col :span="4">
           <el-row style="text-align:center">
             <el-col>
-              <div class="main-top--menu-item" @click="signout"><i class="fa fa-power-off"></i>&nbsp;&nbsp;退出登录
-              </div>
+              <el-button type="text" @click="signout"><i class="fa fa-power-off"></i>&nbsp;退出登录</el-button>
+              <!--<div class="main-top&#45;&#45;menu-item" @click="signout"><i class="fa fa-power-off"></i>&nbsp;&nbsp;退出登录-->
+              <!--</div>-->
             </el-col>
           </el-row>
         </el-col>
@@ -36,13 +37,13 @@
       <aside>
         <el-menu :default-active="String(userSelf.active)" router theme="dark" @open="handleOpen" @close="handleClose">
           <template v-for="router in userSelf.leftRoutes">
-            <el-submenu :index="router.path"
+            <el-submenu :index="router.path" :key="router.path"
                         v-if="router.children && router.children instanceof Array && router.children.length > 0">
               <template slot="title">{{router.name}}</template>
               <el-menu-item v-for="child in router.children" :key="child.name" :index="child.path">{{child.meta.name}}
               </el-menu-item>
             </el-submenu>
-            <el-menu-item :index="router.path" v-else>{{router.meta.name}}</el-menu-item>
+            <el-menu-item :index="router.path" :key="router.path" v-else>{{router.meta.name}}</el-menu-item>
           </template>
         </el-menu>
         <!--<router-view name="left">{{userSelf.leftRoutes}}</router-view>-->
@@ -125,45 +126,46 @@
   }
 </style>
 <script>
-  import {mapModules, mapRules} from 'vuet'
+import {mapModules, mapRules} from 'vuet'
 
-  export default {
-    mixins: [
-      mapModules({userSelf: 'user-self'}),
-      mapRules({
-        store: [{path: 'user-self'}]
-      }),
-    ],
-    data() {
-      return {
-        loading: true,
-        authed: false
-      }
+export default {
+  mixins: [
+    mapModules({userSelf: 'user-self'}),
+    mapRules({
+      store: [{path: 'user-self'}]
+    })
+  ],
+  data () {
+    return {
+      loading: true,
+      authed: false
+    }
+  },
+  mounted () {
+    if (this.$route.matched) {
+      this.$route.matched.forEach(router => {
+        if (router.meta && router.meta.moduleId) {
+          this.userSelf.changeModule(router.meta.moduleId)
+        }
+        if (router.path) {
+          this.userSelf.active = router.path
+          return true
+        }
+      })
+    }
+  },
+  methods: {
+    handleOpen () {
+      // console.log('handleOpen')
     },
-    mounted() {
-      if (this.$route.matched) {
-        this.$route.matched.forEach(router => {
-          if (router.meta && router.meta.moduleId) {
-            this.userSelf.changeModule(router.meta.moduleId)
-          }
-          if (router.path) {
-            this.userSelf.active = router.path
-            return true
-          }
-        })
-      }
+    handleClose () {
+      // console.log('handleClose')
     },
-    methods: {
-      handleOpen() {
-        // console.log('handleOpen')
-      },
-      handleClose() {
-        // console.log('handleClose')
-      },
-      signout() {
-        this.userSelf.signout()
-        this.userSelf.reset()
-      }
+    signout () {
+      this.userSelf.signout().finally(() => {
+        this.$router.push('/login?logout')
+      })
     }
   }
+}
 </script>

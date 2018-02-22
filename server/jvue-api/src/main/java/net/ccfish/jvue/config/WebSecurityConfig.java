@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import net.ccfish.jvue.security.EntryPointUnauthorizedHandler;
 import net.ccfish.jvue.security.JwtAuthenticationTokenFilter;
 import net.ccfish.jvue.security.RestAccessDeniedHandler;
+import net.ccfish.jvue.security.RestLogoutSuccessHandler;
 
 /**
  * 安全模块配置
@@ -30,20 +31,23 @@ import net.ccfish.jvue.security.RestAccessDeniedHandler;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsService userDetailsService;
-    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
-    private EntryPointUnauthorizedHandler entryPointUnauthorizedHandler;
-    private RestAccessDeniedHandler restAccessDeniedHandler;
+    private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    private final EntryPointUnauthorizedHandler entryPointUnauthorizedHandler;
+    private final RestAccessDeniedHandler restAccessDeniedHandler;
+    private final RestLogoutSuccessHandler logoutSuccessHandler;
 
     @Autowired
     public WebSecurityConfig(UserDetailsService userDetailsService,
             JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
             EntryPointUnauthorizedHandler entryPointUnauthorizedHandler,
-            RestAccessDeniedHandler restAccessDeniedHandler) {
+            RestAccessDeniedHandler restAccessDeniedHandler,
+            RestLogoutSuccessHandler logoutSuccessHandler) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
         this.entryPointUnauthorizedHandler = entryPointUnauthorizedHandler;
         this.restAccessDeniedHandler = restAccessDeniedHandler;
+        this.logoutSuccessHandler = logoutSuccessHandler;
     }
     
     @Bean
@@ -60,6 +64,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        
+        httpSecurity.logout().disable();
+        
         httpSecurity
             .csrf().disable()
                 .authorizeRequests()
@@ -75,8 +82,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**","/**/favicon.ico", "/webjars/**").permitAll()
                 .antMatchers("/**").authenticated()
                 .anyRequest().authenticated()
+
+            .and().logout().logoutSuccessHandler(logoutSuccessHandler)
             .and()
                 .headers().cacheControl();
+        
         httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(restAccessDeniedHandler);
 

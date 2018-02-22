@@ -46,7 +46,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
             Collection<GrantedAuthority> authorities = loadGrantedRoles(user.getRoles());
             
             return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(),
-                    user.getSuperUser(), authorities);
+                    user.getSuperUser(), user.getNickname(), user.getEmail(), authorities);
         }
     }
 
