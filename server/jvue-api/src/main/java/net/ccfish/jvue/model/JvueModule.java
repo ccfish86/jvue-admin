@@ -20,7 +20,7 @@ public class JvueModule implements Serializable {
 	private Integer id;
 
 	@Column(nullable=false)
-	private byte enabled;
+	private byte enabled = 0;
 
 	@Column(nullable=false, length=64)
 	private String name;

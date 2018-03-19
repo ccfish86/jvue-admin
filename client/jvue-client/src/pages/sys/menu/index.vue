@@ -3,7 +3,7 @@
       <el-row class="actions-top--edit" type="flex" justify="end">
         <el-col :span="2" :pull="2">
           <el-button type="success" icon="el-icon-document" size="small"
-                     @click="$router.push({name: 'sys-menu-add'})">添加
+                     @click="$router.push('/sys/menu/add')">添加
           </el-button>
         </el-col>
       </el-row>
@@ -11,17 +11,20 @@
                 size="small" border stripe>
         <el-table-column prop="id" label="ID" align="center" width="95">
         </el-table-column>
-        <el-table-column prop="name" label="画面名" align="left" min-width="180">
+        <el-table-column prop="name" label="画面名" align="left" min-width="120">
         </el-table-column>
-        <el-table-column prop="component" label="组件名" align="left" min-width="180">
+        <el-table-column prop="component" label="组件名" align="left" min-width="140">
         </el-table-column>
         <el-table-column prop="path" label="路径" align="left" min-width="180">
         </el-table-column>
-        <el-table-column prop="moduleId" label="模块名" align="left" min-width="180">
+        <el-table-column prop="moduleId" label="模块名" align="left" min-width="140">
           <template slot-scope="scope">{{scope.row.moduleId|moduleName}}</template>
         </el-table-column>
         <el-table-column prop="enabled" label="是否启用" align="left" min-width="100">
           <template slot-scope="scope">{{scope.row.enabled|enumName('yn')}}</template>
+        </el-table-column>
+        <el-table-column prop="showNav" label="是否导航" align="left" min-width="100">
+          <template slot-scope="scope">{{scope.row.showNav|enumName('yn')}}</template>
         </el-table-column>
 
         <el-table-column label="操作" align="center" width="200" fixed="right">

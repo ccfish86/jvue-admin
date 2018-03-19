@@ -51,6 +51,9 @@ export default {
               form: {}
             }
           },
+          async fetch() {
+            // 初始化信息
+          },
           async save() {
             let param = this.form
             const response = await ApiUtils.post('/api/module', param)
@@ -159,8 +162,41 @@ export default {
             }
           }
         },
-        add: {},
-        edit: {}
+        add: {
+          data() {
+            return {
+              form: {}
+            }
+          },
+          async fetch() {
+            // 初始化信息
+          },
+          async save() {
+            let param = this.form
+            const response = await ApiUtils.post('/api/menu', param)
+            let {error, message, data} = response.data
+            if (error === null) {
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          }
+        },
+        edit: {},
+        names: {
+          data() {
+            return {
+              list: {}
+            }
+          },
+          async getMenus(moduleId) {
+            const response = await ApiUtils.get('/api/menu/names', {moduleId})
+            let {status, data = {}} = response
+            if (status === 200 && data.error === null) {
+              this.list = data.data || []
+            }
+          }
+        }
       }
     },
     api: {

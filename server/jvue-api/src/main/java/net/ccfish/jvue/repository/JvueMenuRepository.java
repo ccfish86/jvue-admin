@@ -14,5 +14,5 @@ import net.ccfish.jvue.model.JvueMenu;
 @Repository
 public interface JvueMenuRepository extends JpaRepository<JvueMenu, Integer>, JpaSpecificationExecutor<JvueMenu> {
 
-    List<JvueMenu> findByJvueMenuIsNull();
+    List<JvueMenu> findByParentIdIsNull();
 }

@@ -1,4 +1,9 @@
 export default {
+  moduleName: '模块名',
+  menuName: '菜单名',
+  module: '模块',
+  menuPath: '路径',
+  menuComponent: '组件',
   username: '用户名',
   password: '密码',
   fullname: '姓名',

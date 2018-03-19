@@ -36,7 +36,7 @@ public class JvueMenu implements Serializable {
 	@Column(length=64)
 	private String component;
 
-	private byte enabled;
+	private byte enabled = 0;
 
 	@Column(name="icon_class", length=64)
 	private String iconClass;
@@ -53,17 +53,20 @@ public class JvueMenu implements Serializable {
 	private byte type;
 	
 	@Column(name="show_nav", nullable=false)
-	private Integer showNav; 
+	private Integer showNav = 0; 
+
+    @JoinColumn(name="parent_id")
+    private Integer parentId;
 
 	//bi-directional many-to-one association to JvueMenu
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name="parent_id")
-	private JvueMenu jvueMenu;
+//	@JsonIgnore
+//	@ManyToOne
+//	@JoinColumn(name="parent_id")
+//	private JvueMenu jvueMenu;
 
 	//bi-directional many-to-one association to JvueMenu
     @JsonProperty("children")
-	@OneToMany(mappedBy="jvueMenu")
+	@OneToMany(mappedBy="parentId")
 	private List<JvueMenu> jvueMenus;
 
 	public JvueMenu() {
@@ -141,13 +144,21 @@ public class JvueMenu implements Serializable {
         this.showNav = showNav;
     }
 
-    public JvueMenu getJvueMenu() {
-		return this.jvueMenu;
-	}
+    public Integer getParentId() {
+        return parentId;
+    }
 
-	public void setJvueMenu(JvueMenu jvueMenu) {
-		this.jvueMenu = jvueMenu;
-	}
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+//    public JvueMenu getJvueMenu() {
+//		return this.jvueMenu;
+//	}
+//
+//	public void setJvueMenu(JvueMenu jvueMenu) {
+//		this.jvueMenu = jvueMenu;
+//	}
 
 	public List<JvueMenu> getJvueMenus() {
 		return this.jvueMenus;
@@ -159,14 +170,14 @@ public class JvueMenu implements Serializable {
 
 	public JvueMenu addJvueMenus(JvueMenu jvueMenus) {
 		getJvueMenus().add(jvueMenus);
-		jvueMenus.setJvueMenu(this);
+//		jvueMenus.setJvueMenu(this);
 
 		return jvueMenus;
 	}
 
 	public JvueMenu removeJvueMenus(JvueMenu jvueMenus) {
 		getJvueMenus().remove(jvueMenus);
-		jvueMenus.setJvueMenu(null);
+//		jvueMenus.setJvueMenu(null);
 
 		return jvueMenus;
 	}

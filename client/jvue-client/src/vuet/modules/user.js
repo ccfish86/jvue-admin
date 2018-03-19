@@ -69,10 +69,17 @@ export default {
         if (this.moduleId !== moduleId) {
           this.moduleId = moduleId
           this.leftRoutes = []
-          // 只需要处理第一层
+          // 只需要处理第一层，第二层
           this.routers.forEach(router => {
             if (router.meta && router.meta.moduleId === moduleId && router.meta.showNav === 1) {
-              this.leftRoutes.push(router)
+              // console.info(`router.meta.showNav = ${router.meta.showNav}`)
+              let nrouter = Object.assign(router)
+              if (nrouter.children) {
+                nrouter.children = nrouter.children.filter((r) => r.meta && r.meta.showNav === 1)
+              }
+              this.leftRoutes.push(nrouter)
+            } else {
+              return
             }
           })
           //  FIXME 处理模块后，需要切换到对应的页面

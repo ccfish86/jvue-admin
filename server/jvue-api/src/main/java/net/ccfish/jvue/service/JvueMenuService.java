@@ -17,5 +17,6 @@ import net.ccfish.jvue.vm.ModuleAndMenus;
  */
 public interface JvueMenuService extends _AbstractService<JvueMenu, Integer> {
     List<JvueMenu> findAllRootMenu();
-    public ModuleAndMenus findModuleAndMenu();
+    ModuleAndMenus findModuleAndMenu();
+    List<JvueMenu> findByModule(Integer moduleId);
 }

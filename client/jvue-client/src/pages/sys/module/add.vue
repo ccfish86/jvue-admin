@@ -17,12 +17,13 @@
 </template>
 
 <script>
-  import {mapModules} from 'vuet'
+  import {mapModules, mapRules} from 'vuet'
   import {messages} from '@/common'
 export default {
   name: 'add',
   mixins: [
-    mapModules({moduleAdd: 'sys-module-add'})
+    mapModules({moduleAdd: 'sys-module-add'}),
+    mapRules({temp: 'sys-module-add'})
   ],
   methods: {
     onSubmit() {
