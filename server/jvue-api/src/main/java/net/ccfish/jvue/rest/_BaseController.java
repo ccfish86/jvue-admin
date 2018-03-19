@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +39,8 @@ public interface _BaseController<T, ID extends Serializable> {
 
     _AbstractService<T, ID> baseService();
     
+    public static final Logger logger = LoggerFactory.getLogger(_BaseController.class);
+    
     @GetMapping("")
     @AclResc(id = 1, code = "list", name = "列表")
     @ApiOperation(value = "列表")
@@ -59,6 +63,7 @@ public interface _BaseController<T, ID extends Serializable> {
     @ApiOperation(value = "详情")
     default BaseModel<T> detail(@PathVariable("id") ID id) {        
         T result = baseService().getOne(id);
+        logger.debug("detail result: {}", result);
         return new BaseModel<T>().setData(result);
     }
 

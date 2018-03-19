@@ -6,7 +6,7 @@
                     data-vv-rules="required|max:20"></el-input>
         </el-form-item>
         <el-form-item label="模块是否启用">
-          <el-switch on-text="Yes" off-text="No" inactive-value="0" active-value="1" v-model="moduleAdd.form.enabled"></el-switch>
+          <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="moduleAdd.form.enabled"></el-switch>
         </el-form-item>
         <el-form-item>
           <el-button native-type="submit" type="primary" @click.native.prevent="onSubmit">保存</el-button>

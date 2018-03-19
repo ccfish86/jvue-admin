@@ -53,4 +53,13 @@ public class JvueModuleServiceImpl
         }
     }
 
+    @Override
+    public void update(Integer id, JvueModule data) {
+        // throw new UnsupportedClassVersionError("不支持更新处理");
+        JvueModule module = jvueModuleRepository.findOne(id);
+        module.setName(data.getName());
+        module.setEnabled(data.getEnabled());
+        jvueModuleRepository.save(module);
+    }
+
 }

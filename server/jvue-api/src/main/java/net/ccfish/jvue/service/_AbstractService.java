@@ -24,7 +24,7 @@ public interface _AbstractService<T, ID extends Serializable> {
     JpaRepository<T, ID> jpaRepository();
 
     default T getOne(ID id) {
-        return jpaRepository().getOne(id);
+        return jpaRepository().findOne(id);
     }
 
     default List<T> getAll() {

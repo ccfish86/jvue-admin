@@ -62,7 +62,53 @@ export default {
             }
           }
         },
-        edit: {},
+        detail: {
+          data() {
+            return {
+              detail: {}
+            }
+          },
+          async fetch() {
+            let id = this.app.$route.params['id']
+            const response = await ApiUtils.get(`/api/module/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.detail = data
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          }
+        },
+        edit: {
+          data() {
+            return {
+              form: {}
+            }
+          },
+          async fetch() {
+            let id = this.app.$route.params['id']
+            const response = await ApiUtils.get(`/api/module/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.form = data
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          },
+          async save() {
+            let id = this.app.$route.params['id']
+            let param = this.form
+            const response = await ApiUtils.put(`/api/module/${id}`, param)
+            let {error, message, data} = response.data
+            if (error === null) {
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          }
+        },
         names: {
           data() {
             return {
