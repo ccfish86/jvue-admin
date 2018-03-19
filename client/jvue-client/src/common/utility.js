@@ -2,7 +2,6 @@
  * Created by Yuangui on 2017-01-10.
  */
 import dateUtil from 'element-ui/src/utils/date'
-
 const isDate = function (date) {
   if (date === null || date === undefined) return false
   if (isNaN(new Date(date).getTime())) return false
@@ -109,27 +108,31 @@ const utils = {
   removeCookie (name) {
     utils.setCookie(name, '1', -1)
   },
-  toRoutes(menus) {
+  toRoutes (menus) {
     let userRouters = []
     menus.forEach(menu => {
       let {
+        id,
+        moduleId,
         path,
         component,
         name,
         meta = {},
         iconCls,
-        children
+        children,
+        showNav
       } = menu
       if (children && children instanceof Array) {
         children = utils.toRoutes(children)
       }
-      meta.moduleId = menu.moduleId
-      meta.id = menu.id
-      meta.name = menu.name
+      meta.moduleId = moduleId
+      meta.id = id
+      meta.name = name
+      meta.showNav = showNav
 
       let userRouter = {
         path: path,
-        component(resolve){
+        component (resolve) {
           let vfile = component.replace(/(-)/g, (v) => '/')
           require(['@/pages/' + vfile + '.vue'], resolve)
         },

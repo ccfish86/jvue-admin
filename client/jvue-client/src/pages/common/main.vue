@@ -53,6 +53,12 @@
         </div>
       </aside>
       <section class="content-container">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item class="breadcrumb-inner" v-for="item in $route.matched" v-if="item.meta.name"
+                              :to="item.path? item: {path: '/'}" :key="item.path">
+            {{item.meta.name}}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
         <transition name="fade">
           <router-view></router-view>
         </transition>
@@ -97,9 +103,11 @@
     bottom: 0px;
     left: 190px;
     overflow-y: scroll;
-    padding: 20px;
+    padding: 15px;
   }
-
+  .el-breadcrumb {
+    margin-bottom: 18px;
+  }
   @media screen and (max-width: 1366px) {
     aside {
       width: 180px;
@@ -109,7 +117,6 @@
       left: 180px;
     }
   }
-
   /* 路由切换动效 */
   .fade-leave-active {
     transition-duration: 0s;
@@ -118,7 +125,7 @@
   .fade-enter-active {
     /*transition: all .5s;*/
     opacity: 1;
-    transition: opacity 1s linear;
+    transition: opacity 0.5s linear;
   }
 
   .fade-enter, .fade-leave-active {
@@ -130,9 +137,10 @@ import {mapModules, mapRules} from 'vuet'
 
 export default {
   mixins: [
-    mapModules({userSelf: 'user-self'}),
+    mapModules({userSelf: 'user-self', dictE: 'common-dict-enums'}),
     mapRules({
-      store: [{path: 'user-self'}]
+      need: 'common-dict-enums',
+      store: [{path: 'user-self'}, {path: 'common-dict-enums'}]
     })
   ],
   data () {

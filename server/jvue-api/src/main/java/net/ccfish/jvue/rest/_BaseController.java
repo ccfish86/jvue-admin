@@ -6,7 +6,6 @@ package net.ccfish.jvue.rest;
 
 import java.io.Serializable;
 
-import javax.websocket.server.PathParam;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +57,7 @@ public interface _BaseController<T, ID extends Serializable> {
     @AclResc(id = 2, code = "detail", name = "详情")
     @GetMapping("{id}")
     @ApiOperation(value = "详情")
-    default BaseModel<T> detail(@PathParam("id") ID id) {        
+    default BaseModel<T> detail(@PathVariable("id") ID id) {        
         T result = baseService().getOne(id);
         return new BaseModel<T>().setData(result);
     }
@@ -73,7 +73,7 @@ public interface _BaseController<T, ID extends Serializable> {
     @PutMapping("{id}")
     @AclResc(id = 4, code = "update", name = "更新")
     @ApiOperation(value = "更新")
-    default BaseModel<ID> update(@PathParam("id") ID id, @RequestBody T data) {
+    default BaseModel<ID> update(@PathVariable("id") ID id, @RequestBody T data) {
         baseService().update(id, data);
         return new BaseModel<ID>().setData(id);
     }
@@ -81,7 +81,7 @@ public interface _BaseController<T, ID extends Serializable> {
     @DeleteMapping("{id}")
     @AclResc(id = 5, code = "delete", name = "删除")
     @ApiOperation(value = "删除")
-    default BaseModel<ID> delete(@PathParam("id") ID id) {
+    default BaseModel<ID> delete(@PathVariable("id") ID id) {
         baseService().delete(id);
         return new BaseModel<ID>().setData(id);
     }

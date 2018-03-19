@@ -51,6 +51,9 @@ public class JvueMenu implements Serializable {
 	private String path;
 
 	private byte type;
+	
+	@Column(name="show_nav", nullable=false)
+	private Integer showNav; 
 
 	//bi-directional many-to-one association to JvueMenu
 	@JsonIgnore
@@ -130,7 +133,15 @@ public class JvueMenu implements Serializable {
 		this.type = type;
 	}
 
-	public JvueMenu getJvueMenu() {
+    public Integer getShowNav() {
+        return showNav;
+    }
+
+    public void setShowNav(Integer showNav) {
+        this.showNav = showNav;
+    }
+
+    public JvueMenu getJvueMenu() {
 		return this.jvueMenu;
 	}
 

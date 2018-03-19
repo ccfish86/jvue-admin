@@ -31,12 +31,12 @@ export default {
   enumData (value, key) {
     const dictList = vuet.getModule('common-dict-enums')
     if (!dictList.data) {
-      return ''
+      return '?'
     } else {
       if (dictList.data[key]) {
         return dictList.data[key][String(value)]
       } else {
-        return ''
+        return '-'
       }
     }
   },

@@ -154,6 +154,28 @@ const messages = {
       type: 'info',
       duration: 2500
     }
+  },
+  notifySaveSuccess: () => {
+    return {
+      title: '提示',
+      message: '保存成功',
+      type: 'info',
+      duration: 2500
+    }
+  },
+  messageSaveSuccess: () => {
+    return {
+      showClose: true,
+      duration: 1500,
+      message: '保存成功'
+    }
+  },
+  messageDelSuccess: () => {
+    return {
+      showClose: true,
+      duration: 1500,
+      message: '删除成功'
+    }
   }
 }
 // 使用时直接在Script中使用[consts.ERROR_LEVEL.INFO]取值即可

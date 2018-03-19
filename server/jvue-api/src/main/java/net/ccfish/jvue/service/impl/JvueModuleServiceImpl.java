@@ -5,7 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.ccfish.common.enums.YesOrNoEnums;
+import net.ccfish.common.jpa.JpaRestrictions;
+import net.ccfish.common.jpa.SearchCriteria;
+import net.ccfish.jvue.model.JvueMenu;
 import net.ccfish.jvue.model.JvueModule;
+import net.ccfish.jvue.repository.JvueMenuRepository;
 import net.ccfish.jvue.repository.JvueModuleRepository;
 import net.ccfish.jvue.service.JvueModuleService;
 
@@ -18,6 +23,9 @@ public class JvueModuleServiceImpl
         implements JvueModuleService {
 
     private JvueModuleRepository jvueModuleRepository;
+    
+    @Autowired
+    private JvueMenuRepository jvueMenuRepository;
 
     @Autowired
     public JvueModuleServiceImpl(JvueModuleRepository jvueModuleRepository) {
@@ -27,6 +35,22 @@ public class JvueModuleServiceImpl
     @Override
     public JpaRepository<JvueModule, Integer> jpaRepository() {
         return this.jvueModuleRepository;
+    }
+    
+    @Override
+    public void delete(Integer id) {
+        // 判断是否在其他表中使用，未使用时，可物理删除；如在menu等表里使用，逻辑删除
+        SearchCriteria<JvueMenu> jvueMenuCriteria = new SearchCriteria<>();
+        jvueMenuCriteria.add(JpaRestrictions.eq("moduleId", id, false));
+        long mcount =jvueMenuRepository.count(jvueMenuCriteria);
+        if (mcount > 0L) {
+            //jpaRepository().delete(id);
+            JvueModule entity = jvueModuleRepository.findOne(id);
+            entity.setEnabled((byte)YesOrNoEnums.No.ordinal());
+            jvueModuleRepository.save(entity);
+        } else {
+            jvueModuleRepository.delete(id);
+        }
     }
 
 }

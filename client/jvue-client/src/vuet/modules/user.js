@@ -60,15 +60,6 @@ export default {
           return Promise.reject(data.message)
         }
       },
-      async loadUser () {
-        let response = await ApiUtils.get('/api/account')
-        let {data} = response
-        if (data.error === '') {
-          return data.data
-        } else {
-          return Promise.reject(new Error(data.message))
-        }
-      },
       async signout () {
         // 删除本地存储
         this.reset()
@@ -80,7 +71,7 @@ export default {
           this.leftRoutes = []
           // 只需要处理第一层
           this.routers.forEach(router => {
-            if (router.meta.moduleId === moduleId) {
+            if (router.meta && router.meta.moduleId === moduleId && router.meta.showNav === 1) {
               this.leftRoutes.push(router)
             }
           })

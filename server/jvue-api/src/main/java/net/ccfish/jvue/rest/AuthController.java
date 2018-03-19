@@ -81,6 +81,11 @@ public class AuthController {
             result.setError("401");
             result.setMessage("用户不存在");
             return result;
+        } catch (AuthenticationException ae) {
+            BaseModel<UserInfo> result = new BaseModel<>();
+            result.setError("401");
+            result.setMessage("用户密码不对");
+            return result;
         }
     }
     /**

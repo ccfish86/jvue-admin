@@ -10,13 +10,13 @@ export default {
     region: {
       modules: {
         list: {
-          data() {
+          data () {
             return {
               data: []
             }
           },
           /* 取省市县地址 */
-          async fetch() {
+          async fetch () {
             let response = await ApiUtils.get('00021')
             let {code, message, data} = response.data
             if (code === '0') {
@@ -28,13 +28,13 @@ export default {
           }
         },
         tree: {
-          data() {
+          data () {
             return {
               data: []
             }
           },
           /* 取省市县地址 */
-          async fetch() {
+          async fetch () {
             let response = await ApiUtils.get('00022')
             let {code, message, data} = response.data
             if (code === '0') {
@@ -50,23 +50,23 @@ export default {
     dict: {
       modules: {
         enums: {
-          data() {
+          data () {
             return {
-              data: []
+              data: {}
             }
           },
           /* 获取枚举类型数据列表 */
-          async fetch() {
-            let response = await ApiUtils.get('00013')
-            let {code, message, data} = response.data
-            if (code === '0') {
+          async fetch () {
+            let response = await ApiUtils.get('/api/pub/dict/enums')
+            let {error, message, data} = response.data
+            if (error === null) {
               this.data = data
               return data
             } else {
               return Promise.reject(message)
             }
           },
-          async getEnums(key) {
+          async getEnums (key) {
             if (this.data[key]) {
               return this.data[key]
             }
@@ -80,13 +80,13 @@ export default {
           }
         },
         codes: {
-          data() {
+          data () {
             return {
               data: []
             }
           },
           /* 获取字典类型数据列表 */
-          async fetch() {
+          async fetch () {
             let response = await ApiUtils.get('00015')
             let {code, message, data} = response.data
             if (code === '0') {
@@ -102,12 +102,12 @@ export default {
     storage: {
       modules: {
         photo: {
-          data() {
+          data () {
             return {
               loading: false
             }
           },
-          async upload(fileName, base64, waterMark = 0) {
+          async upload (fileName, base64, waterMark = 0) {
             this.loading = true
             let req = {
               name: fileName,
@@ -125,13 +125,13 @@ export default {
           }
         },
         html: {
-          data() {
+          data () {
             return {
               loading: false,
               content: ''
             }
           },
-          async load(url) {
+          async load (url) {
             this.loading = true
             this.content = ''
             let param = {

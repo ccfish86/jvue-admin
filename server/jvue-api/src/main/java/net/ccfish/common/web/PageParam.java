@@ -13,7 +13,7 @@ package net.ccfish.common.web;
 public class PageParam {
 
     /** 使用PageHelper，页码从1开始 */
-    int page = 1;
+    int page = 0;
     
     /** 每页件数 */
     int pageSize = 20;
