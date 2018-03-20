@@ -63,7 +63,7 @@ export default {
       async signout () {
         // 删除本地存储
         this.reset()
-        await ApiUtils.get('/api/logout')
+        await ApiUtils.post('/api/logout')
       },
       async changeModule (moduleId = 0) {
         if (this.moduleId !== moduleId) {

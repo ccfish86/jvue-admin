@@ -6,6 +6,7 @@ package net.ccfish.jvue.service;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,8 @@ public interface _AbstractService<T, ID extends Serializable> {
     JpaRepository<T, ID> jpaRepository();
 
     default T getOne(ID id) {
-        return jpaRepository().findOne(id);
+        Optional<T> result = jpaRepository().findById(id);
+        return result.get();
     }
 
     default List<T> getAll() {
@@ -40,7 +42,7 @@ public interface _AbstractService<T, ID extends Serializable> {
     }
 
     default void delete(ID id) {
-        jpaRepository().delete(id);
+        jpaRepository().deleteById(id);
     }
 
     default void save(T obj) {
@@ -48,7 +50,7 @@ public interface _AbstractService<T, ID extends Serializable> {
     }
 
     default void save(List<T> objs) {
-        jpaRepository().save(objs);
+        jpaRepository().saveAll(objs);
     }
 
     default void update(ID id, T data) {

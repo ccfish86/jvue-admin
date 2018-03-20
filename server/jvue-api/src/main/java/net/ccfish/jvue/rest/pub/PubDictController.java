@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.ccfish.common.enums.YesOrNoEnums;
+import net.ccfish.common.enums.YesOrNoEnum;
 import net.ccfish.common.web.BaseModel;
 
 /**
@@ -30,7 +30,7 @@ public class PubDictController {
         Map<String, Map<String, String>> enums = new LinkedHashMap<String, Map<String,String>>();
         
         Map<String, String> yns = new LinkedHashMap<>();
-        for (YesOrNoEnums yn: YesOrNoEnums.values()) {
+        for (YesOrNoEnum yn: YesOrNoEnum.values()) {
             yns.put(String.valueOf(yn.ordinal()), yn.name());
         }
         enums.put("yn", yns);

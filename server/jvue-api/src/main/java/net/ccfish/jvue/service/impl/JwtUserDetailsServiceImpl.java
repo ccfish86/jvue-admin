@@ -23,7 +23,6 @@ import net.ccfish.jvue.security.JwtUserDetails;
  * @version 1.0
  * @since 1.0
  */
-@Cacheable("JwtUserDetailsService")
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
@@ -36,6 +35,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
+    @Cacheable(value = "JwtUserDetailsService", key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {

@@ -1,11 +1,13 @@
 package net.ccfish.jvue.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.ccfish.common.enums.YesOrNoEnums;
+import net.ccfish.common.enums.YesOrNoEnum;
 import net.ccfish.common.jpa.JpaRestrictions;
 import net.ccfish.common.jpa.SearchCriteria;
 import net.ccfish.jvue.model.JvueMenu;
@@ -45,21 +47,25 @@ public class JvueModuleServiceImpl
         long mcount =jvueMenuRepository.count(jvueMenuCriteria);
         if (mcount > 0L) {
             //jpaRepository().delete(id);
-            JvueModule entity = jvueModuleRepository.findOne(id);
-            entity.setEnabled((byte)YesOrNoEnums.No.ordinal());
-            jvueModuleRepository.save(entity);
+            Optional<JvueModule> entityResult = jvueModuleRepository.findById(id);
+            entityResult.ifPresent(entity -> {
+                entity.setEnabled((byte)YesOrNoEnum.No.ordinal());
+                jvueModuleRepository.save(entity);
+            });
         } else {
-            jvueModuleRepository.delete(id);
+            jvueModuleRepository.deleteById(id);
         }
     }
 
     @Override
     public void update(Integer id, JvueModule data) {
         // throw new UnsupportedClassVersionError("不支持更新处理");
-        JvueModule module = jvueModuleRepository.findOne(id);
-        module.setName(data.getName());
-        module.setEnabled(data.getEnabled());
-        jvueModuleRepository.save(module);
+        Optional<JvueModule> entityResult = jvueModuleRepository.findById(id);
+        entityResult.ifPresent(module -> {
+            module.setName(data.getName());
+            module.setEnabled(data.getEnabled());
+            jvueModuleRepository.save(module);
+        });
     }
 
 }

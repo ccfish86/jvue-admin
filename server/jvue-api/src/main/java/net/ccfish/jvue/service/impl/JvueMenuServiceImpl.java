@@ -1,6 +1,7 @@
 package net.ccfish.jvue.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class JvueMenuServiceImpl implements JvueMenuService {
         List<Integer> moduleIds = menus.stream().map(menu -> menu.getModuleId()).distinct()
                 .collect(Collectors.toList());
 
-        List<JvueModule> modules = jvueModuleRepository.findAll(moduleIds);
+        List<JvueModule> modules = jvueModuleRepository.findAllById(moduleIds);
         
         moduleAndMenus.setMenus(menus);
         moduleAndMenus.setModules(modules);
@@ -63,5 +64,24 @@ public class JvueMenuServiceImpl implements JvueMenuService {
         menuSearchCriteria.add(JpaRestrictions.isNull("parentId"));
         
         return jvueMenuRepository.findAll(menuSearchCriteria);
+    }
+
+    @Override
+    public void update(Integer id, JvueMenu data) {
+        // throw new UnsupportedClassVersionError("不支持更新处理");
+        Optional<JvueMenu> menuResult = jvueMenuRepository.findById(id);
+        if (menuResult.isPresent()) {
+            JvueMenu menu = menuResult.get();
+            menu.setName(data.getName());
+            menu.setIconClass(data.getIconClass());
+            menu.setComponent(data.getComponent());
+            menu.setPath(data.getPath());
+            menu.setModuleId(data.getModuleId());
+            menu.setParentId(data.getParentId());
+            menu.setShowNav(data.getShowNav());
+            menu.setType(data.getType());
+            menu.setEnabled(data.getEnabled());
+            jvueMenuRepository.save(menu);
+        }
     }
 }

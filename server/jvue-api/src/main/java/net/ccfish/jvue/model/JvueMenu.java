@@ -9,12 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
@@ -53,7 +51,7 @@ public class JvueMenu implements Serializable {
 	private byte type;
 	
 	@Column(name="show_nav", nullable=false)
-	private Integer showNav = 0; 
+	private byte showNav = 0; 
 
     @JoinColumn(name="parent_id")
     private Integer parentId;
@@ -136,11 +134,11 @@ public class JvueMenu implements Serializable {
 		this.type = type;
 	}
 
-    public Integer getShowNav() {
+    public byte getShowNav() {
         return showNav;
     }
 
-    public void setShowNav(Integer showNav) {
+    public void setShowNav(byte showNav) {
         this.showNav = showNav;
     }
 

@@ -3,7 +3,7 @@
     <el-col :span="24" class="header">
       <!--<router-view name="top"></router-view>-->
       <el-row>
-        <el-col :span="16" class="logo">
+        <el-col :span="18" class="logo">
           <el-row :gutter="10">
             <el-col :span="2">
               <span class="logo-info-span">JVUE</span>
@@ -17,19 +17,17 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :span="3">
-          <div class="main-top--menu-item logo-div__nav"><i
-            class="fa fa-user"></i>&nbsp;&nbsp;{{userSelf.user.nickname}}
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <el-row style="text-align:center">
-            <el-col>
-              <el-button type="text" @click="signout"><i class="fa fa-power-off"></i>&nbsp;退出登录</el-button>
-              <!--<div class="main-top&#45;&#45;menu-item" @click="signout"><i class="fa fa-power-off"></i>&nbsp;&nbsp;退出登录-->
-              <!--</div>-->
-            </el-col>
-          </el-row>
+        <el-col :span="5" :push="1">
+          <el-dropdown size="small" @command="handleCommand">
+            <span class="el-dropdown-link">
+              <i class="fa fa-user"></i>&nbsp;&nbsp;{{userSelf.user.nickname}}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown" >
+              <el-dropdown-item command="github" >代码地址</el-dropdown-item>
+              <el-dropdown-item command="api" >API地址</el-dropdown-item>
+              <el-dropdown-item command="signout" divided>退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </el-col>
       </el-row>
     </el-col>
@@ -173,6 +171,17 @@ export default {
       this.userSelf.signout().finally(() => {
         this.$router.push('/login?logout')
       })
+    },
+    handleCommand (command) {
+      if (command === 'github') {
+        window.open('https://github.com/ccfish86/jvue-admin')
+      } else if (command === 'api') {
+        window.open('/api/swagger-ui.html')
+      } else if (command === 'signout') {
+        this.signout()
+      } else {
+        console.warn(`未处理：${command}`)
+      }
     }
   }
 }

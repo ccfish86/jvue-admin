@@ -48,10 +48,10 @@ public interface _BaseController<T, ID extends Serializable> {
 
         Pageable page;
         if (StringUtils.isBlank(pageParam.getSort())) {
-            page = new PageRequest(pageParam.getPage(), pageParam.getPageSize());
+            page = PageRequest.of(pageParam.getPage(), pageParam.getPageSize());
         } else {
             Sort sort = new Sort(Direction.ASC, pageParam.getSort());
-            page = new PageRequest(pageParam.getPage(), pageParam.getPageSize(), sort);
+            page = PageRequest.of(pageParam.getPage(), pageParam.getPageSize(), sort);
         }
         
         Page<T> result = baseService().getAll(page);

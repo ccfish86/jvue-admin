@@ -165,7 +165,10 @@ export default {
         add: {
           data() {
             return {
-              form: {}
+              form: {
+                type: 1,
+                showNav: 0
+              }
             }
           },
           async fetch() {
@@ -182,7 +185,39 @@ export default {
             }
           }
         },
-        edit: {},
+        edit: {
+          data() {
+            return {
+              form: {}
+            }
+          },
+          async fetch() {
+            let id = this.app.$route.params['id']
+            const response = await ApiUtils.get(`/api/menu/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.form = data
+              if (data.moduleId) {
+                let menuNames = this.vuet.getModule('sys-menu-names')
+                menuNames.getMenus(data.moduleId)
+              }
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          },
+          async save() {
+            let id = this.app.$route.params['id']
+            let param = this.form
+            const response = await ApiUtils.put(`/api/menu/${id}`, param)
+            let {error, message, data} = response.data
+            if (error === null) {
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          }
+        },
         names: {
           data() {
             return {
