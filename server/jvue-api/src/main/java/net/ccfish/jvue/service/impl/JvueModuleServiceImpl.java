@@ -3,6 +3,7 @@ package net.ccfish.jvue.service.impl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,7 @@ public class JvueModuleServiceImpl
     }
     
     @Override
+    @CacheEvict(value = "JwtUserDetailsService", allEntries = true)
     public void delete(Integer id) {
         // 判断是否在其他表中使用，未使用时，可物理删除；如在menu等表里使用，逻辑删除
         SearchCriteria<JvueMenu> jvueMenuCriteria = new SearchCriteria<>();
@@ -58,6 +60,7 @@ public class JvueModuleServiceImpl
     }
 
     @Override
+    @CacheEvict(value = "JwtUserDetailsService", allEntries = true)
     public void update(Integer id, JvueModule data) {
         // throw new UnsupportedClassVersionError("不支持更新处理");
         Optional<JvueModule> entityResult = jvueModuleRepository.findById(id);

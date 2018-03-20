@@ -5,10 +5,11 @@
       <el-row>
         <el-col :span="18" class="logo">
           <el-row :gutter="10">
-            <el-col :span="2">
-              <span class="logo-info-span">JVUE</span>
+            <el-col :span="5">
+              <div class="logo-info-span"><a href="https://www.hongxinxiangtong.org" target="hxxt">
+                <img src="/static/img/logo-white.png" alt="JVUE" /></a></div>
             </el-col>
-            <el-col :span="20">
+            <el-col :span="18">
               <el-menu :default-active="String(userSelf.moduleId)" mode="horizontal">
                 <el-menu-item v-for="module in userSelf.modules" :index="String(module.id)" :key="module.name"
                               @click="userSelf.changeModule(module.id)">{{module.name}}
@@ -33,7 +34,7 @@
     </el-col>
     <el-col :span="24" class="main">
       <aside>
-        <el-menu :default-active="String(userSelf.active)" router theme="dark" @open="handleOpen" @close="handleClose">
+        <el-menu :default-active="String(userSelf.active)" router theme="dark" @open="handleOpen" @close="handleClose" :default-openeds="userSelf.openeds">
           <template v-for="router in userSelf.leftRoutes">
             <el-submenu :index="router.path" :key="router.path"
                         v-if="router.children && router.children instanceof Array && router.children.length > 0">
@@ -51,7 +52,10 @@
         </div>
       </aside>
       <section class="content-container">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb separator-class="el-icon-arrow-right" v-if="$route.matched.length > 0">
+          <el-breadcrumb-item class="breadcrumb-inner" to="/">
+            首页
+          </el-breadcrumb-item>
           <el-breadcrumb-item class="breadcrumb-inner" v-for="item in $route.matched" v-if="item.meta.name"
                               :to="item.path? item: {path: '/'}" :key="item.path">
             {{item.meta.name}}
@@ -114,6 +118,14 @@
     .content-container {
       left: 180px;
     }
+  }
+  .logo-info-span {
+    background: #2c3e50;
+    padding:5px 2px;
+  }
+  .logo-info-span a>img{
+    width: 95%;
+    max-width: 262px;
   }
   /* 路由切换动效 */
   .fade-leave-active {

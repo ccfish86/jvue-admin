@@ -23,7 +23,8 @@ export default {
           routers: [],
           leftRoutes: [],
           moduleId: null,
-          active: ''
+          active: '',
+          openeds: []
         }
       },
       async fetch () {
@@ -69,12 +70,14 @@ export default {
         if (this.moduleId !== moduleId) {
           this.moduleId = moduleId
           this.leftRoutes = []
+          this.openeds = []
           // 只需要处理第一层，第二层
           this.routers.forEach(router => {
             if (router.meta && router.meta.moduleId === moduleId && router.meta.showNav === 1) {
               // console.info(`router.meta.showNav = ${router.meta.showNav}`)
               let nrouter = Object.assign(router)
               if (nrouter.children) {
+                this.openeds.push(router.path)
                 nrouter.children = nrouter.children.filter((r) => r.meta && r.meta.showNav === 1)
               }
               this.leftRoutes.push(nrouter)

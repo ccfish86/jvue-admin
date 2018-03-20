@@ -20,9 +20,9 @@
         <el-input v-model="menuAdd.form.name" data-vv-name="menuName" v-validate
                   data-vv-rules="required|max:20"></el-input>
       </el-form-item>
-      <el-form-item label="画面类型" :error="errors.first('menuType')" data-vv-name="menuType" v-validate
-                    data-vv-rules="required">
-        <el-radio-group size="small" v-model="menuAdd.form.type">
+      <el-form-item label="画面类型" :error="errors.first('menuType')">
+        <el-radio-group size="small" v-model="menuAdd.form.type" data-vv-name="menuType" v-validate
+                        data-vv-rules="required">
           <el-radio-button :label="1">菜单</el-radio-button>
           <el-radio-button :label="2">画面</el-radio-button>
           <el-radio-button :label="3">菜单+画面</el-radio-button>
