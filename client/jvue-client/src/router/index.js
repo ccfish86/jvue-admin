@@ -38,13 +38,18 @@ router.beforeEach(({meta, path, name}, from, next) => {
   let { auth = true } = meta
   if (userSelf.user && userSelf.user.token) {
     // 已登录
-    return next()
+    // return next()
   } else {
     if (auth) {
       return next({ path: '/login' })
     } else {
-      return next()
+      // return next()
     }
   }
+  if (meta && from.meta && meta.moduleId !== from.meta.moduleId) {
+    // 处理导航与画面同步
+    userSelf.changeModule(meta.moduleId)
+  }
+  return next()
 })
 export default router
