@@ -119,7 +119,7 @@ export default {
             }
           },
           async fetch() {
-            const response = await ApiUtils.get('/api/module/names')
+            const response = await ApiUtils.get('/api/module/ext/names')
             let {status, data = {}} = response
             if (status === 200 && data.error === null) {
               this.list = data.data || []
@@ -225,7 +225,7 @@ export default {
             }
           },
           async getMenus(moduleId) {
-            const response = await ApiUtils.get('/api/menu/names', {moduleId})
+            const response = await ApiUtils.get('/api/menu/ext/names', {moduleId})
             let {status, data = {}} = response
             if (status === 200 && data.error === null) {
               this.list = data.data || []

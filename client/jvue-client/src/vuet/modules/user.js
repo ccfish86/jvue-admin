@@ -52,9 +52,16 @@ export default {
           this.menus = menus
           this.modules = modules
           // this.refreshRoutes()
-          let userRouters = utils.toRoutes(this.menus)
-          await this.app.$router.addRoutes(userRouters)
-          this.routers = userRouters
+          let userRoutes = utils.toRoutes(this.menus)
+          // 追加404
+          userRoutes.push({
+            path: '*',
+            meta: {auth: false},
+            hidden: true,
+            redirect: {path: '/error/404'}
+          })
+          await this.app.$router.addRoutes(userRoutes)
+          this.routers = userRoutes
           this.changeModule()
           return data.data
         } else {
@@ -90,6 +97,8 @@ export default {
       },
       reloadRouters () {
         if (this.menus && this.menus.length > 0) {
+          //  判断用户登录状态，如果未登录/登录失败，仅localStorage里有缓存的话，直接跳登录，不再加载动态路由
+          // TODO 判断用户登录状态
           let userRoutes = utils.toRoutes(this.menus)
           // 追加404
           userRoutes.push({

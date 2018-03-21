@@ -7,7 +7,10 @@ import vuet from '@/vuet/'
 // 指定header等参数时，在跨域等场合时，需要服务器端支持，这儿配置的为同域不跨域的主要接口
 const axios = Axios.create({
   withCredentials: true,
-  timeout: 10000
+  timeout: 10000,
+  headers: {
+    'Accept': 'application/json;charset=utf-8'
+  }
 })
 
 axios.interceptors.request.use(async config => {

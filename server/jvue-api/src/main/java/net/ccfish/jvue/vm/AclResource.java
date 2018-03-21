@@ -5,6 +5,9 @@
 package net.ccfish.jvue.vm;
 
 import java.io.Serializable;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 资源定义
@@ -34,6 +37,19 @@ public class AclResource implements Serializable {
     private String code;
     
     private Type type;
+
+    // 除服务器端外，不直接暴露给客户端（如需要该信息，请使用Swagger2）
+    @JsonIgnore
+    private String[] path = {};
+    
+    // 除服务器端外，不直接暴露给客户端（如需要该信息，请使用Swagger2）
+    @JsonIgnore
+    private Set<String> pattern;
+
+    // 除服务器端外，不直接暴露给客户端（如需要该信息，请使用Swagger2）
+    @JsonIgnore
+    private String[] method;
+    
     /**
      * @return the id
      */
@@ -82,5 +98,23 @@ public class AclResource implements Serializable {
     public void setType(Type type) {
         this.type = type;
     }
-    
+    public String[] getPath() {
+        return path;
+    }
+    public void setPath(String[] path) {
+        this.path = path;
+    }
+    public String[] getMethod() {
+        return method;
+    }
+    public void setMethod(String[] method) {
+        this.method = method;
+    }
+    public Set<String> getPattern() {
+        return pattern;
+    }
+    public void setPattern(Set<String> pattern) {
+        this.pattern = pattern;
+    }
+
 }

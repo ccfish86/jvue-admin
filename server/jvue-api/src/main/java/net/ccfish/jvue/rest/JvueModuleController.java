@@ -43,7 +43,8 @@ public class JvueModuleController implements _BaseController<JvueModule, Integer
         return this.jvueModuleService;
     }
     
-    @GetMapping("names") 
+    @AclResc(id = 11, code = "names", name = "名字列表")
+    @GetMapping("/ext/names") 
     public BaseModel<List<CodeDto<Integer>>> names(){
         List<JvueModule> modules = jvueModuleService.getAll();
         List<CodeDto<Integer>> codeList = new ArrayList<>();

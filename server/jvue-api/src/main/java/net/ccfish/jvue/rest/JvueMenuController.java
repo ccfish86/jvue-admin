@@ -44,7 +44,8 @@ public class JvueMenuController implements _BaseController<JvueMenu, Integer> {
         return this.jvueMenuService;
     }
     
-    @GetMapping("names")
+    @AclResc(id = 11, code = "names", name = "名字列表")
+    @GetMapping("/ext/names")
     public BaseModel<List<CodeDto<Integer>>> names(@RequestParam("moduleId") Integer moduleId){
         List<JvueMenu> menus = jvueMenuService.findByModule(moduleId);
         List<CodeDto<Integer>> codeList = new ArrayList<>();

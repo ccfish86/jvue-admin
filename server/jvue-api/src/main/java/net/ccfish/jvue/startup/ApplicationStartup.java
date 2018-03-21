@@ -3,6 +3,8 @@ package net.ccfish.jvue.startup;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
@@ -15,7 +17,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
+import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -143,7 +148,8 @@ public class ApplicationStartup implements CommandLineRunner {
             Map<RequestMappingInfo, HandlerMethod> map =
                     requestMappingHandlerMapping.getHandlerMethods();
             for (RequestMappingInfo info : map.keySet()) {
-                AclResc moduleAclResc = map.get(info).getBeanType().getAnnotation(AclResc.class);
+                HandlerMethod handlerMethod = map.get(info);
+                AclResc moduleAclResc = handlerMethod.getBeanType().getAnnotation(AclResc.class);
 
                 if (moduleAclResc != null) {
 
@@ -151,7 +157,7 @@ public class ApplicationStartup implements CommandLineRunner {
                             moduleAclResc.code(), moduleAclResc.name());
                     Collection<AclResource> resources = resourcesMap.get(moduleAclResc.id());
 
-                    Class<?> aclResourceClass = map.get(info).getBeanType();
+                    Class<?> aclResourceClass = handlerMethod.getBeanType();
                     RequestMapping moduleMapping =
                             aclResourceClass.getAnnotation(RequestMapping.class);
 
@@ -163,23 +169,35 @@ public class ApplicationStartup implements CommandLineRunner {
                         moduleResc.setType(AclResource.Type.MODULE);
                         moduleResc.setCode(moduleAclResc.code());
                         moduleResc.setName(moduleAclResc.name());
-
+                        
                         resourcesMap.put(moduleAclResc.id(), moduleResc);
                     }
 
                     if (moduleMapping != null) {
 
-                        Method method = map.get(info).getMethod();
+                        Method method = handlerMethod.getMethod();
                         AclResc methodAclResc = method.getAnnotation(AclResc.class);
+                        
                         if (methodAclResc != null) {
 
                             logger.debug("load resource: id={}, code={}, name={}",
                                     methodAclResc.id(), methodAclResc.code(), methodAclResc.name());
+                            
+                            // TODO 需要后续处理的事项，有一部分字段，与Swagger2重复，仅需保留Swagger2定义的一部分，便于开发与维护
+                            
                             AclResource methodResc = new AclResource();
                             methodResc.setId(moduleAclResc.id() + methodAclResc.id());
                             methodResc.setType(AclResource.Type.METHOD);
                             methodResc.setCode(moduleAclResc.code() + methodAclResc.code());
                             methodResc.setName(moduleAclResc.name() + methodAclResc.name());
+                            
+                            // URL和请求方法
+                            PatternsRequestCondition pattern = info.getPatternsCondition();
+                            RequestMethodsRequestCondition methods = info.getMethodsCondition();
+                            
+                            methodResc.setPattern(pattern.getPatterns());
+                            // methodResc.setPath(moduleMapping.path());
+                            methodResc.setMethod(toString(methods.getMethods()));
 
                             resourcesMap.put(moduleAclResc.id(), methodResc);
                         }
@@ -191,5 +209,19 @@ public class ApplicationStartup implements CommandLineRunner {
             ilock.unlock();
         }
         // addModule(resourcesMap);
+    }
+
+    /**
+     * @param methods
+     * @return
+     * @since  1.0
+     */
+    private String[] toString(Set<RequestMethod> methods) {
+        if (methods == null || methods.size() == 0) {
+            return null;
+        }
+        
+        String[] strMethods = methods.stream().map(m -> m.name()).toArray(String[]::new);
+        return strMethods;
     }
 }

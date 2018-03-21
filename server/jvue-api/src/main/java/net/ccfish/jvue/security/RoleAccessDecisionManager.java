@@ -5,6 +5,7 @@
 package net.ccfish.jvue.security;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,12 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
+import org.springframework.web.util.UrlPathHelper;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.MultiMap;
@@ -33,6 +39,9 @@ import net.ccfish.jvue.vm.AclResource;
 public class RoleAccessDecisionManager implements AccessDecisionManager {
 
     private final Logger logger = LoggerFactory.getLogger(RoleAccessDecisionManager.class);
+
+    private final UrlPathHelper pathHelper = new UrlPathHelper();
+    private final PathMatcher pathMatcher = new AntPathMatcher();
     
     @Autowired
     private HazelcastInstance hazelcastInstance;
@@ -46,27 +55,84 @@ public class RoleAccessDecisionManager implements AccessDecisionManager {
         // TODO Auto-generated method stub
         logger.debug("arg0 {}, arg1 {}, arg2 {}", authentication, arg1, arg2);
         // 逻辑
-        
-        // 1.判断URL对应的权限定义
-        MultiMap<Integer, AclResource> resourcesMap =
-                hazelcastInstance.getMultiMap("acl-resource");
-        // >> arg1 FilterInvocation: URL: /module?page=0&pageSize=10
-        // >> 如果不需要登录的话，直接放行
-        
+        if (arg1 instanceof FilterInvocation) {
+            // HTTP filter object
+            FilterInvocation filterInvocation = (FilterInvocation) arg1;
+            
+//            // 1.判断是否为超级管理员，是的话直接放行
+//            if (authentication.getPrincipal() instanceof JwtUserDetails) {
+//                JwtUserDetails jwtUser = (JwtUserDetails) authentication.getPrincipal();
+//                if (jwtUser.getSuperUser() == JvueDataStatus.SUPER_USER_TRUE) {
+//                    // 放行
+//                    logger.debug("SUPER_USER_TRUE");
+//                    return ;
+//                }
+//            }
+            
+            // 1.判断URL对应的权限定义
+            MultiMap<Integer, AclResource> resourcesMap =
+                    hazelcastInstance.getMultiMap("acl-resource");
+            // >> arg1 FilterInvocation: URL: /module?page=0&pageSize=10
+            // >> 如果不需要登录的话，直接放行
+            String requestUrl = filterInvocation.getRequestUrl();
+            String requestMethod = filterInvocation.getRequest().getMethod();
+            
+            String apiCode = "";
+            logger.debug("访问接口:{} {}", requestUrl, requestMethod);
+            
+            for (AclResource ar: resourcesMap.values()) {
+                if (ar.getType() == AclResource.Type.METHOD) {
+                    //pathHelper.
+                    boolean isUrl = false;
+                    boolean isMethod = false;
+                    
+                    logger.debug("判断接口:{} {} {}, {}", ar.getCode(), ar.getName(), ar.getPath(), ar.getPattern());
 
-        // 2.判断是否为超级管理员，是的话直接放行
-        if (authentication.getPrincipal() instanceof JwtUserDetails) {
-            JwtUserDetails jwtUser = (JwtUserDetails) authentication.getPrincipal();
-            if (jwtUser.getSuperUser() == JvueDataStatus.SUPER_USER_TRUE) {
-                // 放行
-                return ;
+                    for (String path : ar.getPattern()) {
+                        isUrl = pathMatcher.match(path, requestUrl);
+                        if (isUrl) {
+                            break;
+                        }
+                    }
+                    if (isUrl) {
+                        if (ar.getMethod() != null) {
+                            for (String method: ar.getMethod()) {
+                                if (Objects.equals(method, requestMethod)){
+                                    isMethod = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            isMethod = true;
+                        }
+                    }
+                    
+                    if (isUrl && isMethod) {
+                        // 已匹配
+                        apiCode = ar.getCode();
+                        logger.debug("已匹配接口:{} > {} {}", requestUrl, ar.getCode(), ar.getName());
+                        break;
+                    }
+                }
             }
+            
+            // 2.判断是否为超级管理员，是的话直接放行
+            if (authentication.getPrincipal() instanceof JwtUserDetails) {
+                JwtUserDetails jwtUser = (JwtUserDetails) authentication.getPrincipal();
+                if (jwtUser.getSuperUser() == JvueDataStatus.SUPER_USER_TRUE) {
+                    // 放行
+                    logger.debug("SUPER_USER_TRUE");
+                    return ;
+                }
+            }
+            
+            // 处理 apiCode与角色匹配
+            
+            // 3.获取用户的角色，通过比对角色授予的API接口ID和AclResource里定义的ID，有匹配则放行
+            
+            // 4.上述以外，禁止调用
+            // TODO throw new AccessDeniedException("no role");
         }
-        
-        // 3.获取用户的角色，通过比对角色授予的API接口ID和AclResource里定义的ID，有匹配则放行
-        
-        // 4.上述以外，禁止调用
-        // TODO throw new AccessDeniedException("no role");
     }
 
     /* (non-Javadoc)
