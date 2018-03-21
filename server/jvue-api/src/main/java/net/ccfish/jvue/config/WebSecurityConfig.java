@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,13 +13,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import net.ccfish.jvue.security.EntryPointUnauthorizedHandler;
 import net.ccfish.jvue.security.JwtAuthenticationTokenFilter;
 import net.ccfish.jvue.security.RestAccessDeniedHandler;
 import net.ccfish.jvue.security.RestLogoutSuccessHandler;
+import net.ccfish.jvue.security.RoleAccessDecisionManager;
 
 /**
  * 安全模块配置
@@ -38,6 +40,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final EntryPointUnauthorizedHandler entryPointUnauthorizedHandler;
     private final RestAccessDeniedHandler restAccessDeniedHandler;
     private final RestLogoutSuccessHandler logoutSuccessHandler;
+    
+    @Autowired
+    private RoleAccessDecisionManager accessDecisionManager;
 
     @Autowired
     public WebSecurityConfig(UserDetailsService userDetailsService,
@@ -69,9 +74,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         
         httpSecurity
             .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            .and()
-//            .disable()
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//            .and()
+                .disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/login").permitAll()
@@ -86,6 +91,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**","/**/favicon.ico", "/webjars/**").permitAll()
                 .antMatchers("/**").authenticated()
                 .anyRequest().authenticated()
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                        object.setAccessDecisionManager(accessDecisionManager);
+                        return object;
+                    }
+                    
+                })
 //            .and().rememberMe()
             .and().logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler)
             .and()
