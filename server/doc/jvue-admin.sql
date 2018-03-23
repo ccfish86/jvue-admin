@@ -1,5 +1,5 @@
 ﻿# Host: 192.168.10.9  (Version 5.7.18)
-# Date: 2018-02-05 13:46:00
+# Date: 2018-03-23 18:57:36
 # Generator: MySQL-Front 6.0  (Build 1.163)
 
 
@@ -9,16 +9,12 @@
 
 CREATE TABLE `jvue_api` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '画面菜单ID',
+  `api_id` int(11) NOT NULL DEFAULT '0' COMMENT '接口编码',
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT '画面接口名',
-  `menu_id` int(11) DEFAULT NULL COMMENT '画面菜单ID',
-  `api_code` char(8) DEFAULT NULL COMMENT '接口编码',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='画面接口';
-
-#
-# Data for table "jvue_api"
-#
-
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `api_m_a_idx` (`menu_id`,`api_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='画面接口';
 
 #
 # Structure for table "jvue_menu"
@@ -34,16 +30,11 @@ CREATE TABLE `jvue_menu` (
   `icon_class` varchar(64) DEFAULT NULL COMMENT '图标',
   `parent_id` int(11) DEFAULT NULL COMMENT '父菜单',
   `enabled` tinyint(1) DEFAULT '1' COMMENT '是否有效',
+  `show_nav` tinyint(1) NOT NULL DEFAULT '1' COMMENT '菜单里显示',
   PRIMARY KEY (`id`),
   KEY `parentId` (`parent_id`),
   CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `jvue_menu` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COMMENT='画面菜单';
-
-#
-# Data for table "jvue_menu"
-#
-
-INSERT INTO `jvue_menu` VALUES (1,0,1,'/home','home-index','首页',NULL,NULL,1),(29,1,1,'/sys','common-main','模块LAYOUT',NULL,NULL,1),(30,2,1,'/user','common-main','用户LAYOUT',NULL,NULL,1),(31,1,1,'/sys/module','sys-module-index','模块列表',NULL,29,1),(32,2,1,'/user/list','user-index','用户列表',NULL,30,1),(33,1,1,'/sys/menu','sys-munu-index','画面列表',NULL,29,1),(34,1,1,'/sys/api','sys-api-index','接口列表',NULL,29,1);
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COMMENT='画面菜单';
 
 #
 # Structure for table "jvue_module"
@@ -54,13 +45,7 @@ CREATE TABLE `jvue_module` (
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT '模块名',
   `enabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='模块';
-
-#
-# Data for table "jvue_module"
-#
-
-INSERT INTO `jvue_module` VALUES (1,'系统管理',1),(2,'用户管理',1);
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COMMENT='模块';
 
 #
 # Structure for table "jvue_role"
@@ -69,13 +54,9 @@ INSERT INTO `jvue_module` VALUES (1,'系统管理',1),(2,'用户管理',1);
 CREATE TABLE `jvue_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) DEFAULT NULL COMMENT '角色名',
+  `enabled` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否启用',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色';
-
-#
-# Data for table "jvue_role"
-#
-
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='角色';
 
 #
 # Structure for table "jvue_role_api"
@@ -89,11 +70,6 @@ CREATE TABLE `jvue_role_api` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色对应接口权限';
 
 #
-# Data for table "jvue_role_api"
-#
-
-
-#
 # Structure for table "jvue_role_memu"
 #
 
@@ -103,11 +79,6 @@ CREATE TABLE `jvue_role_memu` (
   `memu_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色对应画面菜单';
-
-#
-# Data for table "jvue_role_memu"
-#
-
 
 #
 # Structure for table "jvue_role_segment"
@@ -121,25 +92,17 @@ CREATE TABLE `jvue_role_segment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色对应画面片段';
 
 #
-# Data for table "jvue_role_segment"
-#
-
-
-#
 # Structure for table "jvue_segment"
 #
 
 CREATE TABLE `jvue_segment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '画面菜单ID',
+  `segment_id` int(11) NOT NULL DEFAULT '0' COMMENT '片段ID，画面内唯一',
   `name` varchar(64) DEFAULT NULL COMMENT '画面片段名',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `segment_m_s_idx` (`menu_id`,`segment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='画面片断';
-
-#
-# Data for table "jvue_segment"
-#
-
 
 #
 # Structure for table "user"
@@ -157,12 +120,6 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='用户';
 
 #
-# Data for table "user"
-#
-
-INSERT INTO `user` VALUES (3,'admin','4ae85175a2fac63b49644969c3e97fb2757b17ceb48a1ab36f16e530963fce41db2b2f40ce911809',NULL,1,'jvue super admin user',1);
-
-#
 # Structure for table "user_role"
 #
 
@@ -172,8 +129,3 @@ CREATE TABLE `user_role` (
   `role_id` int(11) NOT NULL DEFAULT '0' COMMENT '角色',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户权限';
-
-#
-# Data for table "user_role"
-#
-
