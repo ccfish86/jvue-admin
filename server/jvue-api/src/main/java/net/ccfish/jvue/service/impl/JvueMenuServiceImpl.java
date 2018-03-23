@@ -67,7 +67,7 @@ public class JvueMenuServiceImpl implements JvueMenuService {
     }
 
     @Override
-    public void update(Integer id, JvueMenu data) {
+    public JvueMenu update(Integer id, JvueMenu data) {
         // throw new UnsupportedClassVersionError("不支持更新处理");
         Optional<JvueMenu> menuResult = jvueMenuRepository.findById(id);
         if (menuResult.isPresent()) {
@@ -81,7 +81,8 @@ public class JvueMenuServiceImpl implements JvueMenuService {
             menu.setShowNav(data.getShowNav());
             menu.setType(data.getType());
             menu.setEnabled(data.getEnabled());
-            jvueMenuRepository.save(menu);
+            return jvueMenuRepository.save(menu);
         }
+        return null;
     }
 }

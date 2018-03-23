@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <el-table :data="apiList.list" v-loading="apiList.loading" empty-text="没有您要查询的数据"
+    <el-table :data="segmentList.list" v-loading="segmentList.loading" empty-text="没有您要查询的数据"
               size="small" border stripe>
       <el-table-column prop="id" label="ID" align="center" width="95">
       </el-table-column>
@@ -10,7 +10,7 @@
       <el-table-column prop="menuId" label="画面名" align="left" min-width="120">
         <template slot-scope="scope">{{scope.row.menuId|menuName}}</template>
       </el-table-column>
-      <el-table-column prop="apiId" label="接口ID" align="left" min-width="70">
+      <el-table-column prop="segmentId" label="接口ID" align="left" min-width="70">
       </el-table-column>
       <el-table-column prop="name" label="接口名" align="left" min-width="120">
       </el-table-column>
@@ -21,10 +21,10 @@
         <el-pagination layout="total, sizes, prev, pager, next, jumper" background
                        @size-change="handleSizeChange"
                        @current-change="handleCurrentChange"
-                       :current-page="apiList.searchForm.page"
+                       :current-page="segmentList.searchForm.page"
                        :page-sizes="[1, 10, 50, 100, 200, 400]"
-                       :page-size="apiList.searchForm.pageSize"
-                       :total="apiList.searchForm.totalCount">
+                       :page-size="segmentList.searchForm.pageSize"
+                       :total="segmentList.searchForm.totalCount">
         </el-pagination>
       </el-col>
     </el-row>
@@ -37,8 +37,8 @@ import filters from '../common/filters'
 export default {
   name: 'index',
   mixins: [
-    mapModules({apiList: 'sys-api-list'}),
-    mapRules({route: 'sys-api-list', need: 'sys-menu-names'})
+    mapModules({segmentList: 'sys-segment-list'}),
+    mapRules({route: 'sys-segment-list', need: 'sys-menu-names'})
   ],
   filters: {
     menuName: (menuId) => {
@@ -47,18 +47,18 @@ export default {
   },
   methods: {
     handleSizeChange (newSize) {
-      this.apiList.searchForm.pageSize = newSize
-      this.apiList.fetch()
+      this.segmentList.searchForm.pageSize = newSize
+      this.segmentList.fetch()
     },
     handleCurrentChange (newPage) {
-      this.apiList.searchForm.page = newPage
-      this.apiList.fetch()
+      this.segmentList.searchForm.page = newPage
+      this.segmentList.fetch()
     },
     showDetail (id) {
-      this.$router.push(`/sys/api/detail/${id}`)
+      this.$router.push(`/sys/segment/detail/${id}`)
     },
     edit (id) {
-      this.$router.push(`/sys/api/edit/${id}`)
+      this.$router.push(`/sys/segment/edit/${id}`)
     }
   }
 }

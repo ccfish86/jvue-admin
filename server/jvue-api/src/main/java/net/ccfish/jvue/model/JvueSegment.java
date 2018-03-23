@@ -21,6 +21,9 @@ public class JvueSegment implements Serializable {
 
 	@Column(name="menu_id", nullable=false)
 	private Integer menuId;
+	
+    @Column(name="segment_id", nullable=false)
+    private Integer segmentId;
 
 	@Column(length=64)
 	private String name;
@@ -44,7 +47,15 @@ public class JvueSegment implements Serializable {
 		this.menuId = menuId;
 	}
 
-	public String getName() {
+	public Integer getSegmentId() {
+        return segmentId;
+    }
+
+    public void setSegmentId(Integer segmentId) {
+        this.segmentId = segmentId;
+    }
+
+    public String getName() {
 		return this.name;
 	}
 

@@ -45,15 +45,17 @@ public interface _AbstractService<T, ID extends Serializable> {
         jpaRepository().deleteById(id);
     }
 
-    default void save(T obj) {
-        jpaRepository().save(obj);
+    default T save(T obj) {
+        T data = jpaRepository().save(obj);
+        return data;
     }
 
-    default void save(List<T> objs) {
-        jpaRepository().saveAll(objs);
+    default List<T> save(List<T> objs) {
+        List<T> datas = jpaRepository().saveAll(objs);
+        return datas;
     }
 
-    default void update(ID id, T data) {
+    default T update(ID id, T data) {
         throw new UnsupportedClassVersionError("不支持更新处理");
     }
 }

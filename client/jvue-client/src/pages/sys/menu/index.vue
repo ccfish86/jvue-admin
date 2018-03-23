@@ -30,7 +30,6 @@
         <el-table-column label="操作" align="center" width="200" fixed="right">
           <template slot-scope="scope">
             <el-button-group>
-              <el-button type="primary" size="mini" @click="showDetail(scope.row.id)">详情</el-button>
               <el-button type="success" size="mini" @click="edit(scope.row.id)">编辑</el-button>
             </el-button-group>
           </template>

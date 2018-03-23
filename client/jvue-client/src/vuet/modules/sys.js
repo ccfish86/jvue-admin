@@ -5,7 +5,7 @@ export default {
     module: {
       modules: {
         list: {
-          data() {
+          data () {
             return {
               searchForm: {
                 page: 1,
@@ -17,7 +17,7 @@ export default {
               list: []
             }
           },
-          async fetch() {
+          async fetch () {
             this.loading = true
             const param = {
               page: this.searchForm.page - 1,
@@ -35,7 +35,7 @@ export default {
               this.list = data.data || []
             }
           },
-          async del(id) {
+          async del (id) {
             const response = await ApiUtils.delete(`/api/module/${id}`)
             let {error, message, data} = response.data
             if (error === null) {
@@ -46,15 +46,15 @@ export default {
           }
         },
         add: {
-          data() {
+          data () {
             return {
               form: {}
             }
           },
-          async fetch() {
+          async fetch () {
             // 初始化信息
           },
-          async save() {
+          async save () {
             let param = this.form
             const response = await ApiUtils.post('/api/module', param)
             let {error, message, data} = response.data
@@ -66,12 +66,12 @@ export default {
           }
         },
         detail: {
-          data() {
+          data () {
             return {
               detail: {}
             }
           },
-          async fetch() {
+          async fetch () {
             let id = this.app.$route.params['id']
             const response = await ApiUtils.get(`/api/module/${id}`)
             let {error, message, data} = response.data
@@ -84,12 +84,12 @@ export default {
           }
         },
         edit: {
-          data() {
+          data () {
             return {
               form: {}
             }
           },
-          async fetch() {
+          async fetch () {
             let id = this.app.$route.params['id']
             const response = await ApiUtils.get(`/api/module/${id}`)
             let {error, message, data} = response.data
@@ -100,7 +100,7 @@ export default {
               Promise.reject(message)
             }
           },
-          async save() {
+          async save () {
             let id = this.app.$route.params['id']
             let param = this.form
             const response = await ApiUtils.put(`/api/module/${id}`, param)
@@ -113,12 +113,12 @@ export default {
           }
         },
         names: {
-          data() {
+          data () {
             return {
               list: []
             }
           },
-          async fetch() {
+          async fetch () {
             const response = await ApiUtils.get('/api/module/ext/names')
             let {status, data = {}} = response
             if (status === 200 && data.error === null) {
@@ -131,7 +131,7 @@ export default {
     menu: {
       modules: {
         list: {
-          data() {
+          data () {
             return {
               searchForm: {
                 page: 1,
@@ -143,7 +143,7 @@ export default {
               list: []
             }
           },
-          async fetch() {
+          async fetch () {
             this.loading = true
             const param = {
               page: this.searchForm.page - 1,
@@ -163,7 +163,7 @@ export default {
           }
         },
         add: {
-          data() {
+          data () {
             return {
               form: {
                 type: 1,
@@ -171,10 +171,10 @@ export default {
               }
             }
           },
-          async fetch() {
+          async fetch () {
             // 初始化信息
           },
-          async save() {
+          async save () {
             let param = this.form
             const response = await ApiUtils.post('/api/menu', param)
             let {error, message, data} = response.data
@@ -186,12 +186,14 @@ export default {
           }
         },
         edit: {
-          data() {
+          data () {
             return {
-              form: {}
+              form: {},
+              apis: [],
+              segments: []
             }
           },
-          async fetch() {
+          async fetch () {
             let id = this.app.$route.params['id']
             const response = await ApiUtils.get(`/api/menu/${id}`)
             let {error, message, data} = response.data
@@ -206,7 +208,41 @@ export default {
               Promise.reject(message)
             }
           },
-          async save() {
+          async loadApis() {
+            let id = this.app.$route.params['id']
+            const response = await ApiUtils.get(`/api/menu/ext/api/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.apis = data.map(d => d.apiId)
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          },
+          async loadSegments() {
+            let id = this.app.$route.params['id']
+            const response = await ApiUtils.get(`/api/menu/ext/segment/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.segments = data
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          },
+          async saveApis() {
+            let id = this.app.$route.params['id']
+            let params = {apis: this.apis}
+            const response = await ApiUtils.put(`/api/menu/ext/api/${id}`, params)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.apis = data.map(d => d.apiId)
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          },
+          async save () {
             let id = this.app.$route.params['id']
             let param = this.form
             const response = await ApiUtils.put(`/api/menu/${id}`, param)
@@ -216,15 +252,48 @@ export default {
             } else {
               Promise.reject(message)
             }
+          },
+          async addSegment(segmentId, name) {
+            let id = this.app.$route.params['id']
+            let param = {
+              menuId: id,
+              segmentId,
+              name
+            }
+            const response = await ApiUtils.post(`/api/segment`, param)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.segments.push(data)
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          },
+          async removeSegment(id, index) {
+            const response = await ApiUtils.delete(`/api/segment/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.segments.splice(index, 1)
+              return data
+            } else {
+              Promise.reject(message)
+            }
           }
         },
         names: {
-          data() {
+          data () {
             return {
               list: {}
             }
           },
-          async getMenus(moduleId) {
+          async fetch() {
+            const response = await ApiUtils.get('/api/menu/ext/names')
+            let {status, data = {}} = response
+            if (status === 200 && data.error === null) {
+              this.list = data.data || []
+            }
+          },
+          async getMenus (moduleId) {
             const response = await ApiUtils.get('/api/menu/ext/names', {moduleId})
             let {status, data = {}} = response
             if (status === 200 && data.error === null) {
@@ -237,7 +306,7 @@ export default {
     api: {
       modules: {
         list: {
-          data() {
+          data () {
             return {
               searchForm: {
                 page: 1,
@@ -249,7 +318,7 @@ export default {
               list: []
             }
           },
-          async fetch() {
+          async fetch () {
             this.loading = true
             const param = {
               page: this.searchForm.page - 1,
@@ -270,6 +339,62 @@ export default {
         },
         add: {},
         edit: {}
+      }
+    },
+    segment: {
+      modules: {
+        list: {
+          data () {
+            return {
+              searchForm: {
+                page: 1,
+                pageSize: 10,
+                pageCount: 0,
+                totalCount: 0
+              },
+              loading: false,
+              list: []
+            }
+          },
+          async fetch () {
+            this.loading = true
+            const param = {
+              page: this.searchForm.page - 1,
+              pageSize: this.searchForm.pageSize
+            }
+
+            const response = await ApiUtils.get('/api/segment', param)
+            this.loading = false
+            let {status, data = {}} = response
+            if (status === 200 && data.error === null) {
+              this.searchForm.page = data.pageNum + 1
+              this.searchForm.pageSize = data.pageSize
+              this.searchForm.pageCount = data.pages
+              this.searchForm.totalCount = data.total
+              this.list = data.data || []
+            }
+          }
+        },
+        add: {},
+        edit: {}
+      }
+    },
+    acl: {
+      modules: {
+        list: {
+          data () {
+            return {
+              list: []
+            }
+          },
+          async fetch() {
+            const response = await ApiUtils.get('/api/acl')
+            let {error, message, data = []} = response.data
+            if (error === null) {
+              this.list = data
+            }
+          }
+        }
       }
     }
   }

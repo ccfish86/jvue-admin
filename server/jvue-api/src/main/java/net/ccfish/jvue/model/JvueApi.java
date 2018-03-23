@@ -19,10 +19,10 @@ public class JvueApi implements Serializable {
 	@Column(unique=true, nullable=false)
 	private Integer id;
 
-	@Column(name="api_code", length=8, columnDefinition="char")
-	private String apiCode;
+	@Column(name="api_id", nullable=false)
+	private Integer apiId;
 
-	@Column(name="menu_id")
+	@Column(name="menu_id", nullable=false)
 	private Integer menuId;
 
 	@Column(nullable=false, length=64)
@@ -39,15 +39,15 @@ public class JvueApi implements Serializable {
 		this.id = id;
 	}
 
-	public String getApiCode() {
-		return this.apiCode;
-	}
+	public Integer getApiId() {
+        return apiId;
+    }
 
-	public void setApiCode(String apiCode) {
-		this.apiCode = apiCode;
-	}
+    public void setApiId(Integer apiId) {
+        this.apiId = apiId;
+    }
 
-	public Integer getMenuId() {
+    public Integer getMenuId() {
 		return this.menuId;
 	}
 

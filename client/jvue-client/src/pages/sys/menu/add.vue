@@ -67,7 +67,10 @@
           if (result) {
             this.menuAdd.save().then((res) => {
               this.$message(messages.messageSaveSuccess())
-              this.menuAdd.reset()
+              // 跳转至编辑画面
+              let id = res.id
+              this.$router.push(`/sys/menu/edit/${id}`)
+              // this.menuAdd.reset()
             }).catch((err) => {
               this.$notify({
                 title: '警告',

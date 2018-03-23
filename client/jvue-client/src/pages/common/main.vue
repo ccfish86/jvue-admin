@@ -5,16 +5,17 @@
       <el-row>
         <el-col :span="18" class="logo">
           <el-row :gutter="10">
-            <el-col :span="5">
+            <el-col :span="24">
               <div class="logo-info-span"><a href="https://www.hongxinxiangtong.org" target="hxxt">
-                <img src="/static/img/logo-white.png" alt="JVUE" /></a></div>
-            </el-col>
-            <el-col :span="18">
-              <el-menu :default-active="String(userSelf.moduleId)" mode="horizontal">
-                <el-menu-item v-for="module in userSelf.modules" :index="String(module.id)" :key="module.name"
-                              @click="userSelf.changeModule(module.id)">{{module.name}}
-                </el-menu-item>
-              </el-menu>
+                <img src="/static/img/logo-white.png" alt="JVUE" /></a>
+              </div>
+              <div>
+                <el-menu :default-active="String(userSelf.moduleId)" mode="horizontal">
+                  <el-menu-item v-for="module in userSelf.modules" :index="String(module.id)" :key="module.name"
+                                @click="userSelf.changeModule(module.id)">{{module.name}}
+                  </el-menu-item>
+                </el-menu>
+              </div>
             </el-col>
           </el-row>
         </el-col>
@@ -35,16 +36,16 @@
     <el-col :span="24" class="main">
       <aside>
         <el-menu :default-active="String(userSelf.active)" router theme="dark" @open="handleOpen" @close="handleClose" :default-openeds="userSelf.openeds">
-          <template v-for="router in userSelf.leftRoutes">
-            <el-submenu :index="router.path" :key="router.path"
-                        v-if="router.children && router.children instanceof Array && router.children.length > 0">
-              <template slot="title">{{router.name}}</template>
-              <el-menu-item v-for="child in router.children" :key="child.name" :index="child.path">{{child.meta.name}}
-              </el-menu-item>
-            </el-submenu>
-            <el-menu-item :index="router.path" :key="router.path" v-else>{{router.meta.name}}</el-menu-item>
-          </template>
-        </el-menu>
+        <template v-for="router in userSelf.leftRoutes">
+          <el-submenu :index="router.path" :key="router.path"
+                      v-if="router.children && router.children instanceof Array && router.children.length > 0">
+            <template slot="title">{{router.name}}</template>
+            <el-menu-item v-for="child in router.children" :key="child.name" :index="child.path">{{child.meta.name}}
+            </el-menu-item>
+          </el-submenu>
+          <el-menu-item :index="router.path" :key="router.path" v-else>{{router.meta.name}}</el-menu-item>
+        </template>
+      </el-menu>
         <!--<router-view name="left">{{userSelf.leftRoutes}}</router-view>-->
         <div style="background: #e1f3d8">
           <div>&nbsp;</div>
@@ -120,12 +121,16 @@
     }
   }
   .logo-info-span {
+    max-width: 188px;
     background: #2c3e50;
     padding:5px 2px;
   }
   .logo-info-span a>img{
     width: 95%;
     max-width: 262px;
+  }
+  div.logo-info-span,div.logo-info-span+div{
+    float: left;
   }
   /* 路由切换动效 */
   .fade-leave-active {

@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
@@ -39,6 +38,9 @@ import net.ccfish.jvue.vm.AclResource;
  * ACL接口加载 <br>
  * <p>
  * 参考了<a href="https://www.cnblogs.com/sweetchildomine/p/5998659.html">高因咖啡</a>的处理
+ * <p>
+ * 这里采用URL后匹配的模式,
+ * 后续可以通过加载DB中的role/api-code数据，绑定给`Spring security`相关模块，效果更好一些
  * 
  * @author 袁贵
  * @version 1.0
@@ -149,31 +151,31 @@ public class ApplicationStartup implements CommandLineRunner {
                     requestMappingHandlerMapping.getHandlerMethods();
             for (RequestMappingInfo info : map.keySet()) {
                 HandlerMethod handlerMethod = map.get(info);
-                AclResc moduleAclResc = handlerMethod.getBeanType().getAnnotation(AclResc.class);
+                AclResc classAclResc = handlerMethod.getBeanType().getAnnotation(AclResc.class);
 
-                if (moduleAclResc != null) {
+                if (classAclResc != null) {
 
-                    logger.debug("load module resource: id={}, code={}, name={}", moduleAclResc.id(),
-                            moduleAclResc.code(), moduleAclResc.name());
-                    Collection<AclResource> resources = resourcesMap.get(moduleAclResc.id());
+                    logger.debug("load class resource: id={}, code={}, name={}", classAclResc.id(),
+                            classAclResc.code(), classAclResc.name());
+                    Collection<AclResource> resources = resourcesMap.get(classAclResc.id());
 
                     Class<?> aclResourceClass = handlerMethod.getBeanType();
-                    RequestMapping moduleMapping =
+                    RequestMapping classMapping =
                             aclResourceClass.getAnnotation(RequestMapping.class);
 
                     if (resources == null || resources.isEmpty()) {
 
-                        // 追加module
-                        AclResource moduleResc = new AclResource();
-                        moduleResc.setId(moduleAclResc.id());
-                        moduleResc.setType(AclResource.Type.MODULE);
-                        moduleResc.setCode(moduleAclResc.code());
-                        moduleResc.setName(moduleAclResc.name());
+                        // 追加class
+                        AclResource classResc = new AclResource();
+                        classResc.setId(classAclResc.id());
+                        classResc.setType(AclResource.Type.CLASS);
+                        classResc.setCode(classAclResc.code());
+                        classResc.setName(classAclResc.name());
                         
-                        resourcesMap.put(moduleAclResc.id(), moduleResc);
+                        resourcesMap.put(classAclResc.id(), classResc);
                     }
 
-                    if (moduleMapping != null) {
+                    if (classMapping != null) {
 
                         Method method = handlerMethod.getMethod();
                         AclResc methodAclResc = method.getAnnotation(AclResc.class);
@@ -186,20 +188,20 @@ public class ApplicationStartup implements CommandLineRunner {
                             // TODO 需要后续处理的事项，有一部分字段，与Swagger2重复，仅需保留Swagger2定义的一部分，便于开发与维护
                             
                             AclResource methodResc = new AclResource();
-                            methodResc.setId(moduleAclResc.id() + methodAclResc.id());
+                            methodResc.setId(classAclResc.id() + methodAclResc.id());
                             methodResc.setType(AclResource.Type.METHOD);
-                            methodResc.setCode(moduleAclResc.code() + methodAclResc.code());
-                            methodResc.setName(moduleAclResc.name() + methodAclResc.name());
+                            methodResc.setCode(classAclResc.code() + methodAclResc.code());
+                            methodResc.setName(classAclResc.name() + methodAclResc.name());
                             
                             // URL和请求方法
                             PatternsRequestCondition pattern = info.getPatternsCondition();
                             RequestMethodsRequestCondition methods = info.getMethodsCondition();
                             
                             methodResc.setPattern(pattern.getPatterns());
-                            // methodResc.setPath(moduleMapping.path());
+                            // methodResc.setPath(classMapping.path());
                             methodResc.setMethod(toString(methods.getMethods()));
 
-                            resourcesMap.put(moduleAclResc.id(), methodResc);
+                            resourcesMap.put(classAclResc.id(), methodResc);
                         }
                     }
 

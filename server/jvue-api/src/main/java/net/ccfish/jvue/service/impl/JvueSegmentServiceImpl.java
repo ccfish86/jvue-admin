@@ -1,10 +1,14 @@
 package net.ccfish.jvue.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.ccfish.common.jpa.JpaRestrictions;
+import net.ccfish.common.jpa.SearchCriteria;
 import net.ccfish.jvue.model.JvueSegment;
 import net.ccfish.jvue.repository.JvueSegmentRepository;
 import net.ccfish.jvue.service.JvueSegmentService;
@@ -28,5 +32,14 @@ public class JvueSegmentServiceImpl
     public JpaRepository<JvueSegment, Integer> jpaRepository() {
         return this.jvueSegmentRepository;
     }
+
+    /* (non-Javadoc)
+     * @see net.ccfish.jvue.service.JvueSegmentService#findByMenu(java.lang.Integer)
+     */
+    @Override
+    public List<JvueSegment> findByMenu(Integer menuId) {
+        SearchCriteria<JvueSegment> searchCriteria = new SearchCriteria<>();
+        searchCriteria.add(JpaRestrictions.eq("menuId", menuId, false));
+        return jvueSegmentRepository.findAll(searchCriteria);}
 
 }

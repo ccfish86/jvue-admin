@@ -1,12 +1,21 @@
 package net.ccfish.jvue.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.ccfish.common.jpa.JpaRestrictions;
+import net.ccfish.common.jpa.SearchCriteria;
 import net.ccfish.jvue.model.JvueApi;
 import net.ccfish.jvue.repository.JvueApiRepository;
+import net.ccfish.jvue.service.AclResourceService;
 import net.ccfish.jvue.service.JvueApiService;
 
 /**
@@ -17,6 +26,9 @@ import net.ccfish.jvue.service.JvueApiService;
 public class JvueApiServiceImpl implements JvueApiService {
 
     private JvueApiRepository jvueApiRepository;
+    
+    @Autowired
+    private AclResourceService aclResourceService;
 
     @Autowired
     public JvueApiServiceImpl(JvueApiRepository jvueApiRepository) {
@@ -26,6 +38,73 @@ public class JvueApiServiceImpl implements JvueApiService {
     @Override
     public JpaRepository<JvueApi, Integer> jpaRepository() {
         return this.jvueApiRepository;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ccfish.jvue.service.JvueApiService#findByMemu(java.lang.Integer)
+     */
+    @Override
+    public List<JvueApi> findByMemu(Integer menuId) {
+
+        SearchCriteria<JvueApi> searchCriteria = new SearchCriteria<>();
+        searchCriteria.add(JpaRestrictions.eq("menuId", menuId, false));
+        return jvueApiRepository.findAll(searchCriteria);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.ccfish.jvue.service.JvueApiService#updateApisByMemu(java.lang.Integer,
+     * java.util.List)
+     */
+    @Override
+    public List<JvueApi> updateApisByMemu(Integer menuId, List<Integer> apis) {
+        Collection<Integer> deleds;
+        Collection<Integer> addeds;
+
+        SearchCriteria<JvueApi> searchCriteria = new SearchCriteria<>();
+        searchCriteria.add(JpaRestrictions.eq("menuId", menuId, false));
+        List<JvueApi> jvueApis = jvueApiRepository.findAll(searchCriteria);
+
+        if (jvueApis != null) {
+            if (apis != null && apis.size() > 0) {
+                List<Integer> existsApis =
+                        jvueApis.stream().map(api -> api.getApiId()).collect(Collectors.toList());
+                deleds = CollectionUtils.subtract(existsApis, apis);
+                addeds = CollectionUtils.subtract(apis, existsApis);
+            } else {
+                // 删除所有
+                jvueApiRepository.deleteAll(jvueApis);
+                return new ArrayList<>();
+            }
+        } else {
+            deleds = null;
+            addeds = apis;
+        }
+
+        if (deleds != null && deleds.size() > 0) {
+            searchCriteria = new SearchCriteria<>();
+            searchCriteria.add(JpaRestrictions.eq("menuId", menuId, false));
+            searchCriteria.add(JpaRestrictions.in("apiId", deleds, false));
+            List<JvueApi> dApis = jvueApiRepository.findAll(searchCriteria);
+            jvueApiRepository.deleteAll(dApis);
+        }
+        
+        if (addeds != null && addeds.size() > 0) {
+            List<JvueApi> aApis = addeds.stream().map(a -> {
+                String name = aclResourceService.getName(a);
+                JvueApi api = new JvueApi();
+                api.setMenuId(menuId);
+                api.setApiId(a);
+                api.setName(name);
+                return api;
+            }).collect(Collectors.toList());
+            jvueApiRepository.saveAll(aApis);
+        }
+
+        return findByMemu(menuId);
     }
 
 }

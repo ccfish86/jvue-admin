@@ -26,7 +26,7 @@ public class AclResource implements Serializable {
     private static final long serialVersionUID = 1L;
     
     public enum Type {
-        MODULE,
+        CLASS,
         METHOD
     }
     

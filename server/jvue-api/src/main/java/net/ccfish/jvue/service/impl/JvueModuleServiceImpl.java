@@ -61,14 +61,17 @@ public class JvueModuleServiceImpl
 
     @Override
     @CacheEvict(value = "JwtUserDetailsService", allEntries = true)
-    public void update(Integer id, JvueModule data) {
+    public JvueModule update(Integer id, JvueModule data) {
         // throw new UnsupportedClassVersionError("不支持更新处理");
+        JvueModule jmodule = null;
         Optional<JvueModule> entityResult = jvueModuleRepository.findById(id);
-        entityResult.ifPresent(module -> {
+        if (entityResult.isPresent()) {
+            JvueModule module = entityResult.get();
             module.setName(data.getName());
             module.setEnabled(data.getEnabled());
-            jvueModuleRepository.save(module);
-        });
+            jmodule = jvueModuleRepository.save(module);
+        }
+        return jmodule;
     }
 
 }

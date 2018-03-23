@@ -13,8 +13,8 @@ div.content-wrapper {
   min-height: 500px;
 }
 .container-form__mid {
-  min-width: 350px;
-  width: 25%;
+  min-width: 400px;
+  width: 45%;
   margin: 20px auto;
 }
 .container-table__footer {
@@ -55,4 +55,20 @@ div.content-wrapper {
 .el-table th{
   background-color:#eef1f6;
   color:black
+}
+.txt-small{
+  font-size: 10pt;
+  line-height: 150%;
+}
+.txt-left{
+  text-align: left;
+}
+.txt-center{
+  text-align: center;
+}
+.txt-b-info {
+  padding: 10px;
+  font-weight: bolder;
+  color: #FFFFFF;
+  background-color: #909399;
 }

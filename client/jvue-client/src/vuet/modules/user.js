@@ -89,7 +89,7 @@ export default {
               }
               this.leftRoutes.push(nrouter)
             } else {
-              return
+
             }
           })
           //  FIXME 处理模块后，需要切换到对应的页面

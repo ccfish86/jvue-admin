@@ -2,9 +2,11 @@
   <div>
     <el-row class="actions-top--edit" type="flex" justify="end">
       <el-col :span="2" :pull="2">
-        <el-button type="success" icon="el-icon-document" size="small"
-                   @click="$router.push('/sys/module/add')">添加
-        </el-button>
+        <v-sec code="9999">
+          <el-button type="success" icon="el-icon-document" size="small"
+                     @click="$router.push('/sys/module/add')">添加
+          </el-button>
+        </v-sec>
       </el-col>
     </el-row>
     <el-table :data="moduleList.list" v-loading="moduleList.loading" empty-text="没有您要查询的数据"
@@ -43,7 +45,7 @@
 </template>
 
 <script>
-  import {messages} from '@/common'
+import {messages} from '@/common'
 import {mapModules, mapRules} from 'vuet'
 export default {
   name: 'index',

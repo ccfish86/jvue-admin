@@ -4,6 +4,8 @@
 
 package net.ccfish.jvue.service;
 
+import java.util.List;
+
 import net.ccfish.jvue.model.JvueApi;
 
 /**
@@ -14,5 +16,19 @@ import net.ccfish.jvue.model.JvueApi;
  */
 public interface JvueApiService extends _AbstractService<JvueApi, Integer> {
 
+    /**
+     * @param menuId
+     * @return
+     * @since  1.0
+     */
+    List<JvueApi> findByMemu(Integer menuId);
+
+    /**
+     * @param menuId
+     * @param apis
+     * @return
+     * @since  1.0
+     */
+    List<JvueApi> updateApisByMemu(Integer menuId, List<Integer> apis);
 
 }
