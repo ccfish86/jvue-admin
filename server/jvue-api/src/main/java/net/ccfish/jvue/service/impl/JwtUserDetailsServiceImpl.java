@@ -1,7 +1,9 @@
 package net.ccfish.jvue.service.impl;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,16 +39,17 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Cacheable(value = "JwtUserDetailsService", key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        final User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(
                     String.format("No user found with username '%s'.", username));
         } else {
             
             Collection<GrantedAuthority> authorities = loadGrantedRoles(user.getRoles());
+            List<Integer> roles = user.getRoles().stream().map(r -> r.getId()).collect(Collectors.toList());
             
             return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(),
-                    user.getSuperUser(), user.getNickname(), user.getEmail(), authorities);
+                    user.getSuperUser(), user.getNickname(), user.getEmail(), authorities, roles);
         }
     }
 
@@ -56,8 +59,17 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
      * @since  1.0
      */
     private Collection<GrantedAuthority> loadGrantedRoles(Set<JvueRole> roles) {
-        // TODO Auto-generated method stub
-        return null;
+        List<GrantedAuthority>  authorities = roles.stream().map(r -> {
+            GrantedAuthority authority = new GrantedAuthority() {
+                private static final long serialVersionUID = 1L;
+
+                public String getAuthority() {
+                    return r.getName();
+                }
+            };
+            return authority;
+        }).collect(Collectors.toList());
+        return authorities;
     }
 
 }

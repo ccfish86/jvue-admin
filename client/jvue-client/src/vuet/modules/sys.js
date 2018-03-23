@@ -35,7 +35,7 @@ export default {
               this.list = data.data || []
             }
           },
-          async del (id) {
+          async remove (id) {
             const response = await ApiUtils.delete(`/api/module/${id}`)
             let {error, message, data} = response.data
             if (error === null) {
@@ -159,6 +159,15 @@ export default {
               this.searchForm.pageCount = data.pages
               this.searchForm.totalCount = data.total
               this.list = data.data || []
+            }
+          },
+          async remove (id) {
+            const response = await ApiUtils.delete(`/api/menu/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              return data
+            } else {
+              Promise.reject(message)
             }
           }
         },
@@ -392,6 +401,129 @@ export default {
             let {error, message, data = []} = response.data
             if (error === null) {
               this.list = data
+            }
+          }
+        }
+      }
+    },
+
+    role: {
+      modules: {
+        list: {
+          data () {
+            return {
+              searchForm: {
+                page: 1,
+                pageSize: 10,
+                pageCount: 0,
+                totalCount: 0
+              },
+              loading: false,
+              list: []
+            }
+          },
+          async fetch () {
+            this.loading = true
+            const param = {
+              page: this.searchForm.page - 1,
+              pageSize: this.searchForm.pageSize
+            }
+
+            const response = await ApiUtils.get('/api/role', param)
+            this.loading = false
+            let {status, data = {}} = response
+            if (status === 200 && data.error === null) {
+              this.searchForm.page = data.pageNum + 1
+              this.searchForm.pageSize = data.pageSize
+              this.searchForm.pageCount = data.pages
+              this.searchForm.totalCount = data.total
+              this.list = data.data || []
+            }
+          },
+          async remove (id) {
+            const response = await ApiUtils.delete(`/api/role/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          },
+          async toggleEnable(id, enabled) {
+            const response = await ApiUtils.patch(`/api/role/${id}/${enabled}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.fetch()
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          }
+        },
+        add: {
+          data () {
+            return {
+              form: {}
+            }
+          },
+          async fetch () {
+            // 初始化信息
+          },
+          async save () {
+            let param = this.form
+            const response = await ApiUtils.post('/api/role', param)
+            let {error, message, data} = response.data
+            if (error === null) {
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          }
+        },
+        detail: {
+          data () {
+            return {
+              detail: {}
+            }
+          },
+          async fetch () {
+            let id = this.app.$route.params['id']
+            const response = await ApiUtils.get(`/api/role/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.detail = data
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          }
+        },
+        edit: {
+          data () {
+            return {
+              form: {}
+            }
+          },
+          async fetch () {
+            let id = this.app.$route.params['id']
+            const response = await ApiUtils.get(`/api/role/${id}`)
+            let {error, message, data} = response.data
+            if (error === null) {
+              this.form = data
+              return data
+            } else {
+              Promise.reject(message)
+            }
+          },
+          async save () {
+            let id = this.app.$route.params['id']
+            let param = this.form
+            const response = await ApiUtils.put(`/api/role/${id}`, param)
+            let {error, message, data} = response.data
+            if (error === null) {
+              return data
+            } else {
+              Promise.reject(message)
             }
           }
         }

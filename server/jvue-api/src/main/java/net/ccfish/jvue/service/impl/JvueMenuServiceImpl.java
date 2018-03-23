@@ -5,16 +5,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.ccfish.common.enums.YesOrNoEnum;
 import net.ccfish.common.jpa.JpaRestrictions;
 import net.ccfish.common.jpa.SearchCriteria;
 import net.ccfish.jvue.model.JvueMenu;
 import net.ccfish.jvue.model.JvueModule;
+import net.ccfish.jvue.model.JvueSegment;
 import net.ccfish.jvue.repository.JvueMenuRepository;
 import net.ccfish.jvue.repository.JvueModuleRepository;
+import net.ccfish.jvue.repository.JvueSegmentRepository;
+import net.ccfish.jvue.service.JvueApiService;
 import net.ccfish.jvue.service.JvueMenuService;
 import net.ccfish.jvue.vm.ModuleAndMenus;
 
@@ -31,15 +36,23 @@ public class JvueMenuServiceImpl implements JvueMenuService {
     @Autowired
     private JvueModuleRepository jvueModuleRepository;
 
+    @Autowired
+    private JvueSegmentRepository jvueSegmentRepository;
+    
+    @Autowired
+    private JvueApiService jvueApiService;
+
     @Override
     public JpaRepository<JvueMenu, Integer> jpaRepository() {
         return this.jvueMenuRepository;
     }
 
+    @Override
     public List<JvueMenu> findAllRootMenu() {
         return jvueMenuRepository.findByParentIdIsNull();
     }
 
+    @Override
     public ModuleAndMenus findModuleAndMenu() {
 
         ModuleAndMenus moduleAndMenus = new ModuleAndMenus();
@@ -49,9 +62,11 @@ public class JvueMenuServiceImpl implements JvueMenuService {
                 .collect(Collectors.toList());
 
         List<JvueModule> modules = jvueModuleRepository.findAllById(moduleIds);
+        List<JvueSegment> segments = jvueSegmentRepository.findAll();
         
         moduleAndMenus.setMenus(menus);
         moduleAndMenus.setModules(modules);
+        moduleAndMenus.setSegments(segments);
 
         return moduleAndMenus;
     }
@@ -64,6 +79,27 @@ public class JvueMenuServiceImpl implements JvueMenuService {
         menuSearchCriteria.add(JpaRestrictions.isNull("parentId"));
         
         return jvueMenuRepository.findAll(menuSearchCriteria);
+    }
+    
+    @Override
+    @CacheEvict(value = "JwtUserDetailsService", allEntries = true)
+    public void delete(Integer id) {
+        // 判断是否在其他表中使用，未使用时，可物理删除；如在menu等表里使用，逻辑删除
+        SearchCriteria<JvueSegment> jvueSegmentCriteria = new SearchCriteria<>();
+        jvueSegmentCriteria.add(JpaRestrictions.eq("menuId", id, false));
+        long scount =jvueSegmentRepository.count(jvueSegmentCriteria);
+        if (scount > 0L) {
+            //jpaRepository().delete(id);
+            Optional<JvueMenu> entityResult = jvueMenuRepository.findById(id);
+            entityResult.ifPresent(entity -> {
+                entity.setEnabled((byte)YesOrNoEnum.No.ordinal());
+                jvueMenuRepository.save(entity);
+            });
+        } else {
+            // 同时删除API
+            jvueApiService.deleteByMenu(id);
+            jvueMenuRepository.deleteById(id);
+        }
     }
 
     @Override

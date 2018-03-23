@@ -4,12 +4,22 @@
 
 package net.ccfish.jvue.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import net.ccfish.common.web.BaseModel;
+import net.ccfish.jvue.model.JvueModule;
 import net.ccfish.jvue.model.JvueRole;
+import net.ccfish.jvue.rest.vm.CodeDto;
 import net.ccfish.jvue.service.JvueRoleService;
 import net.ccfish.jvue.service._AbstractService;
 import net.ccfish.jvue.service.acl.AclResc;
@@ -35,6 +45,16 @@ public class JvueRoleController implements _BaseController<JvueRole, Integer> {
     @Override
     public _AbstractService<JvueRole, Integer> baseService() {
         return this.jvueRoleService;
+    }
+    
+    @ApiOperation(value = "更新是否有效")
+    @AclResc(id = 11, code = "patchEnabled", name = "更新是否有效")
+    @PatchMapping("/{id}/{enabled}") 
+    public BaseModel<JvueRole> patchEnabled(@PathVariable("id") Integer id,
+            @PathVariable("enabled") byte enabled){
+        
+        JvueRole jvueRole = jvueRoleService.updateEnabled(id, enabled);
+        return new BaseModel<JvueRole>().setData(jvueRole);
     }
     
 }

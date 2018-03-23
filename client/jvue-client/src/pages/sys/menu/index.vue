@@ -31,6 +31,7 @@
           <template slot-scope="scope">
             <el-button-group>
               <el-button type="success" size="mini" @click="edit(scope.row.id)">编辑</el-button>
+              <el-button type="danger" size="mini" @click="remove(scope.row.id)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -42,7 +43,7 @@
                          @size-change="handleSizeChange"
                          @current-change="handleCurrentChange"
                          :current-page="menuList.searchForm.page"
-                         :page-sizes="[1, 10, 50, 100, 200, 400]"
+                         :page-sizes="[10, 20, 50, 100, 200, 400]"
                          :page-size="menuList.searchForm.pageSize"
                          :total="menuList.searchForm.totalCount">
           </el-pagination>
@@ -79,6 +80,34 @@ export default {
     },
     edit (id) {
       this.$router.push(`/sys/menu/edit/${id}`)
+    },
+    remove (id) {
+      this.$confirm('删除画面可能无法恢复, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.menuList.remove(id).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.menuList.fetch()
+        }).catch((err) => {
+          this.$notify({
+            title: '警告',
+            message: err,
+            type: 'warning',
+            duration: 2500
+          })
+        })
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }

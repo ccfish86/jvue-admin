@@ -67,7 +67,11 @@ axios.interceptors.response.use((response) => {
       }
     }
   } else {
-    Message.error(error.message)
+    if (error.message) {
+      Message.error(error.message)
+    } else {
+      Message.error('服务器错误')
+    }
   }
   return Promise.reject(error)
 })
@@ -99,6 +103,15 @@ const put = (path, data, config) => {
     NProgress.done()
   }
 }
+const patch = (path, data, config) => {
+  try {
+    NProgress.start()
+    let result = axios.patch(path, data, config)
+    return result
+  } finally {
+    NProgress.done()
+  }
+}
 const remove = (path, config) => {
   try {
     NProgress.start()
@@ -110,4 +123,4 @@ const remove = (path, config) => {
 }
 
 // 暴露的对象或方法
-export {axios, get, post, put, remove as delete}
+export {axios, get, post, put, patch, remove as delete}

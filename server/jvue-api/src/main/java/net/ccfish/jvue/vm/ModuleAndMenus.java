@@ -8,6 +8,7 @@ import java.util.List;
 
 import net.ccfish.jvue.model.JvueMenu;
 import net.ccfish.jvue.model.JvueModule;
+import net.ccfish.jvue.model.JvueSegment;
 
 /**
  * 
@@ -20,6 +21,8 @@ public class ModuleAndMenus {
     private List<JvueModule> modules;
 
     private List<JvueMenu> menus;
+    
+    private List<JvueSegment> segments;
 
     public List<JvueModule> getModules() {
         return modules;
@@ -36,5 +39,13 @@ public class ModuleAndMenus {
     public void setMenus(List<JvueMenu> menus) {
         this.menus = menus;
     }
-    
+
+    public List<JvueSegment> getSegments() {
+        return segments;
+    }
+
+    public void setSegments(List<JvueSegment> segments) {
+        this.segments = segments;
+    }
+
 }

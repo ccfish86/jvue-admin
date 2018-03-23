@@ -5,6 +5,8 @@
 package net.ccfish.jvue.rest;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ import net.ccfish.jvue.rest.vm.ReqLogin;
 import net.ccfish.jvue.security.JwtUserDetails;
 import net.ccfish.jvue.service.AuthService;
 import net.ccfish.jvue.service.JvueMenuService;
+import net.ccfish.jvue.service.JvueRoleService;
 import net.ccfish.jvue.vm.ModuleAndMenus;
 import net.ccfish.jvue.vm.UserInfo;
 
@@ -43,6 +46,8 @@ public class AuthController {
     private AuthService userService;
     @Autowired
     private JvueMenuService jvueMenuService;
+    @Autowired
+    private JvueRoleService jvueRoleService;
     
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
@@ -110,6 +115,9 @@ public class AuthController {
                 } else {
                     // 返回用户菜单
                     // FIXME 根据用户role和缓存中的role权限生成菜单
+                    List<Integer> roles = new ArrayList<>();
+                    ModuleAndMenus menus = jvueRoleService.findModuleAndMenu(roles);
+                    return new BaseModel<ModuleAndMenus>().setData(menus);
                 }
             } else {
                 logger.warn("无法获取登录信息  {}", authentication.getPrincipal());

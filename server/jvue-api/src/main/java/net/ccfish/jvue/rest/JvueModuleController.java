@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.ccfish.common.web.BaseModel;
 import net.ccfish.jvue.model.JvueModule;
 import net.ccfish.jvue.rest.vm.CodeDto;
@@ -42,7 +43,8 @@ public class JvueModuleController implements _BaseController<JvueModule, Integer
     public _AbstractService<JvueModule, Integer> baseService() {
         return this.jvueModuleService;
     }
-    
+
+    @ApiOperation(value = "名字列表")
     @AclResc(id = 11, code = "names", name = "名字列表")
     @GetMapping("/ext/names") 
     public BaseModel<List<CodeDto<Integer>>> names(){

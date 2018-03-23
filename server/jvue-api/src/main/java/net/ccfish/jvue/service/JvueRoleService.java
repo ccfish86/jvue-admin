@@ -4,7 +4,10 @@
 
 package net.ccfish.jvue.service;
 
+import java.util.List;
+
 import net.ccfish.jvue.model.JvueRole;
+import net.ccfish.jvue.vm.ModuleAndMenus;
 
 /**
  * 
@@ -14,5 +17,8 @@ import net.ccfish.jvue.model.JvueRole;
  */
 public interface JvueRoleService extends _AbstractService<JvueRole, Integer> {
 
+    ModuleAndMenus findModuleAndMenu(List<Integer> roles);
+
+    JvueRole updateEnabled(Integer id, byte enabled);
 
 }

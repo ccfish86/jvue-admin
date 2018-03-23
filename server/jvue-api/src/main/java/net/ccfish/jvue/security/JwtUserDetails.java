@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 安全用户模型
@@ -30,9 +31,10 @@ public class JwtUserDetails implements UserDetails {
     private final String password;
     private final byte superUser;
     private final Collection<? extends GrantedAuthority> authorities;
+    private final List<Integer> roles;
 
     public JwtUserDetails(Long id, String username, String password, byte superUser, String nickname, String email,
-            Collection<? extends GrantedAuthority> authorities) {
+            Collection<? extends GrantedAuthority> authorities, List<Integer> roles) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -40,6 +42,7 @@ public class JwtUserDetails implements UserDetails {
         this.authorities = authorities;
         this.id = id;
         this.superUser = superUser;
+        this.roles = roles;
     }
 
     @Override
@@ -96,6 +99,10 @@ public class JwtUserDetails implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public List<Integer> getRoles() {
+        return roles;
     }
 
 }

@@ -107,4 +107,16 @@ public class JvueApiServiceImpl implements JvueApiService {
         return findByMemu(menuId);
     }
 
+    /* (non-Javadoc)
+     * @see net.ccfish.jvue.service.JvueApiService#deleteByMenuId(java.lang.Integer)
+     */
+    @Override
+    public void deleteByMenu(Integer menuId) {
+        
+        List<JvueApi> apis = findByMemu(menuId);
+        if (apis != null) {
+            jvueApiRepository.deleteAll(apis);
+        }
+    }
+
 }

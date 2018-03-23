@@ -31,4 +31,10 @@ public interface JvueApiService extends _AbstractService<JvueApi, Integer> {
      */
     List<JvueApi> updateApisByMemu(Integer menuId, List<Integer> apis);
 
+    /**
+     * @param menuId
+     * @since  1.0
+     */
+    void deleteByMenu(Integer menuId);
+
 }

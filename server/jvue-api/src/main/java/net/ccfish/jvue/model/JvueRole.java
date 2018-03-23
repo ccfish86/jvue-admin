@@ -21,6 +21,9 @@ public class JvueRole implements Serializable {
 
 	@Column(length=64)
 	private String name;
+	
+    @Column(nullable=false)
+    private byte enabled = 0;
 
 	public JvueRole() {
 	}
@@ -40,5 +43,13 @@ public class JvueRole implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+    public byte getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(byte enabled) {
+        this.enabled = enabled;
+    }
 
 }
