@@ -20,5 +20,7 @@ public interface JvueRoleService extends _AbstractService<JvueRole, Integer> {
     ModuleAndMenus findModuleAndMenu(List<Integer> roles);
 
     JvueRole updateEnabled(Integer id, byte enabled);
+    
+    List<Integer> getRolesByApi(Integer apiId);
 
 }

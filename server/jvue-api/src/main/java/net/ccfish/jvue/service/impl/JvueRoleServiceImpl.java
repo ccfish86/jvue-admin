@@ -5,16 +5,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.ccfish.common.jpa.JpaRestrictions;
+import net.ccfish.common.jpa.SearchCriteria;
 import net.ccfish.jvue.model.JvueMenu;
 import net.ccfish.jvue.model.JvueModule;
 import net.ccfish.jvue.model.JvueRole;
+import net.ccfish.jvue.model.JvueRoleApi;
 import net.ccfish.jvue.model.JvueSegment;
 import net.ccfish.jvue.repository.JvueMenuRepository;
 import net.ccfish.jvue.repository.JvueModuleRepository;
+import net.ccfish.jvue.repository.JvueRoleApiRepository;
 import net.ccfish.jvue.repository.JvueRoleRepository;
 import net.ccfish.jvue.repository.JvueSegmentRepository;
 import net.ccfish.jvue.service.JvueRoleService;
@@ -34,6 +39,9 @@ public class JvueRoleServiceImpl implements JvueRoleService {
 
     @Autowired
     private JvueModuleRepository jvueModuleRepository;
+    
+    @Autowired
+    private JvueRoleApiRepository jvueRoleApiRepository;
 
     @Autowired
     private JvueSegmentRepository jvueSegmentRepository;
@@ -83,6 +91,19 @@ public class JvueRoleServiceImpl implements JvueRoleService {
         }
 
         return null;
+    }
+
+    /* (non-Javadoc)
+     * @see net.ccfish.jvue.service.JvueRoleService#rolesByApi(java.lang.Integer)
+     */
+    @Override
+    @Cacheable(value = "role-api", key = "#apiId")
+    public List<Integer> getRolesByApi(Integer apiId) {
+        SearchCriteria<JvueRoleApi> roleApiCriteria = new SearchCriteria<>();
+        roleApiCriteria.add(JpaRestrictions.eq("api.apiId", apiId, false));
+        
+        List<JvueRoleApi> jvueRoleApis = jvueRoleApiRepository.findAll(roleApiCriteria);
+        return jvueRoleApis.stream().map(roleApi -> roleApi.getRole().getId()).collect(Collectors.toList());
     }
 
 

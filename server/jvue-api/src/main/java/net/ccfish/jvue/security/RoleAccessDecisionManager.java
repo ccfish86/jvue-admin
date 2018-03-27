@@ -5,8 +5,10 @@
 package net.ccfish.jvue.security;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.MultiMap;
 
 import net.ccfish.common.JvueDataStatus;
+import net.ccfish.jvue.service.JvueRoleService;
 import net.ccfish.jvue.vm.AclResource;
 
 /**
@@ -45,6 +48,8 @@ public class RoleAccessDecisionManager implements AccessDecisionManager {
     
     @Autowired
     private HazelcastInstance hazelcastInstance;
+    @Autowired
+    private JvueRoleService jvueRoleService;
     
     /* (non-Javadoc)
      * @see org.springframework.security.access.AccessDecisionManager#decide(org.springframework.security.core.Authentication, java.lang.Object, java.util.Collection)
@@ -77,7 +82,7 @@ public class RoleAccessDecisionManager implements AccessDecisionManager {
             String requestUrl = filterInvocation.getRequestUrl();
             String requestMethod = filterInvocation.getRequest().getMethod();
             
-            String apiCode = "";
+            Integer apiCode = null;
             logger.debug("访问接口:{} {}", requestUrl, requestMethod);
             
             for (AclResource ar: resourcesMap.values()) {
@@ -109,20 +114,29 @@ public class RoleAccessDecisionManager implements AccessDecisionManager {
                     
                     if (isUrl && isMethod) {
                         // 已匹配
-                        apiCode = ar.getCode();
+                        apiCode = ar.getId();
                         logger.debug("已匹配接口:{} > {} {}", requestUrl, ar.getCode(), ar.getName());
                         break;
                     }
                 }
             }
             
-            // 2.判断是否为超级管理员，是的话直接放行
-            if (authentication.getPrincipal() instanceof JwtUserDetails) {
-                JwtUserDetails jwtUser = (JwtUserDetails) authentication.getPrincipal();
-                if (jwtUser.getSuperUser() == JvueDataStatus.SUPER_USER_TRUE) {
-                    // 放行
-                    logger.debug("SUPER_USER_TRUE");
-                    return ;
+            if (apiCode != null ) {
+                // 取对应的角色权限
+                List<Integer> roles = jvueRoleService.getRolesByApi(apiCode);
+                
+                if (!roles.isEmpty()) {
+                    // 2.判断是否为超级管理员，是的话直接放行
+                    if (authentication.getPrincipal() instanceof JwtUserDetails) {
+                        JwtUserDetails jwtUser = (JwtUserDetails) authentication.getPrincipal();
+                        Collection<Integer> intersection =
+                                CollectionUtils.intersection(roles, jwtUser.getRoles());
+                        if (intersection.isEmpty()) {
+                            // 没有匹配到角色
+                            throw new AccessDeniedException("no role");
+                        }
+
+                    }
                 }
             }
             
