@@ -15,7 +15,7 @@
     <logger name="org.hibernate" level="WARN" />
     <logger name="org.springframework" level="WARN" />
     <logger name="org.springframework.web" level="info" />
-    <logger name="org.springframework.security" level="DEBUG" />
+    <logger name="org.springframework.security" level="INFO" />
     <logger name="org.springframework.cache" level="WARN" />
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">

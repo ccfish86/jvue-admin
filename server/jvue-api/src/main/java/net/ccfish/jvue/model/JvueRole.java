@@ -3,6 +3,8 @@ package net.ccfish.jvue.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.springframework.security.core.GrantedAuthority;
+
 
 /**
  * The persistent class for the jvue_role database table.
@@ -11,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="jvue_role")
 @NamedQuery(name="JvueRole.findAll", query="SELECT j FROM JvueRole j")
-public class JvueRole implements Serializable {
+public class JvueRole implements GrantedAuthority {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -50,6 +52,14 @@ public class JvueRole implements Serializable {
 
     public void setEnabled(byte enabled) {
         this.enabled = enabled;
+    }
+
+    /* (non-Javadoc)
+     * @see org.springframework.security.core.GrantedAuthority#getAuthority()
+     */
+    @Override
+    public String getAuthority() {
+        return name;
     }
 
 }

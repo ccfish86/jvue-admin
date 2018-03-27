@@ -1,5 +1,6 @@
 package net.ccfish.jvue.service.impl;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -26,8 +27,13 @@ import net.ccfish.jvue.security.JwtUserDetails;
  * @since 1.0
  */
 @Service
-public class JwtUserDetailsServiceImpl implements UserDetailsService {
+public class JwtUserDetailsServiceImpl implements UserDetailsService, Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    
     @Autowired
     private UserRepository userRepository;
 
@@ -45,31 +51,11 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
                     String.format("No user found with username '%s'.", username));
         } else {
             
-            Collection<GrantedAuthority> authorities = loadGrantedRoles(user.getRoles());
             Set<Integer> roles = user.getRoles();
             
             return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(),
-                    user.getSuperUser(), user.getNickname(), user.getEmail(), authorities, roles);
+                    user.getSuperUser(), user.getNickname(), user.getEmail(), user.getAuthorities(), roles);
         }
-    }
-
-    /**
-     * @param roles
-     * @return
-     * @since  1.0
-     */
-    private Collection<GrantedAuthority> loadGrantedRoles(Set<Integer> roles) {
-        List<GrantedAuthority>  authorities = roles.stream().map(r -> {
-            GrantedAuthority authority = new GrantedAuthority() {
-                private static final long serialVersionUID = 1L;
-
-                public String getAuthority() {
-                    return String.valueOf(r);
-                }
-            };
-            return authority;
-        }).collect(Collectors.toList());
-        return authorities;
     }
 
 }

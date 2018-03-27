@@ -132,6 +132,10 @@ public class User implements Serializable {
         return roles.stream().map(role->role.getId()).collect(Collectors.toSet());
     }
 
+    public Set<JvueRole> getAuthorities() {
+        return roles;
+    }
+    
     /**
      * @param roles the roles to set
      */
