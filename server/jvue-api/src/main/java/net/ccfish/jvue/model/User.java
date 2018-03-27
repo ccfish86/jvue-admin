@@ -3,6 +3,7 @@ package net.ccfish.jvue.model;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.BatchSize;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 
 /**
@@ -38,8 +41,8 @@ public class User implements Serializable {
 
 	@Column(length=64)
 	private String email;
-
-    @JsonIgnore
+	
+    @JsonProperty(access = Access.WRITE_ONLY)
 	@Column(length=128, columnDefinition="char")
 	private String password;
 
@@ -54,7 +57,7 @@ public class User implements Serializable {
     @Column(nullable=false, length=1)
     private byte superUser;
 	
-    @JsonIgnore
+    @JsonProperty(access = Access.READ_ONLY)
     @ManyToMany(targetEntity = JvueRole.class, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -81,6 +84,7 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
+	// 禁止密码等字段的返回
 	public String getPassword() {
 		return this.password;
 	}
@@ -124,8 +128,8 @@ public class User implements Serializable {
     /**
      * @return the roles
      */
-    public Set<JvueRole> getRoles() {
-        return roles;
+    public Set<Integer> getRoles() {
+        return roles.stream().map(role->role.getId()).collect(Collectors.toSet());
     }
 
     /**

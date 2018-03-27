@@ -50,7 +50,6 @@ public class SimpleExpression implements Criterion {
         Path expression = null;
         if (fieldName.contains(".")) {
             
-            System.out.println(root);
             String[] names = StringUtils.split(fieldName, ".");
             expression = root.get(names[0]);
             for (int i = 1; i < names.length; i++) {

@@ -1,12 +1,23 @@
 package net.ccfish.jvue.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.ccfish.common.jpa.JpaRestrictions;
+import net.ccfish.common.jpa.SearchCriteria;
+import net.ccfish.jvue.model.JvueApi;
 import net.ccfish.jvue.model.User;
+import net.ccfish.jvue.model.UserRole;
 import net.ccfish.jvue.repository.UserRepository;
+import net.ccfish.jvue.repository.UserRoleRepository;
 import net.ccfish.jvue.service.UserService;
 
 /**
@@ -17,6 +28,9 @@ import net.ccfish.jvue.service.UserService;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
@@ -26,6 +40,53 @@ public class UserServiceImpl implements UserService {
     @Override
     public JpaRepository<User, Long> jpaRepository() {
         return this.userRepository;
+    }
+
+    @Override
+    public User updateRoles(Long id, List<Integer> roles) {
+        
+        List<UserRole> userRoles = userRoleRepository.findByUserId(id);
+        
+        Collection<Integer> deleds;
+        Collection<Integer> addeds;
+        
+        List<Integer> existes = userRoles.stream().map(userRole -> userRole.getRoleId()).collect(Collectors.toList());
+        
+        if (existes != null) {
+            if (roles != null && roles.size() > 0) {
+                deleds = CollectionUtils.subtract(existes, roles);
+                addeds = CollectionUtils.subtract(roles, existes);
+            } else {
+                // 删除所有
+                userRoleRepository.deleteAll(userRoles);
+                deleds = null;
+                addeds = null;
+            }
+        } else {
+            deleds = null;
+            addeds = roles;
+        }
+        
+        if (deleds != null && deleds.size() > 0) {
+//            SearchCriteria<UserRole> searchCriteria = new SearchCriteria<>();
+//            searchCriteria.add(JpaRestrictions.eq("userId", id, false));
+//            searchCriteria.add(JpaRestrictions.in("roleId", deleds, false));
+//            List<UserRole> dRoles = userRoleRepository.findAll(searchCriteria);
+//            userRoleRepository.deleteAll(dRoles);
+            userRoleRepository.deleteByUserIdAndRoleId(id, deleds);
+        }
+        
+        if (addeds != null && addeds.size() > 0) {
+            List<UserRole> aApis = addeds.stream().map(a -> {
+                UserRole role = new UserRole();
+                role.setUserId(id);
+                role.setRoleId(a);
+                return role;
+            }).collect(Collectors.toList());
+            userRoleRepository.saveAll(aApis);
+        }
+        
+        return getOne(id);
     }
 
 }

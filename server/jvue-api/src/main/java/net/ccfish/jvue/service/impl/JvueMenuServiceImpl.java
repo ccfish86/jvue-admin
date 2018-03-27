@@ -21,6 +21,7 @@ import net.ccfish.jvue.repository.JvueModuleRepository;
 import net.ccfish.jvue.repository.JvueSegmentRepository;
 import net.ccfish.jvue.service.JvueApiService;
 import net.ccfish.jvue.service.JvueMenuService;
+import net.ccfish.jvue.service.JvueSegmentService;
 import net.ccfish.jvue.vm.ModuleAndMenus;
 
 /**
@@ -41,6 +42,9 @@ public class JvueMenuServiceImpl implements JvueMenuService {
     
     @Autowired
     private JvueApiService jvueApiService;
+    
+    @Autowired
+    private JvueSegmentService segmentService;
 
     @Override
     public JpaRepository<JvueMenu, Integer> jpaRepository() {
@@ -62,11 +66,15 @@ public class JvueMenuServiceImpl implements JvueMenuService {
                 .collect(Collectors.toList());
 
         List<JvueModule> modules = jvueModuleRepository.findAllById(moduleIds);
-        List<JvueSegment> segments = jvueSegmentRepository.findAll();
+        
+        menus.forEach(menu -> {
+            List<JvueSegment> segments = segmentService.findByMenu(menu.getId());
+            menu.setSegments(segments);
+        });
         
         moduleAndMenus.setMenus(menus);
         moduleAndMenus.setModules(modules);
-        moduleAndMenus.setSegments(segments);
+//        moduleAndMenus.setSegments(segments);
 
         return moduleAndMenus;
     }

@@ -43,7 +43,7 @@
             <el-menu-item v-for="child in router.children" :key="child.name" :index="child.path">{{child.meta.name}}
             </el-menu-item>
           </el-submenu>
-          <el-menu-item :index="router.path" :key="router.path" v-else>{{router.meta.name}}</el-menu-item>
+          <el-menu-item :index="router.path" :key="router.meta.id" v-else>{{router.meta.name}}</el-menu-item>
         </template>
       </el-menu>
         <!--<router-view name="left">{{userSelf.leftRoutes}}</router-view>-->

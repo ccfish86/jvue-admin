@@ -46,7 +46,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         } else {
             
             Collection<GrantedAuthority> authorities = loadGrantedRoles(user.getRoles());
-            List<Integer> roles = user.getRoles().stream().map(r -> r.getId()).collect(Collectors.toList());
+            Set<Integer> roles = user.getRoles();
             
             return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(),
                     user.getSuperUser(), user.getNickname(), user.getEmail(), authorities, roles);
@@ -58,13 +58,13 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
      * @return
      * @since  1.0
      */
-    private Collection<GrantedAuthority> loadGrantedRoles(Set<JvueRole> roles) {
+    private Collection<GrantedAuthority> loadGrantedRoles(Set<Integer> roles) {
         List<GrantedAuthority>  authorities = roles.stream().map(r -> {
             GrantedAuthority authority = new GrantedAuthority() {
                 private static final long serialVersionUID = 1L;
 
                 public String getAuthority() {
-                    return r.getName();
+                    return String.valueOf(r);
                 }
             };
             return authority;

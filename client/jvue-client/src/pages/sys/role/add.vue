@@ -40,6 +40,8 @@ export default {
               duration: 2500
             })
           })
+        } else {
+          this.$notify(messages.notifyCheckError())
         }
       }).catch(result => {
         this.$notify(messages.notifyCheckError())

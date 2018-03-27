@@ -21,8 +21,8 @@ public class ModuleAndMenus {
     private List<JvueModule> modules;
 
     private List<JvueMenu> menus;
-    
-    private List<JvueSegment> segments;
+//    
+//    private List<JvueSegment> segments;
 
     public List<JvueModule> getModules() {
         return modules;
@@ -40,12 +40,12 @@ public class ModuleAndMenus {
         this.menus = menus;
     }
 
-    public List<JvueSegment> getSegments() {
-        return segments;
-    }
+//    public List<JvueSegment> getSegments() {
+//        return segments;
+//    }
 
-    public void setSegments(List<JvueSegment> segments) {
-        this.segments = segments;
-    }
+//    public void setSegments(List<JvueSegment> segments) {
+//        this.segments = segments;
+//    }
 
 }

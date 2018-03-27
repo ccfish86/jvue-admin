@@ -16,13 +16,16 @@ import net.ccfish.jvue.model.JvueMenu;
 import net.ccfish.jvue.model.JvueModule;
 import net.ccfish.jvue.model.JvueRole;
 import net.ccfish.jvue.model.JvueRoleApi;
+import net.ccfish.jvue.model.JvueRoleMenu;
 import net.ccfish.jvue.model.JvueSegment;
 import net.ccfish.jvue.repository.JvueMenuRepository;
 import net.ccfish.jvue.repository.JvueModuleRepository;
 import net.ccfish.jvue.repository.JvueRoleApiRepository;
+import net.ccfish.jvue.repository.JvueRoleMenuRepository;
 import net.ccfish.jvue.repository.JvueRoleRepository;
 import net.ccfish.jvue.repository.JvueSegmentRepository;
 import net.ccfish.jvue.service.JvueRoleService;
+import net.ccfish.jvue.service.JvueSegmentService;
 import net.ccfish.jvue.vm.ModuleAndMenus;
 
 /**
@@ -42,9 +45,15 @@ public class JvueRoleServiceImpl implements JvueRoleService {
     
     @Autowired
     private JvueRoleApiRepository jvueRoleApiRepository;
+    
+    @Autowired
+    private JvueRoleMenuRepository jvueRoleMenuRepository;
 
     @Autowired
     private JvueSegmentRepository jvueSegmentRepository;
+    
+    @Autowired
+    private JvueSegmentService segmentService;
 
     @Autowired
     public JvueRoleServiceImpl(JvueRoleRepository jvueRoleRepository) {
@@ -57,21 +66,29 @@ public class JvueRoleServiceImpl implements JvueRoleService {
     }
 
     @Override
+    @Cacheable(value = "role-menu", key = "#roles")
     public ModuleAndMenus findModuleAndMenu(List<Integer> roles) {
 
         //TODO 根据权限查询对应的菜单和modules/segments
         ModuleAndMenus moduleAndMenus = new ModuleAndMenus();
-        List<JvueMenu> menus = jvueMenuRepository.findByParentIdIsNull();
+        SearchCriteria<JvueRoleMenu> roleMenuCriterias = new SearchCriteria<>();
+        roleMenuCriterias.add(JpaRestrictions.in("role.id", roles, false));
+        
+        List<JvueRoleMenu> roleMenus = jvueRoleMenuRepository.findAll(roleMenuCriterias);
+        List<JvueMenu>  menus = roleMenus.stream().map(roleMenu -> roleMenu.getMenu()).collect(Collectors.toList());
 
         List<Integer> moduleIds = menus.stream().map(menu -> menu.getModuleId()).distinct()
                 .collect(Collectors.toList());
 
         List<JvueModule> modules = jvueModuleRepository.findAllById(moduleIds);
-        List<JvueSegment> segments = jvueSegmentRepository.findAll();
+
+        menus.forEach(menu -> {
+            List<JvueSegment> segments = segmentService.findByMenu(menu.getId());
+            menu.setSegments(segments);
+        });
         
         moduleAndMenus.setMenus(menus);
         moduleAndMenus.setModules(modules);
-        moduleAndMenus.setSegments(segments);
 
         return moduleAndMenus;
     }
