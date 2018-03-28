@@ -39,14 +39,20 @@ div.content-wrapper {
 }
 .actions-top--edit{
   position: absolute;
-  width: 65%;
+  width: 50%;
   margin-top: -40px;
   margin-left: 30%;
 }
 .el-tag+.el-tag {
   margin-left: 5px;
 }
-
+.el-aside {
+  background-color: #D3DCE6;
+  color: #333;
+}
+#app>.el-container {
+  min-height: 700px;
+}
 .small-form--edit .el-input {
   margin-right: 10px;
   width: 380px;

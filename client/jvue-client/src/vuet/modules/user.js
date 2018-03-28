@@ -147,7 +147,7 @@ export default {
         const response = await ApiUtils.put(`/api/user/ext/${id}/role`, roles)
         let {error, message, data} = response.data
         if (error === null) {
-          this.fetch()
+          // this.fetch()
           return data
         } else {
           Promise.reject(message)

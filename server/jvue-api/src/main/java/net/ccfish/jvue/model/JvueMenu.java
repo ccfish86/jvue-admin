@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -67,9 +66,6 @@ public class JvueMenu implements Serializable {
     @JsonProperty("children")
 	@OneToMany(mappedBy="parentId")
 	private List<JvueMenu> jvueMenus;
-    
-    @Transient
-    private List<JvueSegment> segments;
 
 	public JvueMenu() {
 	}
@@ -183,13 +179,5 @@ public class JvueMenu implements Serializable {
 
 		return jvueMenus;
 	}
-
-    public List<JvueSegment> getSegments() {
-        return segments;
-    }
-
-    public void setSegments(List<JvueSegment> segments) {
-        this.segments = segments;
-    }
 
 }

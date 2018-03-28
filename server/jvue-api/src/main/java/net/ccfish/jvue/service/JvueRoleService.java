@@ -8,6 +8,7 @@ import java.util.List;
 
 import net.ccfish.jvue.model.JvueRole;
 import net.ccfish.jvue.vm.ModuleAndMenus;
+import net.ccfish.jvue.vm.RoleMenuDetails;
 
 /**
  * 
@@ -17,10 +18,12 @@ import net.ccfish.jvue.vm.ModuleAndMenus;
  */
 public interface JvueRoleService extends _AbstractService<JvueRole, Integer> {
 
-    ModuleAndMenus findModuleAndMenu(List<Integer> roles);
+    ModuleAndMenus<Integer> findModuleAndMenu(List<Integer> roles);
 
     JvueRole updateEnabled(Integer id, byte enabled);
     
     List<Integer> getRolesByApi(Integer apiId);
+
+    RoleMenuDetails<Integer> getRoleInfo(Integer id);
 
 }

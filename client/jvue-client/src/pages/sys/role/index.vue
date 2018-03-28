@@ -22,7 +22,7 @@
       <el-table-column label="操作" align="center" width="250" fixed="right">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button type="primary" size="mini" @click="showDetail(scope.row.id)">详情</el-button>
+            <el-button type="primary" size="mini" @click="grant(scope.row.id)">授权</el-button>
             <el-button type="success" size="mini" @click="edit(scope.row.id)">编辑</el-button>
             <el-button type="warning" size="mini" @click="unable(scope.row.id)" v-if="scope.row.enabled === 1">禁用</el-button>
             <el-button size="mini" @click="enable(scope.row.id)" v-else>启用</el-button>
@@ -64,8 +64,8 @@ export default {
       this.roleList.searchForm.page = newPage
       this.roleList.fetch()
     },
-    showDetail (id) {
-      this.$router.push(`/sys/role/detail/${id}`)
+    grant (id) {
+      this.$router.push(`/sys/role/grant/${id}`)
     },
     edit(id) {
       this.$router.push(`/sys/role/edit/${id}`)

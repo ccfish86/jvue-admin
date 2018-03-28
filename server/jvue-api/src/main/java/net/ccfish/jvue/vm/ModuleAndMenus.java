@@ -6,9 +6,10 @@ package net.ccfish.jvue.vm;
 
 import java.util.List;
 
+import org.springframework.util.MultiValueMap;
+
 import net.ccfish.jvue.model.JvueMenu;
 import net.ccfish.jvue.model.JvueModule;
-import net.ccfish.jvue.model.JvueSegment;
 
 /**
  * 
@@ -16,13 +17,14 @@ import net.ccfish.jvue.model.JvueSegment;
  * @version 1.0
  * @since  1.0
  */
-public class ModuleAndMenus {
+public class ModuleAndMenus<T> {
 
     private List<JvueModule> modules;
 
     private List<JvueMenu> menus;
-//    
-//    private List<JvueSegment> segments;
+    
+    // 画面片段<画面ID> 画面片段ID
+    private MultiValueMap<Integer, T> segments;
 
     public List<JvueModule> getModules() {
         return modules;
@@ -40,12 +42,13 @@ public class ModuleAndMenus {
         this.menus = menus;
     }
 
-//    public List<JvueSegment> getSegments() {
-//        return segments;
-//    }
+    public MultiValueMap<Integer, T> getSegments() {
+        return segments;
+    }
 
-//    public void setSegments(List<JvueSegment> segments) {
-//        this.segments = segments;
-//    }
+    public void setSegments(MultiValueMap<Integer, T> segments) {
+        this.segments = segments;
+    }
+
 
 }

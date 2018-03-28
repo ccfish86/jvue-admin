@@ -16,7 +16,7 @@
           <el-row type="flex" class="table-expand__content">
             <el-col flex="left" :span="18" class="form-col__role">
               <el-checkbox-group v-model="props.row.roles" >
-                <el-checkbox size="small" v-for="(item, index) in roleList.list" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+                <el-checkbox size="small" v-for="item in roleList.list" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
               </el-checkbox-group>
             </el-col>
             <el-col :span="4" :offset="1">
@@ -37,6 +37,11 @@
       <el-table-column prop="nickname" label="用户名" align="left" min-width="100">
       </el-table-column>
       <el-table-column prop="email" label="邮件" align="left" min-width="100">
+      </el-table-column>
+      <el-table-column prop="roles" label="权限" align="left" min-width="100">
+        <template slot-scope="scope">
+          <el-tag v-for="role in scope.row.roles">{{role|roleName}}</el-tag>
+        </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" align="left" width="100">
       </el-table-column>
@@ -74,6 +79,7 @@
 <script>
 import {messages} from '@/common'
 import {mapModules, mapRules} from 'vuet'
+import vuet from '@/vuet'
 export default {
   name: 'index',
   mixins: [
@@ -82,6 +88,19 @@ export default {
   ],
   data () {
     return {}
+  },
+  filters: {
+    roleName(role) {
+      let roleList = vuet.getModule('sys-role-list')
+      if (roleList) {
+        for (let r of roleList.list) {
+          if (r.id === role) {
+            return r.name
+          }
+        }
+      }
+      return '_' + role
+    }
   },
   methods: {
     handleSizeChange (newSize) {
@@ -136,8 +155,16 @@ export default {
       console.info(user)
     },
     saveRole(user) {
-      this.userList.saveRoles(user.id, user.roles)
-      console.info(user)
+      this.userList.saveRoles(user.id, user.roles).then(res => {
+        this.$message(messages.messageSaveSuccess())
+      }).catch(err => {
+        this.$notify({
+          title: '警告',
+          message: err,
+          type: 'warning',
+          duration: 2500
+        })
+      })
     },
     permit(user, role) {
       if (user.status !== 1) {

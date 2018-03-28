@@ -219,7 +219,7 @@ export default {
           },
           async loadApis() {
             let id = this.app.$route.params['id']
-            const response = await ApiUtils.get(`/api/menu/ext/api/${id}`)
+            const response = await ApiUtils.get(`/api/menu/ext/${id}/api`)
             let {error, message, data} = response.data
             if (error === null) {
               this.apis = data.map(d => d.apiId)
@@ -230,7 +230,7 @@ export default {
           },
           async loadSegments() {
             let id = this.app.$route.params['id']
-            const response = await ApiUtils.get(`/api/menu/ext/segment/${id}`)
+            const response = await ApiUtils.get(`/api/menu/ext/${id}/segment`)
             let {error, message, data} = response.data
             if (error === null) {
               this.segments = data
@@ -242,7 +242,7 @@ export default {
           async saveApis() {
             let id = this.app.$route.params['id']
             let params = {apis: this.apis}
-            const response = await ApiUtils.put(`/api/menu/ext/api/${id}`, params)
+            const response = await ApiUtils.put(`/api/menu/ext/${id}/api`, params)
             let {error, message, data} = response.data
             if (error === null) {
               this.apis = data.map(d => d.apiId)
@@ -406,7 +406,6 @@ export default {
         }
       }
     },
-
     role: {
       modules: {
         list: {
@@ -525,6 +524,56 @@ export default {
             } else {
               Promise.reject(message)
             }
+          }
+        },
+        grant: {
+          data() {
+            return {
+              roleInfo: {},
+              allRoleInfo: {},
+              currentModule: `1`,
+              currentPages: [],
+              form: {
+                menus: []
+              }
+            }
+          },
+          async fetch() {
+            let id = this.app.$route.params['id']
+            Promise.all([ApiUtils.get(`/api/role/ext/${id}/grant`), ApiUtils.get(`/api/menu/ext/menus`)]).then(res => {
+              let [granted, allMenu] = res
+              let {error, message, data} =  granted.data
+              let {error: error2, message: message2, data: data2} =  allMenu.data
+              if (error === null && error2 === null) {
+                this.roleInfo = data
+                this.allRoleInfo = data2
+                this.changeModule(1)
+                Promise.resolve(data)
+              } else {
+                Promise.reject(`${message} ${message2}`)
+              }
+            }).catch(err => {
+              Promise.reject(err)
+            })
+            // const response = await ApiUtils.get(`/api/role/ext/${id}/grant`)
+            // let {error, message, data} = response.data
+            // if (error === null) {
+            //   this.roleInfo = data
+            //   return data
+            // } else {
+            //   Promise.reject(message)
+            // }
+          },
+          async save() {
+            // 保存
+          },
+          async changeModule(moduleId) {
+            // allRoleInfo里面取
+            this.currentModule = moduleId
+            if (this.allRoleInfo) {
+              this.currentPages = this.allRoleInfo.menus.filter(m => m.moduleId === moduleId)
+            }
+            return
           }
         }
       }

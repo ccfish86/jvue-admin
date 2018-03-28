@@ -29,6 +29,7 @@ import net.ccfish.jvue.service.JvueMenuService;
 import net.ccfish.jvue.service.JvueSegmentService;
 import net.ccfish.jvue.service._AbstractService;
 import net.ccfish.jvue.service.acl.AclResc;
+import net.ccfish.jvue.vm.RoleMenuDetails;
 
 /**
  * API相关
@@ -79,15 +80,15 @@ public class JvueMenuController implements _BaseController<JvueMenu, Integer> {
 
     @ApiOperation(value = "API列表")
     @AclResc(id = 12, code = "apis", name = "API列表")
-    @GetMapping("/ext/api/{id}")
+    @GetMapping("/ext/{id}/api")
     public BaseModel<List<JvueApi>> apis(@PathVariable("id") Integer id) {
         List<JvueApi> apis = jvueApiService.findByMemu(id);
         return new BaseModel<List<JvueApi>>().setData(apis);
     }
 
-    @ApiOperation(value = "API列表")
-    @AclResc(id = 13, code = "updateApis", name = "API列表")
-    @PutMapping("/ext/api/{id}")
+    @ApiOperation(value = "更新API")
+    @AclResc(id = 13, code = "updateApis", name = "更新API")
+    @PutMapping("/ext/{id}/api")
     public BaseModel<List<JvueApi>> updateApis(@PathVariable("id") Integer id, @RequestBody ReqMenuApis req){
         List<JvueApi> apis = jvueApiService.updateApisByMemu(id, req.getApis());
         return new BaseModel<List<JvueApi>>().setData(apis);
@@ -95,10 +96,19 @@ public class JvueMenuController implements _BaseController<JvueMenu, Integer> {
 
     @ApiOperation(value = "Segment列表")
     @AclResc(id = 14, code = "segments", name = "Segment列表")
-    @GetMapping("/ext/segment/{id}")
+    @GetMapping("/ext/{id}/segment")
     public BaseModel<List<JvueSegment>> segments(@PathVariable("id") Integer id) {
         List<JvueSegment> segments = jvueSegmentService.findByMenu(id);
         return new BaseModel<List<JvueSegment>>().setData(segments);
     }
 
+    @ApiOperation(value = "画面详情列表")
+    @AclResc(id = 15, code = "getMenus", name = "画面详情列表")
+    @GetMapping("/ext/menus") 
+    public BaseModel<RoleMenuDetails<CodeDto<Integer>>> getMenus(){
+        
+        RoleMenuDetails<CodeDto<Integer>> jvueRole = jvueMenuService.getAllRoleInfo();
+        return new BaseModel<RoleMenuDetails<CodeDto<Integer>>>().setData(jvueRole);
+    }
+    
 }
