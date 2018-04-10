@@ -292,7 +292,7 @@ export default {
         names: {
           data () {
             return {
-              list: {}
+              list: []
             }
           },
           async fetch() {
