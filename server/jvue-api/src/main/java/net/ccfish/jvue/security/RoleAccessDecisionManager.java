@@ -18,8 +18,6 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 import org.springframework.web.util.UrlPathHelper;
@@ -27,7 +25,7 @@ import org.springframework.web.util.UrlPathHelper;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.MultiMap;
 
-import net.ccfish.common.JvueDataStatus;
+import net.ccfish.jvue.config.JvueGlobalMethodSecurityConfiguration;
 import net.ccfish.jvue.service.JvueRoleService;
 import net.ccfish.jvue.vm.AclResource;
 
@@ -37,8 +35,11 @@ import net.ccfish.jvue.vm.AclResource;
  * @author 袁贵
  * @version 1.0
  * @since  1.0
+ * @see JvueGlobalMethodSecurityConfiguration
+ * @see JvueMethodAclVoter
+ * @deprecated path匹配时，带参数的时候无法匹配成功，故改为MethodInvocation方式处理
  */
-@Component
+// @Component
 public class RoleAccessDecisionManager implements AccessDecisionManager {
 
     private final Logger logger = LoggerFactory.getLogger(RoleAccessDecisionManager.class);
@@ -91,7 +92,7 @@ public class RoleAccessDecisionManager implements AccessDecisionManager {
                     boolean isUrl = false;
                     boolean isMethod = false;
                     
-                    logger.debug("判断接口:{} {} {}, {}", ar.getCode(), ar.getName(), ar.getPath(), ar.getPattern());
+                    logger.trace("判断接口:{} {} {}, {}", ar.getCode(), ar.getName(), ar.getPath(), ar.getPattern());
 
                     for (String path : ar.getPattern()) {
                         isUrl = pathMatcher.match(path, requestUrl);

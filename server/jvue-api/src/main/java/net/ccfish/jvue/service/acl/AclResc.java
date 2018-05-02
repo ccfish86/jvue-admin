@@ -6,6 +6,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.security.access.annotation.Secured;
+
 /**
  * 定义接口信息，用于角色授权画面
  * <br>
@@ -17,6 +19,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Secured("ROLE_USER")
 @Documented
 public @interface AclResc {
     
