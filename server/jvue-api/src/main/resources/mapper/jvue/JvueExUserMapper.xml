@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.ccfish.jvue.domain.dao.JvueExUserMapper">
+  <resultMap id="BaseRoleResultMap" type="net.ccfish.jvue.domain.model.JvueExUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="CHAR" property="password" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="super_user" jdbcType="INTEGER" property="superUser" />
+    <collection property="roles" ofType="net.ccfish.jvue.domain.model.JvueExRole"
+        column="id" select="selectRoles">
+    </collection>
+  </resultMap>
+  
+  <resultMap type="net.ccfish.jvue.domain.model.JvueExRole" id="RoleItemMap">
+    <id column="r_id" jdbcType="INTEGER" property="id" />
+    <result column="r_name" jdbcType="VARCHAR" property="name" />
+    <result column="r_enabled" jdbcType="SMALLINT" property="enabled" />
+  </resultMap>
+  
+  <select id="findByUsername" parameterType="java.lang.String" resultMap="BaseRoleResultMap">
+    select 
+        jvue_user.id, jvue_user.username, jvue_user.password, jvue_user.email, jvue_user.status, jvue_user.nickname,
+        jvue_user.super_user
+    from 
+     jvue.jvue_user
+    where
+     jvue_user.username = #{username,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="searchUsers" parameterType="java.lang.String" resultMap="BaseRoleResultMap">
+    select
+      jvue_user.id, jvue_user.username, jvue_user.password, jvue_user.email, jvue_user.status, jvue_user.nickname,
+      jvue_user.super_user
+    from
+      jvue.jvue_user
+    <where>
+        <if test="username!=null">
+            jvue_user.username like #{username,jdbcType=VARCHAR}
+        </if>
+    </where>
+  </select>
+  
+  <select id="selectRoles" parameterType="java.lang.Long" resultMap="RoleItemMap">
+    select 
+      jvue_role.id as r_id, jvue_role.name as r_name, jvue_role.enabled as r_enabled
+    from
+      jvue.jvue_user_role
+      left join jvue.jvue_role on (jvue_user_role.role_id = jvue_role.id)
+    where
+      jvue_user_role.user_id = #{userId,jdbcType=BIGINT}
+    order by r_id
+  </select>
+  
+</mapper>

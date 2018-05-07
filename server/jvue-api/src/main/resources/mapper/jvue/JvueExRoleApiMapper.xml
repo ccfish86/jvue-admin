@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.ccfish.jvue.domain.dao.JvueExRoleApiMapper">
+  <resultMap id="BaseRoleResultMap" type="net.ccfish.jvue.domain.model.JvueExRoleApi">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="api_id" jdbcType="INTEGER" property="apiId" />
+    <association property="role" javaType="net.ccfish.jvue.autogen.model.JvueRole">
+        <id column="r_id" jdbcType="INTEGER" property="id" />
+        <result column="r_name" jdbcType="VARCHAR" property="name" />
+        <result column="r_enabled" jdbcType="SMALLINT" property="enabled" />
+    </association>
+    <association property="api" javaType="net.ccfish.jvue.autogen.model.JvueApi">
+         <id column="a_id" jdbcType="INTEGER" property="id" />
+        <result column="a_page_id" jdbcType="INTEGER" property="pageId" />
+        <result column="a_api_code" jdbcType="INTEGER" property="apiCode" />
+        <result column="a_name" jdbcType="VARCHAR" property="name" />
+    </association>
+  </resultMap>
+  
+  <select id="selectByApi" parameterType="java.lang.Integer" resultMap="BaseRoleResultMap">
+    select 
+        jvue_role_api.id, jvue_role_api.role_id, jvue_role_api.api_id,
+        jvue_role.id as r_id, jvue_role.name as r_name, jvue_role.enabled as r_enabled,
+        jvue_api.id as a_id, jvue_api.name as a_name, jvue_api.page_id as a_page_id, jvue_api.api_code as a_api_code
+    from jvue.jvue_role_api
+        inner join jvue.jvue_api on(jvue_api.id = jvue_role_api.api_id)
+        inner join jvue.jvue_role on(jvue_role.id = jvue_role_api.role_id)
+    where 
+      jvue_api.api_code = #{apiCode,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByRole" parameterType="java.util.List" resultMap="BaseRoleResultMap">
+    select 
+        jvue_role_api.id, jvue_role_api.role_id, jvue_role_api.api_id,
+        jvue_role.id as r_id, jvue_role.name as r_name, jvue_role.enabled as r_enabled,
+        jvue_api.id as a_id, jvue_api.name as a_name, jvue_api.page_id as a_page_id, jvue_api.api_code as a_api_code
+    from jvue.jvue_role_api
+        inner join jvue.jvue_api on(jvue_api.id = jvue_role_api.api_id)
+        inner join jvue.jvue_role on(jvue_role.id = jvue_role_api.role_id)
+    where 
+      jvue_role_api.role_id in 
+      <foreach close=")" collection="roleIds" item="listItem" open="(" separator=",">
+            #{listItem,jdbcType=INTEGER}
+     </foreach>
+  </select>
+  
+  <select id="selectApiByRoleAndModule" resultType="java.lang.Integer">
+    select 
+        jvue_role_api.api_id
+    from jvue.jvue_role_api jvue_role_api
+        inner join jvue.jvue_api c on(c.id = jvue_role_api.api_id)
+        inner join jvue.jvue_page p on(c.page_id = p.id)
+    where
+        jvue_role_api.role_id  = #{roleId,jdbcType=INTEGER}
+        <if test="moduleId != null">
+        and p.module_id = #{moduleId,jdbcType=INTEGER}
+        </if>
+  </select>
+
+</mapper>

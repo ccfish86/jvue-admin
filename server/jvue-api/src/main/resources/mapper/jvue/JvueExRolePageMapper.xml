@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.ccfish.jvue.domain.dao.JvueExRolePageMapper">
+  <resultMap id="BasePageResultMap" type="net.ccfish.jvue.domain.model.JvueExPage">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="module_id" jdbcType="INTEGER" property="moduleId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="component" jdbcType="VARCHAR" property="component" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="icon_class" jdbcType="VARCHAR" property="iconClass" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="enabled" jdbcType="INTEGER" property="enabled" />
+    <result column="show_nav" jdbcType="INTEGER" property="showNav" />
+    <collection property="jvuePages" ofType="net.ccfish.jvue.domain.model.JvueExPage">
+        <id column="c_id" jdbcType="INTEGER" property="id" />
+        <result column="c_module_id" jdbcType="INTEGER" property="moduleId" />
+        <result column="c_type" jdbcType="INTEGER" property="type" />
+        <result column="c_path" jdbcType="VARCHAR" property="path" />
+        <result column="c_component" jdbcType="VARCHAR" property="component" />
+        <result column="c_name" jdbcType="VARCHAR" property="name" />
+        <result column="c_icon_class" jdbcType="VARCHAR" property="iconClass" />
+        <result column="c_parent_id" jdbcType="INTEGER" property="parentId" />
+        <result column="c_enabled" jdbcType="INTEGER" property="enabled" />
+        <result column="c_show_nav" jdbcType="INTEGER" property="showNav" />
+    </collection>
+  </resultMap>
+ 
+  <select id="selectPageByRole" parameterType="java.util.List" resultMap="BasePageResultMap">
+    select 
+        p.id, p.module_id, p.type, p.path, p.component, p.name, p.icon_class, p.parent_id, p.enabled, p.show_nav,
+        c.id as c_id, c.module_id as c_module_id, c.type as c_type, c.path as c_path, c.component as c_component, 
+        c.name as c_name, c.icon_class as c_icon_class, c.parent_id as c_parent_id, c.enabled as c_enabled, c.show_nav as c_show_nav
+    from jvue.jvue_role_page jvue_role_page
+        inner join jvue.jvue_page c on(c.id = jvue_role_page.page_id)
+        right join jvue.jvue_page p on (c.parent_id = p.id)
+    where 
+      jvue_role_page.role_id in 
+      <foreach close=")" collection="roleIds" item="listItem" open="(" separator=",">
+            #{listItem,jdbcType=INTEGER}
+     </foreach>
+    order by p.id, c.id
+  </select>
+
+  <select id="selectPageByRoleAndModule" resultType="java.lang.Integer">
+    select 
+        jvue_role_page.page_id
+    from jvue.jvue_role_page jvue_role_page
+        inner join jvue.jvue_page c on(c.id = jvue_role_page.page_id)
+    where
+        jvue_role_page.role_id  = #{roleId,jdbcType=INTEGER}
+        <if test="moduleId != null">
+        and c.module_id = #{moduleId,jdbcType=INTEGER}
+        </if>
+  </select>
+</mapper>
