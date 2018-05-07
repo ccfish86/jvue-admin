@@ -3,11 +3,11 @@
       <el-row class="actions-top--edit" type="flex" justify="end">
         <el-col :span="2" :pull="2">
           <el-button type="success" icon="el-icon-document" size="small"
-                     @click="$router.push('/sys/menu/add')">添加
+                     @click="$router.push('/sys/page/add')">添加
           </el-button>
         </el-col>
       </el-row>
-      <el-table :data="menuList.list" v-loading="menuList.loading" empty-text="没有您要查询的数据"
+      <el-table :data="pageList.list" v-loading="pageList.loading" empty-text="没有您要查询的数据"
                 size="small" border stripe>
         <el-table-column prop="id" label="ID" align="center" width="95">
         </el-table-column>
@@ -42,10 +42,10 @@
           <el-pagination layout="total, sizes, prev, pager, next, jumper" background
                          @size-change="handleSizeChange"
                          @current-change="handleCurrentChange"
-                         :current-page="menuList.searchForm.page"
+                         :current-page="pageList.searchForm.page"
                          :page-sizes="[10, 20, 50, 100, 200, 400]"
-                         :page-size="menuList.searchForm.pageSize"
-                         :total="menuList.searchForm.totalCount">
+                         :page-size="pageList.searchForm.pageSize"
+                         :total="pageList.searchForm.totalCount">
           </el-pagination>
         </el-col>
       </el-row>
@@ -58,8 +58,8 @@ import filters from '../common/filters'
 export default {
   name: 'index',
   mixins: [
-    mapModules({menuList: 'sys-menu-list'}),
-    mapRules({route: 'sys-menu-list', need: 'sys-module-names'})
+    mapModules({pageList: 'sys-page-list'}),
+    mapRules({route: 'sys-page-list', need: 'sys-module-names'})
   ],
   filters: {
     moduleName: (moduleId) => {
@@ -68,18 +68,18 @@ export default {
   },
   methods: {
     handleSizeChange (newSize) {
-      this.menuList.searchForm.pageSize = newSize
-      this.menuList.fetch()
+      this.pageList.searchForm.pageSize = newSize
+      this.pageList.fetch()
     },
     handleCurrentChange (newPage) {
-      this.menuList.searchForm.page = newPage
-      this.menuList.fetch()
+      this.pageList.searchForm.page = newPage
+      this.pageList.fetch()
     },
     showDetail (id) {
-      this.$router.push(`/sys/menu/detail/${id}`)
+      this.$router.push(`/sys/page/detail/${id}`)
     },
     edit (id) {
-      this.$router.push(`/sys/menu/edit/${id}`)
+      this.$router.push(`/sys/page/edit/${id}`)
     },
     remove (id) {
       this.$confirm('删除画面可能无法恢复, 是否继续?', '提示', {
@@ -87,12 +87,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.menuList.remove(id).then(() => {
+        this.pageList.remove(id).then(() => {
           this.$message({
             type: 'success',
             message: '删除成功!'
           })
-          this.menuList.fetch()
+          this.pageList.fetch()
         }).catch((err) => {
           this.$notify({
             title: '警告',
@@ -101,7 +101,6 @@ export default {
             duration: 2500
           })
         })
-
       }).catch(() => {
         this.$message({
           type: 'info',

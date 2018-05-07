@@ -33,10 +33,7 @@ public class AclResourceServiceImpl implements AclResourceService {
 
     @Autowired
     private HazelcastInstance hazelcastInstance;
-    
-    /* (non-Javadoc)
-     * @see net.ccfish.jvue.service.AclResourceService#getName(java.lang.String)
-     */
+
     @Override
     public String getName(Integer id) {
         MultiMap<Integer, AclResource> resourcesMap =
@@ -55,9 +52,6 @@ public class AclResourceServiceImpl implements AclResourceService {
         return "";
     }
 
-    /* (non-Javadoc)
-     * @see net.ccfish.jvue.service.AclResourceService#getAll()
-     */
     @Override
     public List<AclResource> getAll() {
       MultiMap<Integer, AclResource> resourcesMap =

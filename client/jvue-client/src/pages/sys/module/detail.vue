@@ -7,14 +7,14 @@
 </template>
 
 <script>
-  import {mapModules, mapRules} from 'vuet'
-  export default {
-    name: 'detail',
-    mixins: [
-      mapModules({moduleDetail: 'sys-module-detail'}),
-      mapRules({route: 'sys-module-detail'})
-    ]
-  }
+import {mapModules, mapRules} from 'vuet'
+export default {
+  name: 'detail',
+  mixins: [
+    mapModules({moduleDetail: 'sys-module-detail'}),
+    mapRules({route: 'sys-module-detail'})
+  ]
+}
 </script>
 
 <style scoped>

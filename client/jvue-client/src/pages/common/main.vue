@@ -6,7 +6,7 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <div class="logo-info-span"><a href="https://www.hongxinxiangtong.org" target="hxxt">
-                <img src="/static/img/logo-white.png" alt="JVUE" /></a>
+                <img src="/static/img/logo-white.png" alt="" /></a>
               </div>
               <div>
                 <el-menu :default-active="String(userSelf.moduleId)" mode="horizontal">
@@ -33,7 +33,7 @@
       </el-row>
     </el-header>
     <el-container>
-      <el-aside width="201px">
+      <el-aside width="201px" class="left-nav">
         <el-menu :default-active="String(userSelf.active)" router theme="dark" @open="handleOpen" @close="handleClose" :default-openeds="userSelf.openeds">
           <template v-for="router in userSelf.leftRoutes">
             <el-submenu :index="router.path" :key="router.path"
@@ -73,9 +73,10 @@
   </el-container>
 </template>
 
-
-
 <style scoped>
+  .left-nav {
+    min-height:720px;
+  }
   .el-breadcrumb{
     margin-top: 15px
   }
@@ -108,12 +109,10 @@
 </style>
 <script>
 import {mapModules, mapRules} from 'vuet'
-import ElHeader from "element-ui/packages/header/src/main";
 
 export default {
-  components: {ElHeader},
   mixins: [
-    mapModules({userSelf: 'user-self', dictE: 'common-dict-enums'}),
+    mapModules({userSelf: 'user-self'}),
     mapRules({
       need: 'common-dict-enums',
       store: [{path: 'user-self'}, {path: 'common-dict-enums'}]

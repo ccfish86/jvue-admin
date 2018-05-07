@@ -5,14 +5,14 @@
               size="small" border stripe>
       <el-table-column prop="id" label="ID" align="center" width="95">
       </el-table-column>
-      <el-table-column prop="menuId" label="画面ID" align="left" min-width="70">
+      <el-table-column prop="pageId" label="画面ID" align="left" min-width="70">
       </el-table-column>
-      <el-table-column prop="menuId" label="画面名" align="left" min-width="120">
-        <template slot-scope="scope">{{scope.row.menuId|menuName}}</template>
+      <el-table-column prop="pageId" label="画面名" align="left" min-width="120">
+        <template slot-scope="scope">{{scope.row.pageId|pageName}}</template>
       </el-table-column>
-      <el-table-column prop="segmentId" label="接口ID" align="left" min-width="70">
+      <el-table-column prop="segmentCode" label="画面片段ID" align="left" min-width="70">
       </el-table-column>
-      <el-table-column prop="name" label="接口名" align="left" min-width="120">
+      <el-table-column prop="name" label="画面片段名" align="left" min-width="120">
       </el-table-column>
     </el-table>
 
@@ -38,11 +38,11 @@ export default {
   name: 'index',
   mixins: [
     mapModules({segmentList: 'sys-segment-list'}),
-    mapRules({route: 'sys-segment-list', need: 'sys-menu-names'})
+    mapRules({route: 'sys-segment-list', need: 'sys-page-names'})
   ],
   filters: {
-    menuName: (menuId) => {
-      return filters.menuName(menuId)
+    pageName: (pageId) => {
+      return filters.pageName(pageId)
     }
   },
   methods: {

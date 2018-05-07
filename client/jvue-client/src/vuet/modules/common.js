@@ -114,7 +114,7 @@ export default {
               imageData: base64,
               watermarkSign: waterMark
             }
-            const response = await ApiUtils.post(`/hifi-storage-service/api/storage/photo`, req)
+            const response = await ApiUtils.post(`/api/pub/upload/photo`, req)
             this.loading = false
             let {status, data} = response
             if (status === 200) {
@@ -137,7 +137,7 @@ export default {
             let param = {
               fileId: url
             }
-            const response = await ApiUtils.get(`/hifi-storage-service/api/storage/richText`, param)
+            const response = await ApiUtils.get(`/api/pub/download/richText`, param)
             this.loading = false
             let {status, data} = response
             if (status === 200) {

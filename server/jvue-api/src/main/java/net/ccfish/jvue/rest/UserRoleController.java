@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
-import net.ccfish.jvue.model.UserRole;
-import net.ccfish.jvue.service.UserRoleService;
+import net.ccfish.common.acl.AclResc;
+import net.ccfish.jvue.autogen.model.JvueUserRole;
+import net.ccfish.jvue.service.JvueUserRoleService;
 import net.ccfish.jvue.service._AbstractService;
-import net.ccfish.jvue.service.acl.AclResc;
 
 /**
  * 用户相关
@@ -22,19 +22,21 @@ import net.ccfish.jvue.service.acl.AclResc;
  */
 @RestController
 @RequestMapping("user-role")
-@AclResc(id = 6100, code = "UserRole", name = "用户角色管理", homePage = "")
+@AclResc(id = 4100)
 @Api(tags  = "用户角色管理")
-public class UserRoleController implements _BaseController<UserRole, Long> {
+public class UserRoleController implements _BaseController<JvueUserRole, Long> {
 
     @Autowired
-    private UserRoleService userRoleService;
+    private JvueUserRoleService userRoleService;
 
     /* (non-Javadoc)
-     * @see net.ccfish.jvue.rest._BaseController#baseService()
+     * @see com.hxxt.admin.rest._BaseController#baseService()
      */
     @Override
-    public _AbstractService<UserRole, Long> baseService() {
+    public _AbstractService<JvueUserRole, Long> baseService() {
         return this.userRoleService;
     }
+    
+    
     
 }

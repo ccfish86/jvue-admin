@@ -3,14 +3,12 @@
  */
 package net.ccfish.jvue.security;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 安全用户模型
@@ -31,12 +29,12 @@ public class JwtUserDetails implements UserDetails {
     private final String nickname;
     private final String email;
     private final String password;
-    private final byte superUser;
+    private final Integer superUser;
     private final Collection<? extends GrantedAuthority> authorities;
-    private final Set<Integer> roles;
+    private final List<Integer> roles;
 
-    public JwtUserDetails(Long id, String username, String password, byte superUser, String nickname, String email,
-            Collection<? extends GrantedAuthority> authorities, Set<Integer> roles) {
+    public JwtUserDetails(Long id, String username, String password, Integer superUser, String nickname, String email,
+            Collection<? extends GrantedAuthority> authorities, List<Integer> roles) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -91,7 +89,7 @@ public class JwtUserDetails implements UserDetails {
         return id;
     }
 
-    public byte getSuperUser() {
+    public Integer getSuperUser() {
         return superUser;
     }
 
@@ -103,7 +101,7 @@ public class JwtUserDetails implements UserDetails {
         return email;
     }
 
-    public Set<Integer> getRoles() {
+    public List<Integer> getRoles() {
         return roles;
     }
 

@@ -2,11 +2,13 @@ package net.ccfish.jvue.startup;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +29,13 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ILock;
 import com.hazelcast.core.MultiMap;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.ccfish.common.JvueDataStatus;
-import net.ccfish.jvue.model.User;
-import net.ccfish.jvue.repository.UserRepository;
+import net.ccfish.common.acl.AclResc;
+import net.ccfish.jvue.autogen.dao.JvueUserMapper;
+import net.ccfish.jvue.autogen.model.JvueUser;
 import net.ccfish.jvue.service.JvueApiService;
-import net.ccfish.jvue.service.acl.AclResc;
 import net.ccfish.jvue.vm.AclResource;
 
 /**
@@ -54,7 +58,7 @@ public class ApplicationStartup implements CommandLineRunner {
     @Autowired
     private HazelcastInstance hazelcastInstance;
     @Autowired
-    private UserRepository userRepository;
+    private JvueUserMapper userRepository;
 
     // @Resource
     // private AclResourceService aclResourceService;
@@ -103,21 +107,25 @@ public class ApplicationStartup implements CommandLineRunner {
             }
             
             ilock.lock();
-            long userCount =userRepository.count();
+            
+            // 没有超级管理员
+            JvueUser record = new JvueUser();
+            
+            long userCount =userRepository.selectCount(record);
             if (userCount > 0) {
                 // 用户已经存在
                 return;
             }
             
             // 追加管理员
-            User user = new User();
+            JvueUser user = new JvueUser();
             user.setUsername("admin");
             user.setPassword(passwordEncoder.encode("admin"));
             user.setStatus(JvueDataStatus.ENABLE_TRUE);
-            user.setNickname("jvue super admin user");
+            user.setNickname("Supper admin");
             user.setSuperUser(JvueDataStatus.SUPER_USER_TRUE);
             
-            userRepository.save(user);
+            userRepository.insertSelective(user);
         } finally {
             ilock.unlock();
         }
@@ -147,16 +155,17 @@ public class ApplicationStartup implements CommandLineRunner {
                 return;
             }
 
+            Set<Integer> apiIds = new HashSet<>(); 
+            
             Map<RequestMappingInfo, HandlerMethod> map =
                     requestMappingHandlerMapping.getHandlerMethods();
             for (RequestMappingInfo info : map.keySet()) {
                 HandlerMethod handlerMethod = map.get(info);
                 AclResc classAclResc = handlerMethod.getBeanType().getAnnotation(AclResc.class);
+                Api classApi = handlerMethod.getBeanType().getAnnotation(Api.class);
 
                 if (classAclResc != null) {
 
-                    logger.debug("load class resource: id={}, code={}, name={}", classAclResc.id(),
-                            classAclResc.code(), classAclResc.name());
                     Collection<AclResource> resources = resourcesMap.get(classAclResc.id());
 
                     Class<?> aclResourceClass = handlerMethod.getBeanType();
@@ -169,9 +178,8 @@ public class ApplicationStartup implements CommandLineRunner {
                         AclResource classResc = new AclResource();
                         classResc.setId(classAclResc.id());
                         classResc.setType(AclResource.Type.CLASS);
-                        classResc.setCode(classAclResc.code());
-                        classResc.setName(classAclResc.name());
-                        
+                        classResc.setName(classApi.value());
+
                         resourcesMap.put(classAclResc.id(), classResc);
                     }
 
@@ -179,24 +187,57 @@ public class ApplicationStartup implements CommandLineRunner {
 
                         Method method = handlerMethod.getMethod();
                         AclResc methodAclResc = method.getAnnotation(AclResc.class);
-                        
+                        ApiOperation methodOperation = method.getAnnotation(ApiOperation.class);
+
                         if (methodAclResc != null) {
 
-                            logger.debug("load resource: id={}, code={}, name={}",
-                                    methodAclResc.id(), methodAclResc.code(), methodAclResc.name());
+                            if (methodOperation == null) {
+                                logger.warn("@ApiOperation is undefined. {}#{}", aclResourceClass.getName(), method.getName());
+                                continue;
+                            }
                             
-                            // TODO 需要后续处理的事项，有一部分字段，与Swagger2重复，仅需保留Swagger2定义的一部分，便于开发与维护
+                            String apiName = classApi.value();
+                            String operatioName = methodOperation.value();
                             
+                            if (StringUtils.isEmpty(apiName)) {
+                                // 读tags值
+                                apiName = StringUtils.join(classApi.tags());
+                            }
+                            if (StringUtils.isEmpty(operatioName)) {
+                                // 读tags值
+                                operatioName = StringUtils.join(methodOperation.tags());
+                            }
+
+                            // 有一部分字段，与Swagger2重复，仅需保留Swagger2定义的一部分，便于开发与维护
+                            int id = classAclResc.id() + methodAclResc.id();
+                            String name = apiName + operatioName;
+                            
+                            if (StringUtils.isEmpty(apiName)) {
+                                logger.warn("Class name is undefined：{}#{}", aclResourceClass.getName(), method.getName());
+                            }
+                            if (StringUtils.isEmpty(operatioName)) {
+                                logger.warn("Method name is undefined：{}#{}", aclResourceClass.getName(), method.getName());
+                            }
+                            
+                            // 判断ID是否重复
+                            if (!apiIds.add(id)) {
+                                logger.error("API ID is duplicate defined：{} {}#{}", id, aclResourceClass.getName(), method.getName());
+                                continue;
+                            }
+                            
+                            logger.debug("load method resource: id={}, name={}", id, name);
+
                             AclResource methodResc = new AclResource();
-                            methodResc.setId(classAclResc.id() + methodAclResc.id());
+                            methodResc.setId(id);
                             methodResc.setType(AclResource.Type.METHOD);
-                            methodResc.setCode(classAclResc.code() + methodAclResc.code());
-                            methodResc.setName(classAclResc.name() + methodAclResc.name());
-                            
+                            methodResc.setName(name);
+
                             // URL和请求方法
                             PatternsRequestCondition pattern = info.getPatternsCondition();
                             RequestMethodsRequestCondition methods = info.getMethodsCondition();
-                            
+
+                            // logger.debug("pattern: {}, {}", pattern, methods);
+
                             methodResc.setPattern(pattern.getPatterns());
                             // methodResc.setPath(classMapping.path());
                             methodResc.setMethod(toString(methods.getMethods()));

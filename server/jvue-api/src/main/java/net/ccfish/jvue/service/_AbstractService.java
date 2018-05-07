@@ -6,12 +6,12 @@ package net.ccfish.jvue.service;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.github.pagehelper.PageHelper;
+
+import net.ccfish.common.OrderByUtils;
+import net.ccfish.common.mybatis.BaseMapper;
+import net.ccfish.common.web.PageParam;
 
 /**
  * 基本Service类
@@ -22,37 +22,35 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface _AbstractService<T, ID extends Serializable> {
 
-    JpaRepository<T, ID> jpaRepository();
+    BaseMapper<T> baseMapper();
 
     default T getOne(ID id) {
-        Optional<T> result = jpaRepository().findById(id);
-        return result.get();
+        T result = baseMapper().selectByPrimaryKey(id);
+        return result;
     }
 
     default List<T> getAll() {
-        return jpaRepository().findAll();
+        return baseMapper().selectAll();
     }
 
-    default Page<T> getAll(Pageable page) {
-        return jpaRepository().findAll(page);
+    default List<T> getAll(PageParam pageParam) {
+        String orderBy = OrderByUtils.toString(pageParam.getSort(), pageParam.getDirection());
+        PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize(), orderBy);
+        return baseMapper().selectAll();
     }
-
-    default Page<T> getAll(Example<T> example, Pageable page) {
-        return jpaRepository().findAll(example, page);
-    }
-
+    
     default void delete(ID id) {
-        jpaRepository().deleteById(id);
+        baseMapper().deleteByPrimaryKey(id);
     }
 
     default T save(T obj) {
-        T data = jpaRepository().save(obj);
-        return data;
+        baseMapper().insert(obj);
+        return obj;
     }
 
     default List<T> save(List<T> objs) {
-        List<T> datas = jpaRepository().saveAll(objs);
-        return datas;
+        baseMapper().insertList(objs);
+        return objs;
     }
 
     default T update(ID id, T data) {

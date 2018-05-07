@@ -3,14 +3,13 @@ package net.ccfish.jvue.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
-import net.ccfish.common.jpa.JpaRestrictions;
-import net.ccfish.common.jpa.SearchCriteria;
-import net.ccfish.jvue.model.JvueSegment;
-import net.ccfish.jvue.repository.JvueSegmentRepository;
+import net.ccfish.common.mybatis.BaseMapper;
+import net.ccfish.jvue.autogen.dao.JvueSegmentMapper;
+import net.ccfish.jvue.autogen.model.JvueSegment;
 import net.ccfish.jvue.service.JvueSegmentService;
 
 /**
@@ -18,28 +17,26 @@ import net.ccfish.jvue.service.JvueSegmentService;
  */
 @Service
 @Transactional
-public class JvueSegmentServiceImpl
-        implements JvueSegmentService {
+public class JvueSegmentServiceImpl implements JvueSegmentService {
 
-    private JvueSegmentRepository jvueSegmentRepository;
+    private JvueSegmentMapper jvueSegmentMapper;
 
     @Autowired
-    public JvueSegmentServiceImpl(JvueSegmentRepository jvueSegmentRepository) {
-        this.jvueSegmentRepository = jvueSegmentRepository;
+    public JvueSegmentServiceImpl(JvueSegmentMapper jvueSegmentMapper) {
+        this.jvueSegmentMapper = jvueSegmentMapper;
     }
 
     @Override
-    public JpaRepository<JvueSegment, Integer> jpaRepository() {
-        return this.jvueSegmentRepository;
+    public BaseMapper<JvueSegment> baseMapper() {
+        return this.jvueSegmentMapper;
     }
 
-    /* (non-Javadoc)
-     * @see net.ccfish.jvue.service.JvueSegmentService#findByMenu(java.lang.Integer)
-     */
     @Override
-    public List<JvueSegment> findByMenu(Integer menuId) {
-        SearchCriteria<JvueSegment> searchCriteria = new SearchCriteria<>();
-        searchCriteria.add(JpaRestrictions.eq("menuId", menuId, false));
-        return jvueSegmentRepository.findAll(searchCriteria);}
+    public List<JvueSegment> findByPage(Integer pageId) {
+        Assert.notNull(pageId, "画面ID不能为空");
+        JvueSegment segment = new JvueSegment();
+        segment.setPageId(pageId);
+        return jvueSegmentMapper.select(segment);
+    }
 
 }

@@ -144,6 +144,20 @@ const utils = {
       userRouters.push(userRouter)
     })
     return userRouters
+  },
+  sortInfo (props, sorting) {
+    if (props) {
+      let sort = utils.underLine(props)
+      let direction = sorting === 'descending' ? 1 : 0
+      return {sort, direction}
+    }
+    return {}
+  },
+  underLine (str) {
+    var re = /([A-Z])/g
+    return str.replace(re, function ($0, $1) {
+      return '_' + $1.toLowerCase()
+    })
   }
 }
 // 使用时直接在Script中使用[utils.setWindowTitle]取值即可

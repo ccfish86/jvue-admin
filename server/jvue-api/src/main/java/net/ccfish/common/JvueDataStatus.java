@@ -12,9 +12,9 @@ package net.ccfish.common;
  */
 public abstract class JvueDataStatus {
 
-    public static final byte ENABLE_TRUE = 0x1;
-    public static final byte ENABLE_FALSE = 0x0;
+    public static final int ENABLE_TRUE = 0x1;
+    public static final int ENABLE_FALSE = 0x0;
     
-    public static final byte SUPER_USER_TRUE = 0x1;
-    public static final byte SUPER_USER_FALSE = 0x0;
+    public static final int SUPER_USER_TRUE = 0x1;
+    public static final int SUPER_USER_FALSE = 0x0;
 }

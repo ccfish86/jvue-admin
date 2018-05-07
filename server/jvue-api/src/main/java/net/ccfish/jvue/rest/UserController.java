@@ -6,21 +6,32 @@ package net.ccfish.jvue.rest;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.Page;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.ccfish.common.acl.AclResc;
 import net.ccfish.common.web.BaseModel;
-import net.ccfish.jvue.model.User;
-import net.ccfish.jvue.service.UserService;
-import net.ccfish.jvue.service._AbstractService;
-import net.ccfish.jvue.service.acl.AclResc;
+import net.ccfish.common.web.PageParam;
+import net.ccfish.common.web.PagedModel;
+import net.ccfish.jvue.autogen.model.JvueUser;
+import net.ccfish.jvue.domain.model.JvueExUser;
+import net.ccfish.jvue.service.JvueUserService;
 
 /**
  * 用户相关
@@ -30,36 +41,71 @@ import net.ccfish.jvue.service.acl.AclResc;
  */
 @RestController
 @RequestMapping("user")
-@AclResc(id = 6000, code = "User", name = "用户管理", homePage = "")
+@AclResc(id = 4000)
 @Api(tags  = "用户管理")
-public class UserController implements _BaseController<User, Long> {
+public class UserController {
 
     @Autowired
-    private UserService userService;
+    private JvueUserService userService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    /* (non-Javadoc)
-     * @see net.ccfish.jvue.rest._BaseController#baseService()
-     */
-    @Override
-    public _AbstractService<User, Long> baseService() {
-        return this.userService;
+    @GetMapping("")
+    @AclResc(id = 1)
+    @ApiOperation(value = "列表")
+    public PagedModel<JvueExUser> list(@ModelAttribute PageParam pageParam) {
+        List<JvueExUser> result = userService.searchUser(pageParam);
+        return PagedModel.from((Page<JvueExUser>)result);
     }
     
-    public BaseModel<User> add(@RequestBody User user) {
+    @AclResc(id = 2)
+    @GetMapping("{id}")
+    @ApiOperation(value = "详情")
+    public  BaseModel<JvueUser> detail(@PathVariable("id") Long id) {        
+        JvueUser result = userService.getOne(id);
+        return new BaseModel<JvueUser>().setData(result);
+    }
+
+    @PostMapping("")
+    @AclResc(id = 3)
+    @ApiOperation(value = "追加")
+    public  BaseModel<JvueUser> add(@RequestBody JvueUser user) {
         String password = passwordEncoder.encode(user.getPassword());
         user.setPassword(password);
-        baseService().save(user);
-        return new BaseModel<User>().setData(user);
+        userService.save(user);
+        return new BaseModel<JvueUser>().setData(user);
+    }
+    
+    @PutMapping("{id}")
+    @AclResc(id = 4)
+    @ApiOperation(value = "更新")
+    public  BaseModel<Long> update(@PathVariable("id") Long id, @RequestBody JvueUser data) {
+        if (!StringUtils.isEmpty(data.getPassword())) {
+            String password = passwordEncoder.encode(data.getPassword());
+            data.setPassword(password);
+        }
+        userService.update(id, data);
+        return new BaseModel<Long>().setData(id);
+    }
+    
+    @DeleteMapping("{id}")
+    @AclResc(id = 5)
+    @ApiOperation(value = "删除")
+    public  BaseModel<Long> delete(@PathVariable("id") Long id) {
+        userService.delete(id);
+        return new BaseModel<Long>().setData(id);
     }
 
     @PutMapping("/ext/{id}/role")
-    @AclResc(id = 11, code = "updateRoles", name = "更新权限")
+    @AclResc(id = 11)
     @ApiOperation(value = "更新权限")
-    public BaseModel<User> updateRoles(@PathVariable("id") Long id, @RequestBody List<Integer> roles) {
-        User user = userService.updateRoles(id, roles);
-        return new BaseModel<User>().setData(user);
+    public BaseModel<JvueUser> updateRoles(@PathVariable("id") Long id, @RequestBody List<Integer> roles) {
+        
+        logger.debug("更新权限{} {}", id, roles);
+        JvueUser user = userService.updateRoles(id, roles);
+        return new BaseModel<JvueUser>().setData(user);
     }
-    
+
 }

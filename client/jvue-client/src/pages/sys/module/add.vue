@@ -17,8 +17,8 @@
 </template>
 
 <script>
-  import {mapModules, mapRules} from 'vuet'
-  import {messages} from '@/common'
+import {mapModules, mapRules} from 'vuet'
+import {messages} from '@/common'
 export default {
   name: 'add',
   mixins: [
@@ -26,7 +26,7 @@ export default {
     mapRules({temp: 'sys-module-add'})
   ],
   methods: {
-    onSubmit() {
+    onSubmit () {
       this.$validator.validateAll().then(result => {
         if (result) {
           this.moduleAdd.save().then((res) => {

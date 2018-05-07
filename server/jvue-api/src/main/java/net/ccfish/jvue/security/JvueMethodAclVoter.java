@@ -19,8 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import net.ccfish.common.JvueDataStatus;
+import net.ccfish.common.acl.AclResc;
 import net.ccfish.jvue.service.JvueRoleService;
-import net.ccfish.jvue.service.acl.AclResc;
 
 /**
  * 

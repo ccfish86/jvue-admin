@@ -6,7 +6,7 @@ package net.ccfish.common.web;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
+import com.github.pagehelper.Page;
 
 /**
  * 各消息/服务间用通用Model
@@ -70,7 +70,7 @@ public class PagedModel<T> extends BaseModel<List<T>> {    //当前页
         long pageCount = total / pageSize;
         return pageMod == 0 ? pageCount : pageCount + 1;
     }
-    
+
     /**
      * @param list
      * @return
@@ -78,10 +78,10 @@ public class PagedModel<T> extends BaseModel<List<T>> {    //当前页
      */
     public static <T> PagedModel<T> from(Page<T> list) {
         PagedModel<T> pageList = new PagedModel<>();
-        pageList.pageNum = list.getNumber();
-        pageList.pageSize = list.getSize();
-        pageList.setTotal(list.getTotalElements());
-        pageList.setData(list.getContent());
+        pageList.pageNum = list.getPageNum();
+        pageList.pageSize = list.getPageSize();
+        pageList.setTotal(list.getTotal());
+        pageList.setData(list.getResult());
         return pageList;
     }
 

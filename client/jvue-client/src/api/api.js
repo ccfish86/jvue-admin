@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import qs from 'qs'
 import NProgress from 'nprogress'
 import {Message, MessageBox, Notification} from 'element-ui'
 import vuet from '@/vuet/'
@@ -10,6 +11,9 @@ const axios = Axios.create({
   timeout: 10000,
   headers: {
     'Accept': 'application/json;charset=utf-8'
+  },
+  paramsSerializer: function (params) {
+    return qs.stringify(params, {arrayFormat: 'repeat'})
   }
 })
 
@@ -57,9 +61,10 @@ axios.interceptors.response.use((response) => {
       // TODO: jhipster's format
       if (error.response.data) {
         let {title, message, detail} = error.response.data
+        let {status, statusText} = error.response // for nodejs.proxy
         MessageBox({
-          title: title,
-          message: detail || message,
+          title: title || status,
+          message: detail || message || statusText,
           type: 'error'
         })
       } else {

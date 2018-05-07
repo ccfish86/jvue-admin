@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
-import net.ccfish.jvue.model.JvueSegment;
+import net.ccfish.common.acl.AclResc;
+import net.ccfish.jvue.autogen.model.JvueSegment;
 import net.ccfish.jvue.service.JvueSegmentService;
 import net.ccfish.jvue.service._AbstractService;
-import net.ccfish.jvue.service.acl.AclResc;
 
 /**
  * Segment相关
@@ -22,7 +22,7 @@ import net.ccfish.jvue.service.acl.AclResc;
  */
 @RestController
 @RequestMapping("segment")
-@AclResc(id = 5400, code = "JvueSegment", name = "画面片段管理", homePage = "")
+@AclResc(id = 5400)
 @Api(tags  = "画面片段管理")
 public class JvueSegmentController implements _BaseController<JvueSegment, Integer> {
 
@@ -30,7 +30,7 @@ public class JvueSegmentController implements _BaseController<JvueSegment, Integ
     private JvueSegmentService jvueSegmentService;
 
     /* (non-Javadoc)
-     * @see net.ccfish.jvue.rest._BaseController#baseService()
+     * @see com.hxxt.admin.rest._BaseController#baseService()
      */
     @Override
     public _AbstractService<JvueSegment, Integer> baseService() {

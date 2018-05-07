@@ -1,23 +1,21 @@
 package net.ccfish.jvue.service.impl;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import net.ccfish.jvue.model.JvueRole;
-import net.ccfish.jvue.model.User;
-import net.ccfish.jvue.repository.UserRepository;
+import net.ccfish.jvue.domain.dao.JvueExUserMapper;
+import net.ccfish.jvue.domain.model.JvueExUser;
 import net.ccfish.jvue.security.JwtUserDetails;
+
 
 /**
  * 用户验证方法
@@ -35,26 +33,31 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService, Serializab
     private static final long serialVersionUID = 1L;
     
     @Autowired
-    private UserRepository userRepository;
+    private JvueExUserMapper userMapper;
 
     @Autowired
-    public JwtUserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public JwtUserDetailsServiceImpl(JvueExUserMapper userMapper) {
+        this.userMapper = userMapper;
     }
 
     @Override
     @Cacheable(value = "JwtUserDetailsService", key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final User user = userRepository.findByUsername(username);
+        final JvueExUser user = userMapper.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(
                     String.format("No user found with username '%s'.", username));
         } else {
             
-            Set<Integer> roles = user.getRoles();
-            
+            List<Integer> roles;
+            if (user.getRoles() == null) {
+                roles = new ArrayList<>();
+            }
+            else {
+                roles= user.getRoles().stream().map(role->role.getId()).collect(Collectors.toList());
+            }
             return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(),
-                    user.getSuperUser(), user.getNickname(), user.getEmail(), user.getAuthorities(), roles);
+                    user.getSuperUser(), user.getNickname(), user.getEmail(), user.getRoles(), roles);
         }
     }
 

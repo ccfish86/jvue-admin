@@ -12,7 +12,8 @@
 vue, vuet, element-ui, axios
 
 ### 后端技术栈
-spring boot, hazelcast, hibernate(jpa), mysql, swagger2
+spring boot, hazelcast, mybatis, postgresql, swagger2
+PS: 如果需要hibernate(jpa)和mysql版本的话，请参考分支[jvue-admin-jpa](https://github.com/ccfish86/jvue-admin/tree/jvue-admin-jpa)。此外：两个分支对应的数据库字段有些不一样。
 
 ### 授权设计
 传统的Struts，SpringMVC或类似的MVC架构下，页面和接口的权限是并行的，有的是以类型区分，有的是混着来的。
@@ -23,5 +24,6 @@ spring boot, hazelcast, hibernate(jpa), mysql, swagger2
 ### 测试地址
 线上测试地址：[http://jvue.ccfish.net/](http://jvue.ccfish.net/)
 管理员：admin/admin
+普通用户：user/user
 
 PS: 正在努力开发中，预计春节以后会有一版Release

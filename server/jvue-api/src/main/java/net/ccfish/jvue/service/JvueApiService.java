@@ -6,7 +6,8 @@ package net.ccfish.jvue.service;
 
 import java.util.List;
 
-import net.ccfish.jvue.model.JvueApi;
+import net.ccfish.jvue.autogen.model.JvueApi;
+
 
 /**
  * 
@@ -17,24 +18,24 @@ import net.ccfish.jvue.model.JvueApi;
 public interface JvueApiService extends _AbstractService<JvueApi, Integer> {
 
     /**
-     * @param menuId
+     * @param pageId
      * @return
      * @since  1.0
      */
-    List<JvueApi> findByMemu(Integer menuId);
+    List<JvueApi> findByMemu(Integer pageId);
 
     /**
-     * @param menuId
+     * @param pageId
      * @param apis
      * @return
      * @since  1.0
      */
-    List<JvueApi> updateApisByMemu(Integer menuId, List<Integer> apis);
+    List<JvueApi> updateApisByMemu(Integer pageId, List<Integer> apis);
 
     /**
-     * @param menuId
+     * @param pageId
      * @since  1.0
      */
-    void deleteByMenu(Integer menuId);
+    void deleteByPage(Integer pageId);
 
 }

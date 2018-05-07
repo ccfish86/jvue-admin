@@ -14,8 +14,8 @@ export default {
       return '-'
     }
   },
-  menuName (code) {
-    const codeList = vuet.getModule('sys-menu-names')
+  pageName (code) {
+    const codeList = vuet.getModule('sys-page-names')
     if (!codeList.list) {
       return ''
     } else {

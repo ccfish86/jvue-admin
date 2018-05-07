@@ -2,12 +2,12 @@
  * Copyright © 2013-2017 BLT, Co., Ltd. All Rights Reserved.
  */
 package net.ccfish.jvue.security;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 自定401返回值

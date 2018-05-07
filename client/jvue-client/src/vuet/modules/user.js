@@ -12,13 +12,14 @@ export default {
             nickname: null,
             token: null,
             permissions: [],
-            menus: [],
+            pages: [],
             modules: [],
             leftRoutes: [],
             moduleId: null,
             active: ''
           },
-          menus: [],
+          pages: [],
+          segments: {},
           modules: [],
           routers: [],
           leftRoutes: [],
@@ -45,14 +46,15 @@ export default {
         // TODO
       },
       async loadRouters () {
-        let response = await ApiUtils.get('/api/auth/menu')
+        let response = await ApiUtils.get('/api/auth/page')
         let {data} = response
         if (data.error === null) {
-          let {menus, modules} = data.data
-          this.menus = menus
+          let {pages, modules, segments} = data.data
+          this.pages = pages
           this.modules = modules
+          this.segments = segments
           // this.refreshRoutes()
-          let userRoutes = utils.toRoutes(this.menus)
+          let userRoutes = utils.toRoutes(this.pages)
           // 追加404
           userRoutes.push({
             path: '*',
@@ -96,10 +98,10 @@ export default {
         }
       },
       reloadRouters () {
-        if (this.menus && this.menus.length > 0) {
+        if (this.pages && this.pages.length > 0) {
           //  判断用户登录状态，如果未登录/登录失败，仅localStorage里有缓存的话，直接跳登录，不再加载动态路由
           // TODO 判断用户登录状态
-          let userRoutes = utils.toRoutes(this.menus)
+          let userRoutes = utils.toRoutes(this.pages)
           // 追加404
           userRoutes.push({
             path: '*',
@@ -128,22 +130,24 @@ export default {
       async fetch () {
         this.loading = true
         const param = {
-          page: this.searchForm.page - 1,
-          pageSize: this.searchForm.pageSize
+          page: this.searchForm.page,
+          pageSize: this.searchForm.pageSize,
+          sort: 'id',
+          direction: 1
         }
 
         const response = await ApiUtils.get('/api/user', param)
         this.loading = false
         let {status, data = {}} = response
         if (status === 200 && data.error === null) {
-          this.searchForm.page = data.pageNum + 1
+          this.searchForm.page = data.pageNum
           this.searchForm.pageSize = data.pageSize
           this.searchForm.pageCount = data.pages
           this.searchForm.totalCount = data.total
           this.list = data.data || []
         }
       },
-      async saveRoles(id, roles) {
+      async saveRoles (id, roles) {
         const response = await ApiUtils.put(`/api/user/ext/${id}/role`, roles)
         let {error, message, data} = response.data
         if (error === null) {
@@ -162,7 +166,7 @@ export default {
           Promise.reject(message)
         }
       },
-      async toggleEnable(id, enabled) {
+      async toggleEnable (id, enabled) {
         const response = await ApiUtils.patch(`/api/user/${id}/${enabled}`)
         let {error, message, data} = response.data
         if (error === null) {

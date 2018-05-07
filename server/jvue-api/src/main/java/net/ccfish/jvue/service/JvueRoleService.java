@@ -6,9 +6,10 @@ package net.ccfish.jvue.service;
 
 import java.util.List;
 
-import net.ccfish.jvue.model.JvueRole;
-import net.ccfish.jvue.vm.ModuleAndMenus;
-import net.ccfish.jvue.vm.RoleMenuDetails;
+import net.ccfish.jvue.autogen.model.JvueRole;
+import net.ccfish.jvue.service.model.ModuleAndPages;
+import net.ccfish.jvue.service.model.PageRoleGrant;
+import net.ccfish.jvue.service.model.RolePageDetails;
 
 /**
  * 
@@ -18,12 +19,22 @@ import net.ccfish.jvue.vm.RoleMenuDetails;
  */
 public interface JvueRoleService extends _AbstractService<JvueRole, Integer> {
 
-    ModuleAndMenus<Integer> findModuleAndMenu(List<Integer> roles);
+    ModuleAndPages<Integer> findModuleAndPage(List<Integer> roles);
 
-    JvueRole updateEnabled(Integer id, byte enabled);
+    JvueRole updateEnabled(Integer id, Integer enabled);
     
     List<Integer> getRolesByApi(Integer apiId);
 
-    RoleMenuDetails<Integer> getRoleInfo(Integer id);
+    RolePageDetails<Integer> getRoleInfo(Integer id);
+
+    /**
+     * 角色授权
+     * @param id 角色ID
+     * @param moduleId 模块ID
+     * @param pageRoles 画面权限
+     * @return 更新（0:未;1:已更新）
+     * @since  1.0
+     */
+    int grant(Integer id, Integer moduleId, List<PageRoleGrant> pageRoles);
 
 }

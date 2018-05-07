@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.ccfish.common.acl.AclResc;
+import net.ccfish.common.entity.CodeItem;
 import net.ccfish.common.web.BaseModel;
-import net.ccfish.jvue.model.JvueModule;
-import net.ccfish.jvue.rest.vm.CodeDto;
+import net.ccfish.jvue.autogen.model.JvueModule;
 import net.ccfish.jvue.service.JvueModuleService;
 import net.ccfish.jvue.service._AbstractService;
-import net.ccfish.jvue.service.acl.AclResc;
 
 /**
  * Module相关
@@ -29,7 +29,7 @@ import net.ccfish.jvue.service.acl.AclResc;
  */
 @RestController
 @RequestMapping("module")
-@AclResc(id = 5000, code = "JvueModule", name = "模块管理", homePage = "")
+@AclResc(id = 5000)
 @Api(tags = "模块管理")
 public class JvueModuleController implements _BaseController<JvueModule, Integer> {
 
@@ -37,7 +37,7 @@ public class JvueModuleController implements _BaseController<JvueModule, Integer
     private JvueModuleService jvueModuleService;
 
     /* (non-Javadoc)
-     * @see net.ccfish.jvue.rest._BaseController#baseService()
+     * @see com.hxxt.admin.rest._BaseController#baseService()
      */
     @Override
     public _AbstractService<JvueModule, Integer> baseService() {
@@ -45,18 +45,18 @@ public class JvueModuleController implements _BaseController<JvueModule, Integer
     }
 
     @ApiOperation(value = "名字列表")
-    @AclResc(id = 11, code = "names", name = "名字列表")
+    @AclResc(id = 11)
     @GetMapping("/ext/names") 
-    public BaseModel<List<CodeDto<Integer>>> names(){
+    public BaseModel<List<CodeItem<Integer>>> names(){
         List<JvueModule> modules = jvueModuleService.getAll();
-        List<CodeDto<Integer>> codeList = new ArrayList<>();
+        List<CodeItem<Integer>> codeList = new ArrayList<>();
         for (JvueModule module: modules) {
-            CodeDto<Integer> codeDto = new CodeDto<>();
-            codeDto.setCode(module.getId());
-            codeDto.setName(module.getName());
-            codeList.add(codeDto);
+            CodeItem<Integer> CodeItem = new CodeItem<>();
+            CodeItem.setCode(module.getId());
+            CodeItem.setName(module.getName());
+            codeList.add(CodeItem);
         }
-        return new BaseModel<List<CodeDto<Integer>>>().setData(codeList);
+        return new BaseModel<List<CodeItem<Integer>>>().setData(codeList);
     }
 //
 //    @Override

@@ -17,36 +17,36 @@
 </template>
 
 <script>
-  import {mapModules, mapRules} from 'vuet'
-  import {messages} from '@/common'
-  export default {
-    name: 'edit',
-    mixins: [
-      mapModules({moduleEdit: 'sys-module-edit'}),
-      mapRules({route: 'sys-module-edit'})
-    ],
-    methods: {
-      onSubmit() {
-        this.$validator.validateAll().then(result => {
-          if (result) {
-            this.moduleEdit.save().then((res) => {
-              this.$message(messages.messageSaveSuccess())
-              this.moduleEdit.fetch()
-            }).catch((err) => {
-              this.$notify({
-                title: '警告',
-                message: err,
-                type: 'warning',
-                duration: 2500
-              })
+import {mapModules, mapRules} from 'vuet'
+import {messages} from '@/common'
+export default {
+  name: 'edit',
+  mixins: [
+    mapModules({moduleEdit: 'sys-module-edit'}),
+    mapRules({route: 'sys-module-edit'})
+  ],
+  methods: {
+    onSubmit () {
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          this.moduleEdit.save().then((res) => {
+            this.$message(messages.messageSaveSuccess())
+            this.moduleEdit.fetch()
+          }).catch((err) => {
+            this.$notify({
+              title: '警告',
+              message: err,
+              type: 'warning',
+              duration: 2500
             })
-          }
-        }).catch(result => {
-          this.$notify(messages.notifyCheckError())
-        })
-      }
+          })
+        }
+      }).catch(result => {
+        this.$notify(messages.notifyCheckError())
+      })
     }
   }
+}
 </script>
 
 <style scoped>

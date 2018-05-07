@@ -6,7 +6,7 @@ package net.ccfish.jvue.service;
 
 import java.util.List;
 
-import net.ccfish.jvue.model.JvueSegment;
+import net.ccfish.jvue.autogen.model.JvueSegment;
 
 /**
  * 
@@ -17,10 +17,10 @@ import net.ccfish.jvue.model.JvueSegment;
 public interface JvueSegmentService extends _AbstractService<JvueSegment, Integer> {
 
     /**
-     * @param menuId
+     * @param pageId
      * @return
      * @since  1.0
      */
-    List<JvueSegment> findByMenu(Integer menuId);
+    List<JvueSegment> findByPage(Integer pageId);
 
 }

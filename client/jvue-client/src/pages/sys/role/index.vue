@@ -2,7 +2,7 @@
   <div>
     <el-row class="actions-top--edit" type="flex" justify="end">
       <el-col :span="2" :pull="2">
-        <v-sec code="9999">
+        <v-sec :code="1">
           <el-button type="success" icon="el-icon-document" size="small"
                      @click="$router.push('/sys/role/add')">添加
           </el-button>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import {messages} from '@/common'
+// import {messages} from '@/common'
 import {mapModules, mapRules} from 'vuet'
 export default {
   name: 'index',
@@ -67,13 +67,13 @@ export default {
     grant (id) {
       this.$router.push(`/sys/role/grant/${id}`)
     },
-    edit(id) {
+    edit (id) {
       this.$router.push(`/sys/role/edit/${id}`)
     },
-    enable(id) {
+    enable (id) {
       this.roleList.toggleEnable(id, 1)
     },
-    unable(id) {
+    unable (id) {
       this.roleList.toggleEnable(id, 0)
     },
     remove (id) {
@@ -96,7 +96,6 @@ export default {
             duration: 2500
           })
         })
-
       }).catch(() => {
         this.$message({
           type: 'info',

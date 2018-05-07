@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="txt-left txt-b-info">你正在编辑：{{menuEdit.form.name}}</div>
+    <div class="txt-left txt-b-info">你正在编辑：{{pageEdit.form.name}}</div>
     <el-tabs v-model="activeName" type="border-card" tab-position="left" @tab-click="handleClick">
       <el-tab-pane label="基本属性" name="basic">
-        <el-form ref="menuEdit" :model="menuEdit.form" label-width="150px" class="container-form__mid">
+        <el-form ref="pageEdit" :model="pageEdit.form" label-width="150px" class="container-form__mid">
           <el-form-item label="所属模块" :error="errors.first('module')">
-            <el-select clearable v-model="menuEdit.form.moduleId" placeholder="请选择" data-vv-name="module"
+            <el-select clearable v-model="pageEdit.form.moduleId" placeholder="请选择" data-vv-name="module"
                        v-validate data-vv-rules="required" @change="moduleChanged">
               <el-option v-for="item in moduleNames.list"
                          :label="item.name" :value="item.code" :key="item.code">
@@ -13,39 +13,39 @@
             </el-select>
           </el-form-item>
           <el-form-item label="父画面">
-            <el-select clearable v-model="menuEdit.form.parentId" placeholder="请选择" >
-              <el-option v-for="item in menuNames.list"
+            <el-select clearable v-model="pageEdit.form.parentId" placeholder="请选择" >
+              <el-option v-for="item in pageNames.list"
                          :label="item.name" :value="item.code" :key="item.code">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="画面名称" :error="errors.first('menuName')">
-            <el-input v-model="menuEdit.form.name" data-vv-name="menuName" v-validate
+          <el-form-item label="画面名称" :error="errors.first('pageName')">
+            <el-input v-model="pageEdit.form.name" data-vv-name="pageName" v-validate
                       data-vv-rules="required|max:20"></el-input>
           </el-form-item>
-          <el-form-item label="画面类型" :error="errors.first('menuType')">
-            <el-radio-group size="small" v-model="menuEdit.form.type" data-vv-name="menuType" v-validate
+          <el-form-item label="画面类型" :error="errors.first('pageType')">
+            <el-radio-group size="small" v-model="pageEdit.form.type" data-vv-name="pageType" v-validate
                             data-vv-rules="required">
               <el-radio-button :label="1">菜单</el-radio-button>
               <el-radio-button :label="2">画面</el-radio-button>
               <el-radio-button :label="3">菜单+画面</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="画面路径" :error="errors.first('menuPath')">
-            <el-input v-model="menuEdit.form.path" data-vv-name="menuPath" v-validate
+          <el-form-item label="画面路径" :error="errors.first('pagePath')">
+            <el-input v-model="pageEdit.form.path" data-vv-name="pagePath" v-validate
                       data-vv-rules="required|max:120"></el-input>
           </el-form-item>
-          <el-form-item label="画面组件" :error="errors.first('menuComponent')">
-            <el-input v-model="menuEdit.form.component" data-vv-name="menuComponent" v-validate
+          <el-form-item label="画面组件" :error="errors.first('pageComponent')">
+            <el-input v-model="pageEdit.form.component" data-vv-name="pageComponent" v-validate
                       data-vv-rules="required|max:120"></el-input>
           </el-form-item>
 
           <el-form-item label="画面是否启用">
-            <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="menuEdit.form.enabled"></el-switch>
+            <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="pageEdit.form.enabled"></el-switch>
           </el-form-item>
 
           <el-form-item label="导航是否启用">
-            <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="menuEdit.form.showNav"></el-switch>
+            <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="pageEdit.form.showNav"></el-switch>
           </el-form-item>
           <el-form-item>
             <el-button native-type="submit" type="primary" size="small" @click.native.prevent="onSubmit">保存</el-button>
@@ -62,7 +62,7 @@
             <!--<ol v-for="item in aclList.list">{{item.id}}  {{item.name}}</ol>-->
           <!--</ul>-->
         <!--</div>-->
-        <el-transfer v-model="menuEdit.apis" filterable :props="{key: 'id',label: 'name'}" :data="aclList.list" >
+        <el-transfer v-model="pageEdit.apis" filterable :props="{key: 'id',label: 'name'}" :data="aclList.list" >
         </el-transfer>
         <div>&nbsp;</div>
         <div class="txt-center">
@@ -73,11 +73,11 @@
         <div class="txt-left txt-small">
           维护画面所对应的组件或片段，这样在管理画面权限时，方便给不同角色授权与画面不同内容的权限。
         </div>
-        <el-table :data="menuEdit.segments" empty-text="没有您要查询的数据"
+        <el-table :data="pageEdit.segments" empty-text="没有您要查询的数据"
                size="small" border stripe>
           <el-table-column prop="id" label="ID" align="center" width="95">
           </el-table-column>
-          <el-table-column prop="segmentId" label="画面片段ID" align="left" min-width="100">
+          <el-table-column prop="segmentCode" label="画面片段ID" align="left" min-width="100">
           </el-table-column>
           <el-table-column prop="name" label="画面片段名" align="left" min-width="180">
           </el-table-column>
@@ -114,14 +114,14 @@ export default {
   name: 'edit',
   mixins: [
     mapModules({
-      menuEdit: 'sys-menu-edit',
+      pageEdit: 'sys-page-edit',
       moduleNames: 'sys-module-names',
-      menuNames: 'sys-menu-names',
+      pageNames: 'sys-page-names',
       aclList: 'sys-acl-list'
     }),
-    mapRules({need: 'sys-module-names', temp: 'sys-menu-edit', route: 'sys-acl-list'})
+    mapRules({need: 'sys-module-names', temp: 'sys-page-edit', route: 'sys-acl-list'})
   ],
-  data() {
+  data () {
     return {
       activeName: 'basic',
       segment: {}
@@ -133,9 +133,9 @@ export default {
     onSubmit () {
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.menuEdit.save().then((res) => {
+          this.pageEdit.save().then((res) => {
             this.$message(messages.messageSaveSuccess())
-            this.menuEdit.reset()
+            this.pageEdit.reset()
           }).catch((err) => {
             this.$notify({
               title: '警告',
@@ -152,20 +152,20 @@ export default {
     moduleChanged (nid) {
       // 模块切换，重新查询父画面（一级）
       if (nid != null) {
-        this.menuNames.getMenus(nid).then(apis => {
+        this.pageNames.getPages(nid).then(apis => {
           // 选中行
         })
       }
     },
-    handleClick(tab, event) {
+    handleClick (tab, event) {
       if (this.activeName === 'api') {
-        this.menuEdit.loadApis()
+        this.pageEdit.loadApis()
       } else if (this.activeName === 'segment') {
-        this.menuEdit.loadSegments()
+        this.pageEdit.loadSegments()
       }
     },
-    saveApis() {
-      if (this.menuEdit.apis !== null && this.menuEdit.apis.length > 20) {
+    saveApis () {
+      if (this.pageEdit.apis !== null && this.pageEdit.apis.length > 20) {
         // TODO 单画面禁止保存超过20个接口，以避免在授权时的体验问题
         this.$notify({
           title: '警告',
@@ -174,14 +174,14 @@ export default {
           duration: 2500
         })
       } else {
-        this.menuEdit.saveApis()
+        this.pageEdit.saveApis()
       }
     },
-    saveSegment() {
-      this.menuEdit.addSegment(this.segment.id, this.segment.name).then(() => this.segment.reset())
+    saveSegment () {
+      this.pageEdit.addSegment(this.segment.id, this.segment.name).then(() => this.segment.reset())
     },
-    removeSegment(id, index) {
-      this.menuEdit.removeSegment(id, index)
+    removeSegment (id, index) {
+      this.pageEdit.removeSegment(id, index)
     }
   }
 }

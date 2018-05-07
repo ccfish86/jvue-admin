@@ -17,11 +17,12 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.MultiMap;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import net.ccfish.common.acl.AclResc;
 import net.ccfish.common.web.BaseModel;
-import net.ccfish.jvue.model.JvueApi;
+import net.ccfish.jvue.autogen.model.JvueApi;
 import net.ccfish.jvue.service.JvueApiService;
 import net.ccfish.jvue.service._AbstractService;
-import net.ccfish.jvue.service.acl.AclResc;
 import net.ccfish.jvue.vm.AclResource;
 
 /**
@@ -33,7 +34,7 @@ import net.ccfish.jvue.vm.AclResource;
  */
 @RestController
 @RequestMapping("api")
-@AclResc(id = 5100, code = "JvueApi", name = "接口管理", homePage = "")
+@AclResc(id = 5100)
 @Api(tags  = "接口管理")
 public class JvueApiController implements _BaseController<JvueApi, Integer> {
 
@@ -46,7 +47,7 @@ public class JvueApiController implements _BaseController<JvueApi, Integer> {
     /*
      * (non-Javadoc)
      * 
-     * @see net.ccfish.jvue.rest._BaseController#baseService()
+     * @see com.hxxt.admin.rest._BaseController#baseService()
      */
     @Override
     public _AbstractService<JvueApi, Integer> baseService() {
@@ -54,7 +55,8 @@ public class JvueApiController implements _BaseController<JvueApi, Integer> {
     }
     
     @GetMapping("resources")
-    @AclResc(id = 11, code = "resources", name = "资源", homePage = "")
+    @ApiOperation(value = "资源")
+    @AclResc(id = 11)
     public BaseModel<List<AclResource>> getResources() {
         MultiMap<Integer, AclResource> resourcesMap = hazelcastInstance.getMultiMap("acl-resource");
         

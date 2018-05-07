@@ -10,7 +10,7 @@
 <script>
 export default{
   methods: {
-    back() {
+    back () {
       let path = this.$route.redirectedFrom
       if (path) {
         this.$router.push(path)

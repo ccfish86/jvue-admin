@@ -4,21 +4,28 @@
 
 package net.ccfish.jvue.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.ccfish.common.acl.AclResc;
+import net.ccfish.common.entity.CodeItem;
 import net.ccfish.common.web.BaseModel;
-import net.ccfish.jvue.model.JvueRole;
+import net.ccfish.jvue.autogen.model.JvueRole;
+import net.ccfish.jvue.rest.vm.ReqRoleGrant;
 import net.ccfish.jvue.service.JvueRoleService;
 import net.ccfish.jvue.service._AbstractService;
-import net.ccfish.jvue.service.acl.AclResc;
-import net.ccfish.jvue.vm.RoleMenuDetails;
+import net.ccfish.jvue.service.model.RolePageDetails;
 
 /**
  * Role相关
@@ -28,7 +35,7 @@ import net.ccfish.jvue.vm.RoleMenuDetails;
  */
 @RestController
 @RequestMapping("role")
-@AclResc(id = 5300, code = "JvueRole", name = "角色管理", homePage = "")
+@AclResc(id = 5300)
 @Api(tags  = "角色管理")
 public class JvueRoleController implements _BaseController<JvueRole, Integer> {
 
@@ -36,7 +43,7 @@ public class JvueRoleController implements _BaseController<JvueRole, Integer> {
     private JvueRoleService jvueRoleService;
 
     /* (non-Javadoc)
-     * @see net.ccfish.jvue.rest._BaseController#baseService()
+     * @see com.hxxt.admin.rest._BaseController#baseService()
      */
     @Override
     public _AbstractService<JvueRole, Integer> baseService() {
@@ -44,22 +51,46 @@ public class JvueRoleController implements _BaseController<JvueRole, Integer> {
     }
     
     @ApiOperation(value = "更新是否有效")
-    @AclResc(id = 11, code = "patchEnabled", name = "更新是否有效")
+    @AclResc(id = 11)
     @PatchMapping("/{id}/{enabled}") 
     public BaseModel<JvueRole> patchEnabled(@PathVariable("id") Integer id,
-            @PathVariable("enabled") byte enabled){
+            @PathVariable("enabled") Integer enabled){
         
         JvueRole jvueRole = jvueRoleService.updateEnabled(id, enabled);
         return new BaseModel<JvueRole>().setData(jvueRole);
     }
 
     @ApiOperation(value = "角色权限")
-    @AclResc(id = 12, code = "getRoleInfo", name = "角色权限")
+    @AclResc(id = 12)
     @GetMapping("/ext/{id}/grant") 
-    public BaseModel<RoleMenuDetails<Integer>> getRoleInfo(@PathVariable("id") Integer id){
+    public BaseModel<RolePageDetails<Integer>> getRoleInfo(@PathVariable("id") Integer id){
         
-        RoleMenuDetails<Integer> jvueRole = jvueRoleService.getRoleInfo(id);
-        return new BaseModel<RoleMenuDetails<Integer>>().setData(jvueRole);
+        RolePageDetails<Integer> jvueRole = jvueRoleService.getRoleInfo(id);
+        return new BaseModel<RolePageDetails<Integer>>().setData(jvueRole);
+    }
+    @ApiOperation(value = "权限名字列表")
+    @AclResc(id = 13)
+    @GetMapping("/ext/names") 
+    public BaseModel<List<CodeItem<Integer>>> names(){
+        
+        List<JvueRole> jvueRoleList = jvueRoleService.getAll();
+        List<CodeItem<Integer>> codeList = new ArrayList<>();
+        for (JvueRole role: jvueRoleList) {
+            CodeItem<Integer> CodeItem = new CodeItem<>();
+            CodeItem.setCode(role.getId());
+            CodeItem.setName(role.getName());
+            codeList.add(CodeItem);
+        }
+        return BaseModel.ok(codeList);
+    }
+    
+    @ApiOperation(value = "授予角色权限")
+    @AclResc(id = 14)
+    @PutMapping("/ext/{id}/grant") 
+    public BaseModel<Integer> grant(@PathVariable("id") Integer id, @RequestBody ReqRoleGrant roleGrant){
+        
+        int upd = jvueRoleService.grant(id, roleGrant.getModuleId(), roleGrant.getPageRoles());
+        return BaseModel.ok(upd);
     }
 
 }

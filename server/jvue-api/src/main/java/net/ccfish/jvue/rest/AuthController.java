@@ -5,7 +5,6 @@
 package net.ccfish.jvue.rest;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,10 +26,10 @@ import net.ccfish.common.web.BaseModel;
 import net.ccfish.jvue.rest.vm.ReqLogin;
 import net.ccfish.jvue.security.JwtUserDetails;
 import net.ccfish.jvue.service.AuthService;
-import net.ccfish.jvue.service.JvueMenuService;
+import net.ccfish.jvue.service.JvuePageService;
 import net.ccfish.jvue.service.JvueRoleService;
-import net.ccfish.jvue.vm.ModuleAndMenus;
-import net.ccfish.jvue.vm.UserInfo;
+import net.ccfish.jvue.service.model.JvueUserInfo;
+import net.ccfish.jvue.service.model.ModuleAndPages;
 
 /**
  * 登录
@@ -45,7 +44,7 @@ public class AuthController {
     @Autowired
     private AuthService userService;
     @Autowired
-    private JvueMenuService jvueMenuService;
+    private JvuePageService jvuePageService;
     @Autowired
     private JvueRoleService jvueRoleService;
     
@@ -76,18 +75,18 @@ public class AuthController {
      */
     @ApiOperation(value = "用户登录")
     @PostMapping(value = "/login")
-    public BaseModel<UserInfo> login(@RequestBody ReqLogin req) throws AuthenticationException {
+    public BaseModel<JvueUserInfo> login(@RequestBody ReqLogin req) throws AuthenticationException {
         try {
-            UserInfo userInfo = userService.login(req.getUsername(), req.getPassword());
+            JvueUserInfo userInfo = userService.login(req.getUsername(), req.getPassword());
             
-            return new BaseModel<UserInfo>().setData(userInfo);
+            return new BaseModel<JvueUserInfo>().setData(userInfo);
         } catch (UsernameNotFoundException e) {
-            BaseModel<UserInfo> result = new BaseModel<>();
+            BaseModel<JvueUserInfo> result = new BaseModel<>();
             result.setError("401");
             result.setMessage("用户不存在");
             return result;
         } catch (AuthenticationException ae) {
-            BaseModel<UserInfo> result = new BaseModel<>();
+            BaseModel<JvueUserInfo> result = new BaseModel<>();
             result.setError("401");
             result.setMessage("用户密码不对");
             return result;
@@ -100,8 +99,8 @@ public class AuthController {
      * @since  1.0
      */
     @ApiOperation(value = "用户菜单")
-    @GetMapping(value = "/auth/menu")
-    public BaseModel<ModuleAndMenus> getMenu(Principal principal) {
+    @GetMapping(value = "/auth/page")
+    public BaseModel<ModuleAndPages<Integer>> getPage(Principal principal) {
         //logger.info(principal.toString());
         if (principal instanceof Authentication ) {
             // JwtUserDetails
@@ -110,14 +109,18 @@ public class AuthController {
                 JwtUserDetails jwtUser = (JwtUserDetails) authentication.getPrincipal();
                 if (jwtUser.getSuperUser() == JvueDataStatus.SUPER_USER_TRUE) {
                     // 返回所有菜单
-                    ModuleAndMenus menus = jvueMenuService.findModuleAndMenu();
-                    return new BaseModel<ModuleAndMenus>().setData(menus);
+                    ModuleAndPages<Integer> pages = jvuePageService.findModuleAndPage();
+                    return BaseModel.ok(pages);
                 } else {
                     // 返回用户菜单
-                    // FIXME 根据用户role和缓存中的role权限生成菜单
-                    List<Integer> roles = new ArrayList<>();
-                    ModuleAndMenus menus = jvueRoleService.findModuleAndMenu(roles);
-                    return new BaseModel<ModuleAndMenus>().setData(menus);
+                    // 根据用户role和缓存中的role权限生成菜单
+                    List<Integer> roles = jwtUser.getRoles();
+                    if (roles != null && !roles.isEmpty()) {
+                        ModuleAndPages<Integer> pages = jvueRoleService.findModuleAndPage(roles);
+                        return BaseModel.ok(pages);
+                    } else {
+                        return BaseModel.error("用户未授权");
+                    }
                 }
             } else {
                 logger.warn("无法获取登录信息  {}", authentication.getPrincipal());

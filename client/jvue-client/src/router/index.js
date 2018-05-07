@@ -46,7 +46,7 @@ router.beforeEach(({meta, path, name}, from, next) => {
       // return next()
     }
   }
-  if (meta && from.meta && meta.moduleId !== from.meta.moduleId) {
+  if (meta && from.meta && (meta.moduleId !== from.meta.moduleId || userSelf.moduleId !== meta.moduleId)) {
     // 处理导航与画面同步
     userSelf.changeModule(meta.moduleId)
   }

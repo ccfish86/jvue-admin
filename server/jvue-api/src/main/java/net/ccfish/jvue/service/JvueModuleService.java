@@ -4,7 +4,7 @@
 
 package net.ccfish.jvue.service;
 
-import net.ccfish.jvue.model.JvueModule;
+import net.ccfish.jvue.autogen.model.JvueModule;
 
 /**
  * 
@@ -13,6 +13,5 @@ import net.ccfish.jvue.model.JvueModule;
  * @since 1.0
  */
 public interface JvueModuleService extends _AbstractService<JvueModule, Integer> {
-
 
 }

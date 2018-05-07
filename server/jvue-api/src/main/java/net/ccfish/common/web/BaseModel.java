@@ -68,4 +68,20 @@ public class BaseModel<T> implements Serializable {
         this.message = message;
     }
 
+    public static <T> BaseModel<T> ok(T data) {
+        return new BaseModel<T>().setData(data);
+    }
+
+    public static <T> BaseModel<T> error(String error, String message) {
+        BaseModel<T> baseModel = new BaseModel<>();
+        baseModel.setError(error);
+        baseModel.setMessage(message);
+        return baseModel;
+    }
+    public static <T> BaseModel<T> error(String message) {
+        BaseModel<T> baseModel = new BaseModel<>();
+        baseModel.setError("1");
+        baseModel.setMessage(message);
+        return baseModel;
+    }
 }

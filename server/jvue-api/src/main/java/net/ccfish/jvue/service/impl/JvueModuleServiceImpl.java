@@ -1,20 +1,17 @@
 package net.ccfish.jvue.service.impl;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import net.ccfish.common.enums.YesOrNoEnum;
-import net.ccfish.common.jpa.JpaRestrictions;
-import net.ccfish.common.jpa.SearchCriteria;
-import net.ccfish.jvue.model.JvueMenu;
-import net.ccfish.jvue.model.JvueModule;
-import net.ccfish.jvue.repository.JvueMenuRepository;
-import net.ccfish.jvue.repository.JvueModuleRepository;
+import net.ccfish.common.mybatis.BaseMapper;
+import net.ccfish.jvue.autogen.dao.JvueModuleMapper;
+import net.ccfish.jvue.autogen.dao.JvuePageMapper;
+import net.ccfish.jvue.autogen.model.JvueModule;
+import net.ccfish.jvue.autogen.model.JvuePage;
 import net.ccfish.jvue.service.JvueModuleService;
 
 /**
@@ -22,40 +19,41 @@ import net.ccfish.jvue.service.JvueModuleService;
  */
 @Service
 @Transactional
-public class JvueModuleServiceImpl
-        implements JvueModuleService {
+public class JvueModuleServiceImpl implements JvueModuleService {
 
-    private JvueModuleRepository jvueModuleRepository;
-    
-    @Autowired
-    private JvueMenuRepository jvueMenuRepository;
+    private JvueModuleMapper jvueModuleMapper;
 
     @Autowired
-    public JvueModuleServiceImpl(JvueModuleRepository jvueModuleRepository) {
-        this.jvueModuleRepository = jvueModuleRepository;
+    private JvuePageMapper jvuePageMapper;
+
+    @Autowired
+    public JvueModuleServiceImpl(JvueModuleMapper jvueModuleMapper) {
+        this.jvueModuleMapper = jvueModuleMapper;
     }
 
     @Override
-    public JpaRepository<JvueModule, Integer> jpaRepository() {
-        return this.jvueModuleRepository;
+    public BaseMapper<JvueModule> baseMapper() {
+        return this.jvueModuleMapper;
     }
-    
+
     @Override
     @CacheEvict(value = "JwtUserDetailsService", allEntries = true)
     public void delete(Integer id) {
-        // 判断是否在其他表中使用，未使用时，可物理删除；如在menu等表里使用，逻辑删除
-        SearchCriteria<JvueMenu> jvueMenuCriteria = new SearchCriteria<>();
-        jvueMenuCriteria.add(JpaRestrictions.eq("moduleId", id, false));
-        long mcount =jvueMenuRepository.count(jvueMenuCriteria);
+
+        Assert.notNull(id, "模块ID不能为空");
+        // 判断是否在其他表中使用，未使用时，可物理删除；如在page等表里使用，逻辑删除
+        JvuePage jvuePage = new JvuePage();
+        jvuePage.setModuleId(id);
+        long mcount = jvuePageMapper.selectCount(jvuePage);
         if (mcount > 0L) {
-            //jpaRepository().delete(id);
-            Optional<JvueModule> entityResult = jvueModuleRepository.findById(id);
-            entityResult.ifPresent(entity -> {
-                entity.setEnabled((byte)YesOrNoEnum.No.ordinal());
-                jvueModuleRepository.save(entity);
-            });
+            // BaseMapper().delete(id);
+            JvueModule entityResult = jvueModuleMapper.selectByPrimaryKey(id);
+            if (entityResult != null) {
+                entityResult.setEnabled(YesOrNoEnum.No.ordinal());
+                jvueModuleMapper.updateByPrimaryKeySelective(entityResult);
+            }
         } else {
-            jvueModuleRepository.deleteById(id);
+            jvueModuleMapper.deleteByPrimaryKey(id);
         }
     }
 
@@ -64,12 +62,12 @@ public class JvueModuleServiceImpl
     public JvueModule update(Integer id, JvueModule data) {
         // throw new UnsupportedClassVersionError("不支持更新处理");
         JvueModule jmodule = null;
-        Optional<JvueModule> entityResult = jvueModuleRepository.findById(id);
-        if (entityResult.isPresent()) {
-            JvueModule module = entityResult.get();
+        JvueModule module = jvueModuleMapper.selectByPrimaryKey(id);
+        if (module != null) {
             module.setName(data.getName());
             module.setEnabled(data.getEnabled());
-            jmodule = jvueModuleRepository.save(module);
+            jvueModuleMapper.updateByPrimaryKeySelective(module);
+            return module;
         }
         return jmodule;
     }
