@@ -9,6 +9,9 @@ import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -22,6 +25,7 @@ import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.MaxSizeConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.spring.cache.HazelcastCacheManager;
 
 /**
  * 分布式缓存配置，分布式锁及消息
@@ -32,6 +36,7 @@ import com.hazelcast.core.HazelcastInstance;
  */
 @Configuration
 @EnableCaching
+@AutoConfigureAfter(value = { DataSourceAutoConfiguration.class })
 public class HazelCastConfigration {
 
     private final Logger log = LoggerFactory.getLogger(HazelCastConfigration.class);
@@ -77,7 +82,14 @@ public class HazelCastConfigration {
         return Hazelcast.newHazelcastInstance(config);
     }
 
-
+    @Bean
+    public CacheManager cacheManager(HazelcastInstance hazelcastInstance) {
+        log.debug("Starting HazelcastCacheManager");
+        CacheManager cacheManager = new HazelcastCacheManager(hazelcastInstance);
+        //cacheManager.setCacheOptions(options);
+        return cacheManager;
+    }
+    
     private MapConfig initializeDefaultMapConfig() {
         MapConfig mapConfig = new MapConfig();
         mapConfig.setBackupCount(1);
