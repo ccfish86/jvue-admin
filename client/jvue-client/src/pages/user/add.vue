@@ -2,20 +2,20 @@
     <div>
       <el-form ref="userAdd" :model="userAdd.form" label-width="150px" class="container-form__mid">
         <el-form-item label="用户名称" :error="errors.first('username')">
-          <el-input v-model="userAdd.form.username" data-vv-name="username" v-validate
-                    data-vv-rules="required|alpha_num|min:2"></el-input>
+          <el-input v-model="userAdd.form.username" data-vv-name="username"
+                    v-validate="'required|alpha_num|min:2'"></el-input>
         </el-form-item>
         <el-form-item label="用户密码" :error="errors.first('password')">
-          <el-input type="password" v-model="userAdd.form.password" data-vv-name="password" v-validate
-                    data-vv-rules="required"></el-input>
+          <el-input type="password" v-model="userAdd.form.password" data-vv-name="password"
+                    v-validate="'required'"></el-input>
         </el-form-item>
         <el-form-item label="用户昵称" :error="errors.first('nickname')">
-          <el-input v-model="userAdd.form.nickname" data-vv-name="nickname" v-validate
-                    data-vv-rules="required|max:20"></el-input>
+          <el-input v-model="userAdd.form.nickname" data-vv-name="nickname"
+                    v-validate="'required|max:20'"></el-input>
         </el-form-item>
         <el-form-item label="用户Email" :error="errors.first('email')">
-          <el-input v-model="userAdd.form.email" data-vv-name="email" v-validate
-                    data-vv-rules="required|email|max:64"></el-input>
+          <el-input v-model="userAdd.form.email" data-vv-name="email" 
+                    v-validate="'required|email|max:64'"></el-input>
         </el-form-item>
         <el-form-item label="用户状态">
           <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="userAdd.form.status"></el-switch>

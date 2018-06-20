@@ -7,12 +7,12 @@
     <el-form :model="loginForm" ref="loginForm" label-position="left" label-width="0px" class="login-container">
       <h3 class="title">JVUE-管理系统登录</h3>
       <el-form-item prop="account" :error="errors.first('account')">
-        <el-input type="text" v-model.trim="loginForm.account" placeholder="账号" data-vv-name="account" v-validate
-                  data-vv-rules="required|alpha_num|min:2" autofocus></el-input>
+        <el-input type="text" v-model.trim="loginForm.account" placeholder="账号" data-vv-name="account" 
+		          v-validate="'required|alpha_num|min:2'" autofocus></el-input>
       </el-form-item>
       <el-form-item prop="password" :error="errors.first('password')">
-        <el-input type="password" v-model="loginForm.password" auto-complete="off" data-vv-name="password" v-validate
-                  data-vv-rules="required" placeholder="密码"></el-input>
+        <el-input type="password" v-model="loginForm.password" auto-complete="off" data-vv-name="password" 
+                  v-validate="'required'" placeholder="密码"></el-input>
       </el-form-item>
       <el-checkbox v-model="checked" class="remember">自动登录</el-checkbox>
       <el-form-item style="width:100%;">

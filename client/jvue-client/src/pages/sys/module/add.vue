@@ -2,8 +2,8 @@
     <div>
       <el-form ref="moduleAdd" :model="moduleAdd.form" label-width="150px" class="container-form__mid">
         <el-form-item label="模块名称" :error="errors.first('moduleName')">
-          <el-input v-model="moduleAdd.form.name" data-vv-name="moduleName" v-validate
-                    data-vv-rules="required|max:20"></el-input>
+          <el-input v-model="moduleAdd.form.name" data-vv-name="moduleName" 
+                    v-validate="'required|max:20'"></el-input>
         </el-form-item>
         <el-form-item label="模块是否启用">
           <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="moduleAdd.form.enabled"></el-switch>

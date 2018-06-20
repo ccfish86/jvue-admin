@@ -2,8 +2,8 @@
     <div>
       <el-form ref="roleAdd" :model="roleAdd.form" label-width="150px" class="container-form__mid">
         <el-form-item label="角色名称" :error="errors.first('roleName')">
-          <el-input v-model="roleAdd.form.name" data-vv-name="roleName" v-validate
-                    data-vv-rules="required|max:20"></el-input>
+          <el-input v-model="roleAdd.form.name" data-vv-name="roleName" 
+                    v-validate="'required|max:20'"></el-input>
         </el-form-item>
         <el-form-item label="角色是否启用">
           <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="roleAdd.form.enabled"></el-switch>
