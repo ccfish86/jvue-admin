@@ -10,7 +10,7 @@ import vuet from '@/vuet/'
 export default {
   name: 'sec',
   props: {
-    // 画面内部编码
+    // 鐢婚潰鍐呴儴缂栫爜
     code: {
       type: Number,
       required: true,
@@ -26,11 +26,11 @@ export default {
     let userSelf = vuet.getModule('user-self')
     if (userSelf /* && userSelf.secCodes && userSelf.secCodes.contains(this.code) */) {
       this.$nextTick(function () {
-        // 取当前的pageId
+        // 鍙栧綋鍓嶇殑pageId
         let pageId = this.$route.meta.id
-        // 取当前page的segmentId[]
+        // 鍙栧綋鍓峱age鐨剆egmentId[]
         let segments = userSelf.segments[pageId]
-        if (segments.includes(this.code)) {
+        if (segments && segments.includes(this.code)) {
           this.permitted = true
         } else {
           this.permitted = false

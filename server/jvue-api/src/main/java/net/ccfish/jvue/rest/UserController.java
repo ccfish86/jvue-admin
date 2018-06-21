@@ -4,12 +4,15 @@
 
 package net.ccfish.jvue.rest;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,13 +28,16 @@ import com.github.pagehelper.Page;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.ccfish.common.JvueDataStatus;
 import net.ccfish.common.acl.AclResc;
 import net.ccfish.common.web.BaseModel;
 import net.ccfish.common.web.PageParam;
 import net.ccfish.common.web.PagedModel;
 import net.ccfish.jvue.autogen.model.JvueUser;
 import net.ccfish.jvue.domain.model.JvueExUser;
+import net.ccfish.jvue.security.JwtUserDetails;
 import net.ccfish.jvue.service.JvueUserService;
+import net.ccfish.jvue.service.model.ModuleAndPages;
 
 /**
  * 用户相关
@@ -93,7 +99,21 @@ public class UserController {
     @DeleteMapping("{id}")
     @AclResc(id = 5)
     @ApiOperation(value = "删除")
-    public  BaseModel<Long> delete(@PathVariable("id") Long id) {
+    public BaseModel<Long> delete(Principal principal, @PathVariable("id") Long id) {
+    	if (principal instanceof Authentication ) {
+            // JwtUserDetails
+            Authentication authentication = (Authentication) principal;
+            if (authentication.getPrincipal() instanceof JwtUserDetails) {
+                JwtUserDetails jwtUser = (JwtUserDetails) authentication.getPrincipal();
+                if (Objects.equals(jwtUser.getId(),id)) {
+                    return BaseModel.error("不能删除自己");
+                }
+            } else {
+                logger.warn("无法获取登录信息  {}", authentication.getPrincipal());
+            }
+        } else {
+            logger.warn("无法获取登录信息  {}", principal);
+        }
         userService.delete(id);
         return new BaseModel<Long>().setData(id);
     }

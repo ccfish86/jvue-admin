@@ -39,4 +39,16 @@ public class JvueSegmentServiceImpl implements JvueSegmentService {
         return jvueSegmentMapper.select(segment);
     }
 
+    @CacheEvict(value = "JwtUserDetailsService", allEntries = true)
+    @Override
+    public void delete(Integer id) {
+        this.jvueSegmentMapper.deleteByPrimaryKey(id);
+    }
+
+    @CacheEvict(value = "JwtUserDetailsService", allEntries = true)
+    @Override
+    public JvueSegment save(JvueSegment obj) {
+    	this.jvueSegmentMapper.insert(obj);
+        return obj;
+    }
 }

@@ -44,7 +44,7 @@ public class Swagger2Config extends WebMvcConfigurerAdapter {
 
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
                 // 扫描指定包中的swagger注解
-                .apis(RequestHandlerSelectors.basePackage("net.ccfish.jvue.rest"))
+//                .apis(RequestHandlerSelectors.basePackage("net.ccfish.jvue.rest"))
                 // 扫描所有有注解的api，用这种方式更灵活
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any()).build();
