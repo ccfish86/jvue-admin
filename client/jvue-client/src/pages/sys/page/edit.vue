@@ -178,7 +178,9 @@ export default {
       }
     },
     saveSegment () {
-      this.pageEdit.addSegment(this.segment.id, this.segment.name).then(() => this.segment.reset())
+      this.pageEdit.addSegment(this.segment.id, this.segment.name).then(() => {
+        this.segment = {}
+      })
     },
     removeSegment (id, index) {
       this.pageEdit.removeSegment(id, index)

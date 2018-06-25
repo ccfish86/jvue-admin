@@ -20,9 +20,11 @@
         <el-form-item label="用户状态">
           <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="userAdd.form.status"></el-switch>
         </el-form-item>
-        <el-form-item label="是否管理员">
-          <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="userAdd.form.superUser"></el-switch>
-        </el-form-item>
+        <v-sec :code="1">
+          <el-form-item label="是否管理员">
+            <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="userAdd.form.superUser"></el-switch>
+          </el-form-item>
+        </v-sec>
         <el-form-item>
           <el-button native-type="submit" type="primary" @click.native.prevent="onSubmit">保存</el-button>
           <el-button @click.native.prevent="$router.back()">取消</el-button>

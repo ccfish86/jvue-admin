@@ -2,8 +2,7 @@
   <div>
     <el-row class="actions-top--edit" type="flex" justify="end">
       <el-col :span="2" :pull="2">
-        <v-sec code="9999">
-
+        <v-sec :code="1">
           <el-button type="success" icon="el-icon-document" size="small" @click="$router.push('/user/add')">添加
           </el-button>
         </v-sec>
