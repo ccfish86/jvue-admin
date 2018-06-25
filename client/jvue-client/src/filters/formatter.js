@@ -2,6 +2,7 @@
  * Created by Yuangui on 2017-01-08.
  */
 // currency
+import { utils } from "@/common/"
 
 export default {
   currencyCny (value) {
@@ -18,7 +19,7 @@ export default {
     return val
   },
   dateTimeFormat (value, format) {
-    return global.utils.formatDate(value, format)
+    return utils.formatDate(value, format)
   },
   yesNo (value) {
     return value === 1 ? '是' : '否'
@@ -26,7 +27,7 @@ export default {
   age (birthday) {
     if (birthday) {
       const now = new Date()
-      const birthdaty = global.utils.toDate(birthday)
+      const birthdaty = utils.toDate(birthday)
       return birthdaty ? Math.floor((now - birthdaty) / (24 * 3600 * 1000 * 30 * 12)) + '岁' : '-'
     }
   }
