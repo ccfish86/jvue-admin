@@ -135,7 +135,7 @@ export default {
         if (result) {
           this.pageEdit.save().then((res) => {
             this.$message(messages.messageSaveSuccess())
-            this.pageEdit.reset()
+            // this.pageEdit.reset()
           }).catch((err) => {
             this.$notify({
               title: '警告',
