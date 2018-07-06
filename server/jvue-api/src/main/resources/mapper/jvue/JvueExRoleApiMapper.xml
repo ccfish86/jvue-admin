@@ -23,9 +23,9 @@
         jvue_role_api.id, jvue_role_api.role_id, jvue_role_api.api_id,
         jvue_role.id as r_id, jvue_role.name as r_name, jvue_role.enabled as r_enabled,
         jvue_api.id as a_id, jvue_api.name as a_name, jvue_api.page_id as a_page_id, jvue_api.api_code as a_api_code
-    from jvue.jvue_role_api
-        inner join jvue.jvue_api on(jvue_api.id = jvue_role_api.api_id)
-        inner join jvue.jvue_role on(jvue_role.id = jvue_role_api.role_id)
+    from jvue_role_api
+        inner join jvue_api on(jvue_api.id = jvue_role_api.api_id)
+        inner join jvue_role on(jvue_role.id = jvue_role_api.role_id)
     where 
       jvue_api.api_code = #{apiCode,jdbcType=INTEGER}
   </select>
@@ -35,9 +35,9 @@
         jvue_role_api.id, jvue_role_api.role_id, jvue_role_api.api_id,
         jvue_role.id as r_id, jvue_role.name as r_name, jvue_role.enabled as r_enabled,
         jvue_api.id as a_id, jvue_api.name as a_name, jvue_api.page_id as a_page_id, jvue_api.api_code as a_api_code
-    from jvue.jvue_role_api
-        inner join jvue.jvue_api on(jvue_api.id = jvue_role_api.api_id)
-        inner join jvue.jvue_role on(jvue_role.id = jvue_role_api.role_id)
+    from jvue_role_api
+        inner join jvue_api on(jvue_api.id = jvue_role_api.api_id)
+        inner join jvue_role on(jvue_role.id = jvue_role_api.role_id)
     where 
       jvue_role_api.role_id in 
       <foreach close=")" collection="roleIds" item="listItem" open="(" separator=",">
@@ -48,9 +48,9 @@
   <select id="selectApiByRoleAndModule" resultType="java.lang.Integer">
     select 
         jvue_role_api.api_id
-    from jvue.jvue_role_api jvue_role_api
-        inner join jvue.jvue_api c on(c.id = jvue_role_api.api_id)
-        inner join jvue.jvue_page p on(c.page_id = p.id)
+    from jvue_role_api jvue_role_api
+        inner join jvue_api c on(c.id = jvue_role_api.api_id)
+        inner join jvue_page p on(c.page_id = p.id)
     where
         jvue_role_api.role_id  = #{roleId,jdbcType=INTEGER}
         <if test="moduleId != null">

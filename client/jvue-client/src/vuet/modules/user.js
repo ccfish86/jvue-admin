@@ -1,5 +1,6 @@
 import ApiUtils from '@/api/'
 import {utils} from '@/common/'
+import dept from './user/user-dept'
 
 export default {
   modules: {
@@ -243,6 +244,7 @@ export default {
           Promise.reject(message)
         }
       }
-    }
+    },
+    dept
   }
 }

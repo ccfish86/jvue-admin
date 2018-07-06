@@ -32,7 +32,7 @@
         c.id as c_id, c.module_id as c_module_id, c.type as c_type, c.path as c_path, c.component as c_component, 
         c.name as c_name, c.icon_class as c_icon_class, c.parent_id as c_parent_id, c.enabled as c_enabled, c.show_nav as c_show_nav
     from 
-        jvue.jvue_page p left join jvue.jvue_page c on (c.parent_id = p.id)
+        jvue_page p left join jvue_page c on (c.parent_id = p.id)
     where
         p.parent_id is null
     <if test="moduleIds != null and moduleIds.size() > 0">

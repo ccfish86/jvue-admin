@@ -113,6 +113,7 @@ public class JvueUserServiceImpl implements JvueUserService {
         if (jvueUser != null) {
             // jvueUser.setSuperUser(data.getSuperUser());
             jvueUser.setPassword(data.getPassword());
+            jvueUser.setDeptCode(data.getDeptCode());
             jvueUser.setNickname(data.getNickname());
             jvueUser.setEmail(data.getEmail());
             jvueUser.setStatus(data.getStatus());
@@ -121,6 +122,11 @@ public class JvueUserServiceImpl implements JvueUserService {
         } else {
             return data;
         }
+    }
+    
+    @Override
+    public void delete(Long id) {
+    	userMapper.deleteByPrimaryKey(id);
     }
     
     @Override

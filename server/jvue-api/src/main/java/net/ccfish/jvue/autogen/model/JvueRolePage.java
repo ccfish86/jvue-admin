@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 import net.ccfish.common.entity.BaseEntity;
 import tk.mybatis.mapper.annotation.ColumnType;
 
-@Table(name = "jvue.jvue_role_page")
+@Table(name = "jvue_role_page")
 @ApiModel("JvueRolePage（角色对应画面）")
 public class JvueRolePage extends BaseEntity implements Serializable {
     /**

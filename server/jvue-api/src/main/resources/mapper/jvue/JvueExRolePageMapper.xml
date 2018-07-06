@@ -31,9 +31,9 @@
         p.id, p.module_id, p.type, p.path, p.component, p.name, p.icon_class, p.parent_id, p.enabled, p.show_nav,
         c.id as c_id, c.module_id as c_module_id, c.type as c_type, c.path as c_path, c.component as c_component, 
         c.name as c_name, c.icon_class as c_icon_class, c.parent_id as c_parent_id, c.enabled as c_enabled, c.show_nav as c_show_nav
-    from jvue.jvue_role_page jvue_role_page
-        inner join jvue.jvue_page c on(c.id = jvue_role_page.page_id)
-        right join jvue.jvue_page p on (c.parent_id = p.id)
+    from jvue_role_page jvue_role_page
+        inner join jvue_page c on(c.id = jvue_role_page.page_id)
+        right join jvue_page p on (c.parent_id = p.id)
     where 
       jvue_role_page.role_id in 
       <foreach close=")" collection="roleIds" item="listItem" open="(" separator=",">
@@ -45,8 +45,8 @@
   <select id="selectPageByRoleAndModule" resultType="java.lang.Integer">
     select 
         jvue_role_page.page_id
-    from jvue.jvue_role_page jvue_role_page
-        inner join jvue.jvue_page c on(c.id = jvue_role_page.page_id)
+    from jvue_role_page jvue_role_page
+        inner join jvue_page c on(c.id = jvue_role_page.page_id)
     where
         jvue_role_page.role_id  = #{roleId,jdbcType=INTEGER}
         <if test="moduleId != null">

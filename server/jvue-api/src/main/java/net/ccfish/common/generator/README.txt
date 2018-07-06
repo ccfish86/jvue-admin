@@ -1,0 +1,3 @@
+扩展了mybatis生成，使之支持swagger和postgresql等比较特殊的情景。
+其中Swagger注释相关的生成代码来源于gitee开源项目。
+此包在运行时不需要。

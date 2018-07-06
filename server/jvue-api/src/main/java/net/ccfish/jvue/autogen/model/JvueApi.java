@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 import net.ccfish.common.entity.BaseEntity;
 import tk.mybatis.mapper.annotation.ColumnType;
 
-@Table(name = "jvue.jvue_api")
+@Table(name = "jvue_api")
 @ApiModel("JvueApi（画面接口）")
 public class JvueApi extends BaseEntity implements Serializable {
     /**

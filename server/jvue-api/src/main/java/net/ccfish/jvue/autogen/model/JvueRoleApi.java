@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
 import net.ccfish.common.entity.BaseEntity;
 import tk.mybatis.mapper.annotation.ColumnType;
 
-@Table(name = "jvue.jvue_role_api")
+@Table(name = "jvue_role_api")
 @ApiModel("JvueRoleApi（角色对应接口权限）")
 public class JvueRoleApi extends BaseEntity implements Serializable {
     /**

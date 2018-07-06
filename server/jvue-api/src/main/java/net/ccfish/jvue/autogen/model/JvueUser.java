@@ -9,12 +9,16 @@ import javax.persistence.Table;
 
 import org.apache.ibatis.type.JdbcType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import net.ccfish.common.entity.BaseEntity;
 import tk.mybatis.mapper.annotation.ColumnType;
 
-@Table(name = "jvue.jvue_user")
+@Table(name = "jvue_user")
 @ApiModel("JvueUser（用户）")
 public class JvueUser extends BaseEntity implements Serializable {
     /**
@@ -39,6 +43,7 @@ public class JvueUser extends BaseEntity implements Serializable {
      */
     @ApiModelProperty(value ="密码",required = false)
     @ColumnType(jdbcType=JdbcType.VARCHAR)
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String password;
 
     /**
@@ -48,6 +53,12 @@ public class JvueUser extends BaseEntity implements Serializable {
     @ColumnType(jdbcType=JdbcType.VARCHAR)
     private String email;
 
+    /**
+     * 部门编码
+     */
+    @Column(name = "dept_code")
+    @ApiModelProperty(value ="部门编码",required = false)
+    private String deptCode;
     /**
      * 状态
      */
@@ -144,6 +155,24 @@ public class JvueUser extends BaseEntity implements Serializable {
         this.email = email;
     }
 
+    /**
+     * 获取部门编码
+     *
+     * @return dept_code - 部门编码
+     */
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    /**
+     * 设置部门编码
+     *
+     * @param deptCode 部门编码
+     */
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
+    }
+    
     /**
      * 获取状态
      *

@@ -14,12 +14,20 @@
                     v-validate="'required|max:20'"></el-input>
         </el-form-item>
         <el-form-item label="用户Email" :error="errors.first('email')">
-          <el-input v-model="userAdd.form.email" data-vv-name="email" 
+          <el-input v-model="userAdd.form.email" data-vv-name="email"
                     v-validate="'required|email|max:64'"></el-input>
         </el-form-item>
+
+        <!-- 部门 -->
+        <el-form-item label="部门">
+          <el-cascader expand-trigger="hover" change-on-select :options="deptNames.depts"
+                       :props="deptProps" v-model="userAdd.form.deptCode"></el-cascader>
+        </el-form-item>
+
         <el-form-item label="用户状态">
           <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="userAdd.form.status"></el-switch>
         </el-form-item>
+
         <v-sec :code="1">
           <el-form-item label="是否管理员">
             <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="userAdd.form.superUser"></el-switch>
@@ -39,9 +47,18 @@ import {messages} from '@/common'
 export default {
   name: 'add',
   mixins: [
-    mapModules({userAdd: 'user-add'}),
-    mapRules({temp: 'user-add'})
+    mapModules({userAdd: 'user-add', deptNames: 'user-dept-names'}),
+    mapRules({temp: 'user-add', need: 'user-dept-names'})
   ],
+  data() {
+    return {
+      deptProps: {
+        value: 'code',
+        label: 'name',
+        children: 'childs'
+      }
+    }
+  },
   methods: {
     onSubmit () {
       this.$validator.validateAll().then(result => {

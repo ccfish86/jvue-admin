@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.ccfish.jvue.domain.dao.JvueExDeptMapper">
+  <resultMap id="BaseExResultMap" type="net.ccfish.jvue.domain.model.JvueExDept">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <collection property="childs" ofType="net.ccfish.jvue.domain.model.JvueExDept"
+    	column="{code=code,level=level}"
+    	select="searchChild">
+    </collection>
+  </resultMap>
+  
+  <resultMap id="BaseTreeResultMap" type="net.ccfish.jvue.domain.model.JvueDeptNodeItem">
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <collection property="childs" ofType="net.ccfish.jvue.domain.model.JvueExDept"
+    	column="{code=code,level=level}"
+    	select="findSubNode">
+    </collection>
+  </resultMap>
+  
+  <select id="search" resultMap="BaseExResultMap">
+    select
+  	  *
+  	from jvue_dept
+  	where
+    	level = 1
+  </select>
+  <select id="searchChild" parameterType="java.util.Map" resultMap="BaseExResultMap">
+  	select
+  	  *
+  	from jvue_dept
+  	where
+  		parent_code = #{code,jdbcType=VARCHAR}
+    and level = #{level,jdbcType=INTEGER} + 1
+  </select>
+  
+  <select id="findTree" resultMap="BaseTreeResultMap">
+  	select
+  	  code, name, level
+  	from jvue_dept
+  	where
+    	level = 1
+  </select>
+  
+  <select id="findSubNode" parameterType="java.util.Map" 
+  	resultMap="BaseTreeResultMap">
+  	select
+  	  code, name, level
+  	from jvue_dept
+  	where
+    	parent_code = #{code,jdbcType=VARCHAR}
+    and level = #{level,jdbcType=INTEGER} + 1
+  </select>
+  
+</mapper>

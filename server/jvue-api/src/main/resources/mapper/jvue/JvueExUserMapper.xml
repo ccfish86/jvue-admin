@@ -6,6 +6,7 @@
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="CHAR" property="password" />
     <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="dept_code" jdbcType="VARCHAR" property="deptCode" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="super_user" jdbcType="INTEGER" property="superUser" />
@@ -22,20 +23,22 @@
   
   <select id="findByUsername" parameterType="java.lang.String" resultMap="BaseRoleResultMap">
     select 
-        jvue_user.id, jvue_user.username, jvue_user.password, jvue_user.email, jvue_user.status, jvue_user.nickname,
+        jvue_user.id, jvue_user.username, jvue_user.dept_code,
+        jvue_user.password, jvue_user.email, jvue_user.status, jvue_user.nickname,
         jvue_user.super_user
     from 
-     jvue.jvue_user
+     jvue_user
     where
      jvue_user.username = #{username,jdbcType=VARCHAR}
   </select>
   
   <select id="searchUsers" parameterType="java.lang.String" resultMap="BaseRoleResultMap">
     select
-      jvue_user.id, jvue_user.username, jvue_user.password, jvue_user.email, jvue_user.status, jvue_user.nickname,
+      jvue_user.id, jvue_user.username, jvue_user.dept_code,
+      jvue_user.password, jvue_user.email, jvue_user.status, jvue_user.nickname,
       jvue_user.super_user
     from
-      jvue.jvue_user
+      jvue_user
     <where>
         <if test="username!=null">
             jvue_user.username like #{username,jdbcType=VARCHAR}
@@ -47,8 +50,8 @@
     select 
       jvue_role.id as r_id, jvue_role.name as r_name, jvue_role.enabled as r_enabled
     from
-      jvue.jvue_user_role
-      left join jvue.jvue_role on (jvue_user_role.role_id = jvue_role.id)
+      jvue_user_role
+      left join jvue_role on (jvue_user_role.role_id = jvue_role.id)
     where
       jvue_user_role.user_id = #{userId,jdbcType=BIGINT}
     order by r_id

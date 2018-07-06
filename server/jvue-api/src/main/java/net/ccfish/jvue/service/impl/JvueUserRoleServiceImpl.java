@@ -28,4 +28,15 @@ public class JvueUserRoleServiceImpl implements JvueUserRoleService {
         return this.userRoleMapper;
     }
 
+    @Override
+    public void delete(Long id) {
+        this.userRoleMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public JvueUserRole save(JvueUserRole obj) {
+    	this.userRoleMapper.insert(obj);
+        return obj;
+    }
+
 }

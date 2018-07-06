@@ -34,11 +34,14 @@
       </el-table-column>
       <el-table-column prop="nickname" label="用户名" align="left" min-width="100">
       </el-table-column>
+      <el-table-column prop="deptCode" label="部门" align="left" min-width="100">
+        <template slot-scope="scope">{{scope.row.deptCode|deptName}}</template>
+      </el-table-column>
       <el-table-column prop="email" label="邮件" align="left" min-width="100">
       </el-table-column>
       <el-table-column prop="roles" label="权限" align="left" min-width="100">
         <template slot-scope="scope">
-          <el-tag v-for="role in scope.row.roles" :key="role">{{role.id|roleName}}</el-tag>
+          <el-tag v-for="role in scope.row.roleIds" :key="role">{{role|roleName}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" align="left" width="100">
@@ -52,8 +55,8 @@
       <el-table-column label="操作" align="center" width="150" fixed="right">
         <template slot-scope="scope">
           <el-button-group>
-            <el-button type="primary" size="small" @click="showDetail(scope.row.id)">详情</el-button>
-            <!--<el-button type="success" size="small" disabled @click="edit(scope.row.id)">编辑(开发中)</el-button>-->
+            <!--<el-button type="primary" size="small" @click="showDetail(scope.row.id)">详情</el-button>-->
+            <el-button type="success" size="small" @click="edit(scope.row.id)">编辑</el-button>
             <el-button type="danger" size="small" @click="remove(scope.row.id)">删除</el-button>
           </el-button-group>
         </template>
@@ -75,8 +78,8 @@ import vuet from '@/vuet'
 export default {
   name: 'index',
   mixins: [
-    mapModules({ userList: 'user-list', roleNames: 'sys-role-names' }),
-    mapRules({ route: 'user-list', need: 'sys-role-names' })
+    mapModules({ userList: 'user-list', roleNames: 'sys-role-names', deptNames: 'user-dept-names' }),
+    mapRules({ route: 'user-list', need: ['sys-role-names', 'user-dept-names'] })
   ],
   data () {
     return {}
@@ -92,6 +95,13 @@ export default {
         }
       }
       return '_' + role
+    },
+    deptName (code) {
+      let deptNames = vuet.getModule('user-dept-names')
+      if (deptNames) {
+        return deptNames.dict[code]
+      }
+      return '_' + code
     }
   },
   methods: {
@@ -104,10 +114,10 @@ export default {
       this.userList.fetch()
     },
     showDetail (id) {
-      this.$router.push(`/sys/user/detail/${id}`)
+      this.$router.push(`/user/detail/${id}`)
     },
     edit (id) {
-      this.$router.push(`/sys/user/edit/${id}`)
+      this.$router.push(`/user/edit/${id}`)
     },
     enable (id) {
       this.userList.toggleEnable(id, 1)
@@ -154,6 +164,7 @@ export default {
       this.userList
         .saveRoles(user.id, user.roleIds)
         .then(res => {
+          user.roles = res
           this.$message(messages.messageSaveSuccess())
         })
         .catch(err => {

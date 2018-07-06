@@ -17,8 +17,8 @@
     select 
         jvue_role_segment.id, jvue_role_segment.role_id, jvue_role_segment.segment_id,
         jvue_segment.id as s_id, jvue_segment.name as s_name, jvue_segment.page_id as s_page_id, jvue_segment.segment_code as s_segment_code
-    from jvue.jvue_role_segment
-        inner join jvue.jvue_segment on(jvue_segment.id = jvue_role_segment.segment_id)
+    from jvue_role_segment
+        inner join jvue_segment on(jvue_segment.id = jvue_role_segment.segment_id)
     where 
       jvue_role_segment.role_id in 
       <foreach close=")" collection="roleIds" item="listItem" open="(" separator=",">
@@ -29,9 +29,9 @@
   <select id="selectSegmentByRoleAndModule" resultType="java.lang.Integer">
     select 
         jvue_role_segment.segment_id
-    from jvue.jvue_role_segment jvue_role_segment
-        inner join jvue.jvue_segment c on(c.id = jvue_role_segment.segment_id)
-        inner join jvue.jvue_page p on(c.page_id = p.id)
+    from jvue_role_segment jvue_role_segment
+        inner join jvue_segment c on(c.id = jvue_role_segment.segment_id)
+        inner join jvue_page p on(c.page_id = p.id)
     where
         jvue_role_segment.role_id  = #{roleId,jdbcType=INTEGER}
         <if test="moduleId != null">
