@@ -25,12 +25,6 @@
                   v-validate="'required|email|max:64'"></el-input>
       </el-form-item>
 
-      <!-- 部门 -->
-      <el-form-item label="部门">
-        <el-cascader expand-trigger="hover" change-on-select :options="deptNames.depts"
-                     :props="deptProps" v-model="userEdit.form.deptCode"></el-cascader>
-      </el-form-item>
-
       <el-form-item label="用户状态">
         <el-switch on-text="Yes" off-text="No" :inactive-value="0" :active-value="1" v-model="userEdit.form.status"></el-switch>
       </el-form-item>

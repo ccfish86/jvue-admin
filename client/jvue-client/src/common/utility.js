@@ -158,6 +158,64 @@ const utils = {
     return str.replace(re, function ($0, $1) {
       return '_' + $1.toLowerCase()
     })
+  },
+  treeToList (lst, name = 'name', children = 'childs', append) {
+    let result = []
+    if (lst && lst instanceof Array) {
+      for (let item of lst) {
+        item.fullName = append ? append + ' ' + item[name] : item[name]
+        let cResult = utils.treeToList(item[children], name, children, item[name])
+        delete item[children]
+        result.push(item)
+        result = result.concat(cResult)
+      }
+    }
+    return result
+  },
+  getCascader (cascaderCode) {
+    if (cascaderCode && cascaderCode instanceof Array) {
+      let len = cascaderCode.length
+      if (len > 0) {
+        return cascaderCode[len - 1]
+      } else {
+        return null
+      }
+    }
+    return cascaderCode
+  },
+  getDeCascader (code, len) {
+    if (code === null) {
+      return []
+    }
+
+    let tlen = code.length
+    if (tlen >= len) {
+      let result = []
+      for (let i = 0; i++; i < 10) {
+        let si = i * len
+        if (si + len > tlen) {
+          result.push(code.substr(si, len))
+        } else {
+          result.push(code.substr(si, tlen - si))
+          break
+        }
+      }
+      return result
+    }
+    return [code]
+  },
+  treeToObject (lst, key = 'code', name = 'name', children = 'childs', append) {
+    let result = {}
+    if (lst && lst instanceof Array) {
+      for (let item of lst) {
+        let fullName = append ? append + ' ' + item[name] : item[name]
+        let cResult = utils.treeToObject(item[children], key, name, children, fullName)
+        let code = item[key]
+        result[code] = fullName
+        result = Object.assign(result, cResult)
+      }
+    }
+    return result
   }
 }
 // 使用时直接在Script中使用[utils.setWindowTitle]取值即可

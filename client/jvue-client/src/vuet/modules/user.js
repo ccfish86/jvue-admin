@@ -181,14 +181,17 @@ export default {
     add: {
       data () {
         return {
-          form: {}
+          form: {
+            status: 0,
+            superUser: 0
+          }
         }
       },
       async fetch () {
-        // 初始化信息
       },
       async save () {
-        let param = this.form
+        let param = Object.assign({}, this.form)
+        param.deptCode = utils.getCascader(this.form.deptCode)
         const response = await ApiUtils.post('/api/user', param)
         let {error, message, data} = response.data
         if (error === null) {
@@ -227,7 +230,8 @@ export default {
         const response = await ApiUtils.get(`/api/user/${id}`)
         let {error, message, data} = response.data
         if (error === null) {
-          this.form = data
+          let form = Object.assign({}, data, {deptCode: utils.getDeCascader(data.deptCode)})
+          this.form = form
           return data
         } else {
           Promise.reject(message)
@@ -235,7 +239,8 @@ export default {
       },
       async save () {
         let id = this.app.$route.params['id']
-        let param = this.form
+        let param = Object.assign({}, this.form)
+        param.deptCode = utils.getCascader(this.form.deptCode)
         const response = await ApiUtils.put(`/api/user/${id}`, param)
         let {error, message, data} = response.data
         if (error === null) {
