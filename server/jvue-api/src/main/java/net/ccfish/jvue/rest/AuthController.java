@@ -92,44 +92,38 @@ public class AuthController {
             return result;
         }
     }
-    /**
-     * 用户菜单生成
-     * @param principal
-     * @return
-     * @since  1.0
-     */
-    @ApiOperation(value = "用户菜单")
-    @GetMapping(value = "/auth/page")
-    public BaseModel<ModuleAndPages<Integer>> getPage(Principal principal) {
-        //logger.info(principal.toString());
-        if (principal instanceof Authentication ) {
-            // JwtUserDetails
-            Authentication authentication = (Authentication) principal;
-            if (authentication.getPrincipal() instanceof JwtUserDetails) {
-                JwtUserDetails jwtUser = (JwtUserDetails) authentication.getPrincipal();
-                if (jwtUser.getSuperUser() == JvueDataStatus.SUPER_USER_TRUE) {
-                    // 返回所有菜单
-                    ModuleAndPages<Integer> pages = jvuePageService.findModuleAndPage();
-                    return BaseModel.ok(pages);
-                } else {
-                    // 返回用户菜单
-                    // 根据用户role和缓存中的role权限生成菜单
-                    List<Integer> roles = jwtUser.getRoles();
-                    if (roles != null && !roles.isEmpty()) {
-                        ModuleAndPages<Integer> pages = jvueRoleService.findModuleAndPage(roles);
-                        return BaseModel.ok(pages);
-                    } else {
-                        return BaseModel.error("用户未授权");
-                    }
-                }
-            } else {
-                logger.warn("无法获取登录信息  {}", authentication.getPrincipal());
-            }
-        } else {
-            logger.warn("无法获取登录信息  {}", principal);
-        }
-        return null;
-    }
+	/**
+	 * 用户菜单生成
+	 * 
+	 * @param principal
+	 * @return
+	 * @since 1.0
+	 */
+	@ApiOperation(value = "用户菜单")
+	@GetMapping(value = "/auth/page")
+	public BaseModel<ModuleAndPages<Integer>> getPage(@CurrentUser JwtUserDetails jwtUser) {
+		// logger.info(principal.toString());
+		if (jwtUser != null) {
+			if (jwtUser.getSuperUser() == JvueDataStatus.SUPER_USER_TRUE) {
+				// 返回所有菜单
+				ModuleAndPages<Integer> pages = jvuePageService.findModuleAndPage();
+				return BaseModel.ok(pages);
+			} else {
+				// 返回用户菜单
+				// 根据用户role和缓存中的role权限生成菜单
+				List<Integer> roles = jwtUser.getRoles();
+				if (roles != null && !roles.isEmpty()) {
+					ModuleAndPages<Integer> pages = jvueRoleService.findModuleAndPage(roles);
+					return BaseModel.ok(pages);
+				} else {
+					return BaseModel.error("用户未授权");
+				}
+			}
+		} else {
+			logger.warn("无法获取登录信息");
+		}
+		return BaseModel.error("用户未授权");
+	}
 
     /**
      * 刷新密钥

@@ -14,7 +14,7 @@ import './assets/css/'
 import './api/'
 
 Vue.config.productionTip = false
-Vue.use(ElementUI)
+Vue.use(ElementUI, {size: 'small', zIndex: 20000}) // 防止被ueditor挡住
 
 Object.keys(components).forEach((key) => {
   // 首字母大写
