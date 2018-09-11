@@ -51,7 +51,7 @@
       jvue_role.id as r_id, jvue_role.name as r_name, jvue_role.enabled as r_enabled
     from
       jvue_user_role
-      left join jvue_role on (jvue_user_role.role_id = jvue_role.id)
+      join jvue_role on (jvue_user_role.role_id = jvue_role.id)
     where
       jvue_user_role.user_id = #{userId,jdbcType=BIGINT}
     order by r_id

@@ -17,11 +17,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="画面名称" :error="errors.first('pageName')">
-        <el-input v-model="pageAdd.form.name" data-vv-name="pageName" 
+        <el-input v-model="pageAdd.form.name" data-vv-name="pageName"
                   v-validate="'required|max:20'"></el-input>
       </el-form-item>
       <el-form-item label="画面类型" :error="errors.first('pageType')">
-        <el-radio-group size="small" v-model="pageAdd.form.type" data-vv-name="pageType" 
+        <el-radio-group size="small" v-model="pageAdd.form.type" data-vv-name="pageType"
                         v-validate="'required'">
           <el-radio-button :label="1">菜单</el-radio-button>
           <el-radio-button :label="2">画面</el-radio-button>
@@ -29,11 +29,11 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="画面路径" :error="errors.first('pagePath')">
-        <el-input v-model="pageAdd.form.path" data-vv-name="pagePath" 
+        <el-input v-model="pageAdd.form.path" data-vv-name="pagePath"
                   v-validate="'required|max:120'"></el-input>
       </el-form-item>
       <el-form-item label="画面组件" :error="errors.first('pageComponent')">
-        <el-input v-model="pageAdd.form.component" data-vv-name="pageComponent" 
+        <el-input v-model="pageAdd.form.component" data-vv-name="pageComponent"
                   v-validate="'required|max:120'"></el-input>
       </el-form-item>
 

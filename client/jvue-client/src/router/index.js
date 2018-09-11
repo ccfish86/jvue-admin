@@ -36,7 +36,7 @@ router.beforeEach(({meta, path, name}, from, next) => {
   // let {meta, path, name} = to
   let userSelf = vuet.getModule('user-self')
   let { auth = true } = meta
-  if (userSelf.user && userSelf.user.token) {
+  if (userSelf.user && userSelf.user) {
     // 已登录
     // return next()
   } else {

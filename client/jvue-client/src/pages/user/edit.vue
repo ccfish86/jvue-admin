@@ -42,47 +42,47 @@
 </template>
 
 <script>
-  import {mapModules, mapRules} from 'vuet'
-  import {messages} from '@/common'
-  export default {
-    name: 'edit',
-    mixins: [
-      mapModules({userEdit: 'user-edit', deptNames: 'user-dept-names'}),
-      mapRules({temp: 'user-edit', need: 'user-dept-names'})
-    ],
-    data() {
-      return {
-        deptProps: {
-          value: 'code',
-          label: 'name',
-          children: 'childs'
-        }
-      }
-    },
-    methods: {
-      onSubmit () {
-        this.$validator.validateAll().then(result => {
-          if (result) {
-            this.userEdit.save().then((res) => {
-              this.$message(messages.messageSaveSuccess())
-              this.userEdit.reset()
-            }).catch((err) => {
-              this.$notify({
-                title: '警告',
-                message: err,
-                type: 'warning',
-                duration: 2500
-              })
-            })
-          } else {
-            this.$notify(messages.notifyCheckError())
-          }
-        }).catch(result => {
-          this.$notify(messages.notifyCheckError())
-        })
+import {mapModules, mapRules} from 'vuet'
+import {messages} from '@/common'
+export default {
+  name: 'edit',
+  mixins: [
+    mapModules({userEdit: 'user-edit', deptNames: 'user-dept-names'}),
+    mapRules({temp: 'user-edit', need: 'user-dept-names'})
+  ],
+  data () {
+    return {
+      deptProps: {
+        value: 'code',
+        label: 'name',
+        children: 'childs'
       }
     }
+  },
+  methods: {
+    onSubmit () {
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          this.userEdit.save().then((res) => {
+            this.$message(messages.messageSaveSuccess())
+            this.userEdit.reset()
+          }).catch((err) => {
+            this.$notify({
+              title: '警告',
+              message: err,
+              type: 'warning',
+              duration: 2500
+            })
+          })
+        } else {
+          this.$notify(messages.notifyCheckError())
+        }
+      }).catch(result => {
+        this.$notify(messages.notifyCheckError())
+      })
+    }
   }
+}
 </script>
 
 <style scoped>

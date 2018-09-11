@@ -23,7 +23,7 @@ export default {
       async fetch () {
 
       },
-      async search() {
+      async search () {
         this.loading = true
         let {page, pageSize, sort, direction} = this.searchForm
         let param = {page, pageSize, sort, direction}
@@ -38,7 +38,7 @@ export default {
           this.list = utils.treeToList(data.data, 'name') || []
         }
       },
-      async getParentCodes(type) {
+      async getParentCodes (type) {
         let param = {type: type || this.searchForm.type}
         const response = await ApiUtils.get('/api/dept/ext/parentCodes', param)
         let {status, data = {}} = response
@@ -46,7 +46,7 @@ export default {
           this.parentCodes = data.data || []
         }
       },
-      async changeType() {
+      async changeType () {
         this.search()
       },
       async remove (id) {
@@ -109,7 +109,7 @@ export default {
         } else {
           Promise.reject(message)
         }
-      },
+      }
     }
   }
 }

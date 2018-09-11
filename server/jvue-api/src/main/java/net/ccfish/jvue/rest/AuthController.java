@@ -9,7 +9,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,20 +39,6 @@ public class AuthController {
     
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    /**
-     * 用户登录
-     *
-     * @param username 用户名
-     * @param password 密码
-     * @return 操作结果
-     * @throws AuthenticationException 错误信息
-     */
-    @ApiOperation(value = "自动登录")
-    @GetMapping(value = "/login")
-    public String check() throws AuthenticationException {
-        // 处理自动登录/记住密码等
-        return "";
-    }
     
     /**
 	 * 用户菜单生成

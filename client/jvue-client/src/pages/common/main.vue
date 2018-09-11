@@ -1,37 +1,6 @@
 <template>
   <el-container>
-    <el-header>
-      <el-row>
-        <el-col :span="18" class="logo">
-          <el-row :gutter="10">
-            <el-col :span="24">
-              <div class="logo-info-span"><a href="https://www.hongxinxiangtong.org" target="hxxt">
-                <img src="/static/img/logo-white.png" alt="" /></a>
-              </div>
-              <div>
-                <el-menu :default-active="String(userSelf.moduleId)" mode="horizontal">
-                  <el-menu-item v-for="module in userSelf.modules" :index="String(module.id)" :key="module.name"
-                                @click="userSelf.changeModule(module.id)">{{module.name}}
-                  </el-menu-item>
-                </el-menu>
-              </div>
-            </el-col>
-          </el-row>
-        </el-col>
-        <el-col :span="5" :push="1">
-          <el-dropdown size="small" @command="handleCommand">
-            <span class="el-dropdown-link">
-              <i class="fa fa-user"></i>&nbsp;&nbsp;{{userSelf.user.nickname}}<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown" >
-              <el-dropdown-item command="github" >代码地址</el-dropdown-item>
-              <el-dropdown-item command="api" >API地址</el-dropdown-item>
-              <el-dropdown-item command="signout" divided>退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </el-col>
-      </el-row>
-    </el-header>
+
     <el-container>
       <el-aside width="201px" class="left-nav">
         <el-menu :default-active="String(userSelf.active)" router theme="dark" @open="handleOpen" @close="handleClose" :default-openeds="userSelf.openeds">
@@ -52,6 +21,35 @@
         </div>
       </el-aside>
       <el-container>
+        <el-header>
+          <el-row>
+            <el-col :span="18" class="logo">
+              <el-row :gutter="10">
+                <el-col :span="24">
+                    <div>
+                    <el-menu :default-active="String(userSelf.moduleId)" mode="horizontal">
+                      <el-menu-item v-for="module in userSelf.modules" :index="String(module.id)" :key="module.name"
+                                    @click="userSelf.changeModule(module.id)">{{module.name}}
+                  </el-menu-item>
+                    </el-menu>
+                  </div>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col :span="5" :push="1">
+              <el-dropdown size="small" @command="handleCommand">
+            <span class="el-dropdown-link">
+              <i class="fa fa-user"></i>&nbsp;&nbsp;{{userSelf.user.nickname}}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+                <el-dropdown-menu slot="dropdown" >
+                  <el-dropdown-item command="github" >代码地址</el-dropdown-item>
+                  <el-dropdown-item command="api" >API地址</el-dropdown-item>
+                  <el-dropdown-item command="signout" divided>退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-col>
+          </el-row>
+        </el-header>
         <el-header height="25px">
           <el-breadcrumb separator-class="el-icon-arrow-right" v-if="$route.matched.length > 0">
             <el-breadcrumb-item class="breadcrumb-inner" to="/">
@@ -79,18 +77,6 @@
   }
   .el-breadcrumb{
     margin-top: 15px
-  }
-  .logo-info-span {
-    max-width: 188px;
-    background: #2c3e50;
-    padding:5px 2px;
-  }
-  .logo-info-span a>img{
-    width: 95%;
-    max-width: 262px;
-  }
-  div.logo-info-span,div.logo-info-span+div{
-    float: left;
   }
   /* 路由切换动效 */
   .fade-leave-active {

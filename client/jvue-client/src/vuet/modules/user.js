@@ -33,7 +33,14 @@ export default {
         // 登录时处理
       },
       async login (param) {
-        let response = await ApiUtils.post('/api/login', param)
+        let config = {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          }
+        }
+        const qs = require('qs')
+        let response = await ApiUtils.post('/api/login', qs.stringify(param), config)
         let {data} = response
         if (data.error === null) {
           this.user = data.data

@@ -50,7 +50,7 @@ export default {
     mapModules({userAdd: 'user-add', deptNames: 'user-dept-names'}),
     mapRules({temp: 'user-add', need: 'user-dept-names'})
   ],
-  data() {
+  data () {
     return {
       deptProps: {
         value: 'code',

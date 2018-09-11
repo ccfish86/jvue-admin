@@ -50,11 +50,10 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService, Serializab
         } else {
             
             List<Integer> roles;
-            if (user.getRoles() == null) {
+            if (user.getRoles() == null || user.getRoles().isEmpty()) {
                 roles = new ArrayList<>();
-            }
-            else {
-                roles= user.getRoles().stream().map(role->role.getId()).collect(Collectors.toList());
+            } else {
+                roles = user.getRoles().stream().map(role->role.getId()).collect(Collectors.toList());
             }
             return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(),
                     user.getSuperUser(), user.getNickname(), user.getEmail(), user.getRoles(), roles);

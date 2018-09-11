@@ -14,8 +14,12 @@ export default [
     name: 'main',
     meta: {title: '首页', active: 1},
     component: resolve => require(['@/pages/common/main'], resolve),
-    children: [
-    ]
+    children: [{
+      path: '',
+      meta: {auth: false, title: 'home'},
+      name: 'home',
+      component: resolve => require(['@/pages/home/index'], resolve)
+    }]
   },
   {
     path: '/error',

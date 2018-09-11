@@ -2,7 +2,7 @@
  * Created by Yuangui on 2017-01-08.
  */
 // currency
-import { utils } from "@/common/"
+import { utils } from '@/common/'
 
 export default {
   currencyCny (value) {
