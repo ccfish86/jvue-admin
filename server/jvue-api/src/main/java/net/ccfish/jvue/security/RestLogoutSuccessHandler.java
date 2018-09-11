@@ -13,9 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.ccfish.common.web.BaseModel;
 
 /**
  * 处理登录
@@ -32,20 +37,29 @@ public class RestLogoutSuccessHandler implements LogoutSuccessHandler {
     
     private final Logger logger = LoggerFactory.getLogger(RestLogoutSuccessHandler.class);
     
-    private final JwtTokenUtil jwtTokenUtil;
-    
+//    private final JwtTokenUtil jwtTokenUtil;
+	
     @Autowired
-    public RestLogoutSuccessHandler(JwtTokenUtil jwtTokenUtil) {
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
+	private ObjectMapper objectMapper;
+
+//    @Autowired
+//    public RestLogoutSuccessHandler(JwtTokenUtil jwtTokenUtil) {
+//        this.jwtTokenUtil = jwtTokenUtil;
+//    }
     
     /* (non-Javadoc)
      * @see org.springframework.security.web.authentication.logout.LogoutSuccessHandler#onLogoutSuccess(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, org.springframework.security.core.Authentication)
      */
     @Override
-    public void onLogoutSuccess(HttpServletRequest arg0, HttpServletResponse arg1,
-            Authentication arg2) throws IOException, ServletException {
-        logger.debug(" Authentication {}", arg2);
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
+        logger.debug(" Authentication {}", authentication);
+        
+        String result = objectMapper.writeValueAsString(BaseModel.ok(""));
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+		response.getWriter().write(result);
+		
+		
         //jwtTokenUtil.expireToken(token);
 //        if (authorization != null) {
 //            userService.logout(authorization);

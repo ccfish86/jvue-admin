@@ -23,6 +23,10 @@ import net.ccfish.common.acl.AclResc;
 import net.ccfish.jvue.service.JvueRoleService;
 
 /**
+ * 处理权限拦截（方法级）
+ * <p>
+ * 用于controller方法，直接通过自定义注解来标记方法编号，然后在后台管理角色与接口方法的对应关系。简单粗暴
+ * </p>
  * 
  * @author 袁贵
  * @version 1.0
