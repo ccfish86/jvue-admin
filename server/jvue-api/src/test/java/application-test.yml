@@ -1,0 +1,16 @@
+spring:
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/jvue?useSSL=false&tinyInt1isBit=false&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: Root123@ccfish.net
+
+  cache:
+    type: hazelcast
+
+logging:
+  path: /data/jvue/logs
+
+
+  # hazelcast.spring.cache.prop
