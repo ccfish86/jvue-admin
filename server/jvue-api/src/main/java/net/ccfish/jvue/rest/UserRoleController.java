@@ -21,7 +21,7 @@ import net.ccfish.jvue.service._AbstractService;
  * @since  1.0
  */
 @RestController
-@RequestMapping("user-role")
+@RequestMapping("/api/user-role")
 @AclResc(id = 4100)
 @Api(tags  = "用户角色管理")
 public class UserRoleController implements _BaseController<JvueUserRole, Long> {

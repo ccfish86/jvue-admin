@@ -109,6 +109,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -157,6 +165,17 @@
             </plugin>
 
         </plugins>
+        <resources>
+        	<resource>
+        		<directory>src/main/resources</directory>
+        		<includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.yml</include>
+                    <include>**/*.html</include>
+                </includes>
+        	</resource>
+        </resources>
     </build>
     <profiles>
         <profile>

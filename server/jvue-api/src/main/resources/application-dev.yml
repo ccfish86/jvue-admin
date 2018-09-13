@@ -2,14 +2,24 @@ spring:
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://192.168.10.9:5432/jvue
-    username:
-    password:
+    url: jdbc:mysql://localhost:3306/jvue?useSSL=false&tinyInt1isBit=false&useUnicode=true&characterEncoding=UTF-8
+    username: jvue
+    password: 
 
   cache:
     type: hazelcast
-
+    
+  security:
+    oauth2:
+      client:
+        registration:
+          github: 
+            client-id: d27a35ace86b4bc26d76
+            client-secret:   
+            client-name: jvue
+  
 logging:
   path: /data/jvue/logs
+
 
   # hazelcast.spring.cache.prop

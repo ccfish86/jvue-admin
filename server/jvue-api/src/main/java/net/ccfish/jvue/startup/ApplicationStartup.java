@@ -225,7 +225,7 @@ public class ApplicationStartup implements CommandLineRunner {
                                 continue;
                             }
                             
-                            logger.debug("load method resource: id={}, name={}", id, name);
+                            logger.trace("load method resource: id={}, name={}", id, name);
 
                             AclResource methodResc = new AclResource();
                             methodResc.setId(id);

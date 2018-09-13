@@ -1,8 +1,13 @@
 package net.ccfish.jvue.security;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -13,6 +18,9 @@ import net.ccfish.common.acl.CurrentUser;
 
 @Component
 public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolver {
+	
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	/**
 	 * 检查解析器是否支持解析该参数
 	 */
@@ -36,9 +44,17 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 		if (authentication == null) {
 			return null;
 		}
+		
+		logger.debug("authentication {}", authentication);
+		logger.debug("authentication {}", authentication.getPrincipal().getClass());
 		if (authentication.getPrincipal() instanceof JwtUserDetails) {
 			JwtUserDetails jwtUser = (JwtUserDetails) authentication.getPrincipal();
 			return jwtUser;
+		} else if (authentication instanceof OAuth2AuthenticationToken) {
+			logger.debug("authentication OAuth2AuthenticationToken {}", authentication.getPrincipal());
+			HttpServletRequest request =  
+					webRequest.getNativeRequest(HttpServletRequest.class);
+			return request.getSession(true).getAttribute("USER_INFO");
 		} else {
 			return null;
 		}

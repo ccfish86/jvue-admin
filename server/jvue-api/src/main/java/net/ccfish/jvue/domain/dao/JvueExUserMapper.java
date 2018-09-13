@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import net.ccfish.jvue.domain.model.JvueExRole;
 import net.ccfish.jvue.domain.model.JvueExUser;
 
 /**
@@ -22,4 +23,5 @@ public interface JvueExUserMapper {
     
     List<JvueExUser> searchUsers(@Param("username") String username);
     
+    List<JvueExRole> selectRoles(@Param("userId") Long userId);
 }

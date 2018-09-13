@@ -25,7 +25,7 @@ import net.ccfish.jvue.vm.AclResource;
  * @since  1.0
  */
 @RestController
-@RequestMapping("acl")
+@RequestMapping("/api/acl")
 @Api(tags  = "ACL管理")
 @AclResc(id = 5500)
 public class AclResourceController {

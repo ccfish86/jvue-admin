@@ -28,7 +28,7 @@ import net.ccfish.jvue.service._AbstractService;
  * @since  1.0
  */
 @RestController
-@RequestMapping("module")
+@RequestMapping("/api/module")
 @AclResc(id = 5000)
 @Api(tags = "模块管理")
 public class JvueModuleController implements _BaseController<JvueModule, Integer> {

@@ -21,7 +21,7 @@ import net.ccfish.jvue.service._AbstractService;
  * @since  1.0
  */
 @RestController
-@RequestMapping("segment")
+@RequestMapping("/api/segment")
 @AclResc(id = 5400)
 @Api(tags  = "画面片段管理")
 public class JvueSegmentController implements _BaseController<JvueSegment, Integer> {

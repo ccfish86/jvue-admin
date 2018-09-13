@@ -39,7 +39,7 @@ import net.ccfish.jvue.service.model.RolePageDetails;
  * @since  1.0
  */
 @RestController
-@RequestMapping("page")
+@RequestMapping("/api/page")
 @AclResc(id = 5200)
 @Api(tags  = "画面管理")
 public class JvuePageController implements _BaseController<JvuePage, Integer> {

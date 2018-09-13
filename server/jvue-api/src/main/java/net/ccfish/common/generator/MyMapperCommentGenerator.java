@@ -324,4 +324,39 @@ public class MyMapperCommentGenerator implements CommentGenerator {
     public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {
     }
 
+	@Override
+	public void addGeneralMethodAnnotation(Method method, IntrospectedTable introspectedTable,
+			Set<FullyQualifiedJavaType> imports) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addGeneralMethodAnnotation(Method method, IntrospectedTable introspectedTable,
+			IntrospectedColumn introspectedColumn, Set<FullyQualifiedJavaType> imports) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addFieldAnnotation(Field field, IntrospectedTable introspectedTable,
+			Set<FullyQualifiedJavaType> imports) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addFieldAnnotation(Field field, IntrospectedTable introspectedTable,
+			IntrospectedColumn introspectedColumn, Set<FullyQualifiedJavaType> imports) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addClassAnnotation(InnerClass innerClass, IntrospectedTable introspectedTable,
+			Set<FullyQualifiedJavaType> imports) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

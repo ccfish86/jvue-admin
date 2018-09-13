@@ -46,7 +46,7 @@ import net.ccfish.jvue.service.model.ModuleAndPages;
  * @since  1.0
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("/api/user")
 @AclResc(id = 4000)
 @Api(tags  = "用户管理")
 public class UserController {

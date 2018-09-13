@@ -1,8 +1,5 @@
 server:
   port: 8080
-  
-  servlet:
-    context-path: /api
     
 mybatis:
   mapper-locations:
@@ -26,3 +23,8 @@ spring:
     time-zone:
       GMT+8
       
+      
+  thymeleaf:
+    enabled: true
+    
+    

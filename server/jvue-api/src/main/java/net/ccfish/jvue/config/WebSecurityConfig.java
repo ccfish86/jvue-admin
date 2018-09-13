@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import net.ccfish.jvue.security.EntryPointUnauthorizedHandler;
+import net.ccfish.jvue.security.OAuth2AuthenticationSuccessHandler;
 import net.ccfish.jvue.security.RestAccessDeniedHandler;
 import net.ccfish.jvue.security.RestAuthenticationFailureHandler;
 import net.ccfish.jvue.security.RestAuthenticationSuccessHandler;
@@ -76,51 +77,44 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         
         httpSecurity
-            .csrf()
+            .csrf().disable()	
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//            .and()
-                .disable()				
+//            .and()			
 				.formLogin()
-				.loginPage("/login")
-				.successHandler(authenticationSuccessHandler())
-				.failureHandler(authenticationFailureHandler())
+//				.loginPage("/login")
+//				.successHandler(authenticationSuccessHandler())
+//				.failureHandler(authenticationFailureHandler())
 				.permitAll()
-				.and().
-					rememberMe()/* weex下cookie有问题 .alwaysRemember(true)*/
-					//.alwaysRemember(true)
-					.tokenValiditySeconds(840000)
-					.tokenRepository(tokenRepository())
-				.and()
-					.userDetailsService(userDetailsService)
-	                .authorizeRequests()
-	                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-	                .antMatchers("/login").permitAll()
-	                .antMatchers("/error").permitAll()
-	                .antMatchers("/pub/**").permitAll()
-	                .antMatchers("/v2/api-docs").permitAll()
-	                .antMatchers("/*.html").permitAll()
-	                .antMatchers("/**/*.html").permitAll()
-	                .antMatchers("/swagger-resources").permitAll()
-	                .antMatchers("/swagger-resources/**").permitAll()
-	                .antMatchers("/","/admin/").permitAll()
-	                .antMatchers("/admin/**","/**/favicon.ico", "/webjars/**").permitAll()
-	                .antMatchers("/**").authenticated()
-//                .anyRequest().authenticated()
-//                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-//
-//                    @Override
-//                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
-//                        object.setAccessDecisionManager(accessDecisionManager);
-//                        return object;
-//                    }
-//                })
-//            .and().rememberMe()
-            .and().logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler)
+            .and()
+            	.oauth2Login()
+            	.successHandler(oauth2SuccessHandler())
+			.and().
+				rememberMe()/* weex下cookie有问题 .alwaysRemember(true)*/
+				//.alwaysRemember(true)
+				.tokenValiditySeconds(840000)
+				.tokenRepository(tokenRepository())
+			.and()
+				.userDetailsService(userDetailsService)
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/error").permitAll()
+                .antMatchers("/pub/**").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/*.html").permitAll()
+                .antMatchers("/**/*.html").permitAll()
+                .antMatchers("/swagger-resources").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/","/admin/").permitAll()
+                .antMatchers("/admin/**","/**/favicon.ico", "/webjars/**").permitAll()
+                .antMatchers("/**").authenticated()
+            .and()
+            	.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler)
             .and()
                 .headers().cacheControl();
         
 //        httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(restAccessDeniedHandler);
+//        httpSecurity.exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(restAccessDeniedHandler);
 
     }
     
@@ -145,5 +139,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public RestAuthenticationFailureHandler authenticationFailureHandler() {
 		return new RestAuthenticationFailureHandler();
+	}
+	
+	@Bean
+	public AuthenticationSuccessHandler oauth2SuccessHandler() {
+		return new OAuth2AuthenticationSuccessHandler();
 	}
 }

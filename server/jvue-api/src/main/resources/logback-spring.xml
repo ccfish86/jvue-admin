@@ -17,6 +17,7 @@
     <logger name="org.springframework.web" level="info" />
     <logger name="org.springframework.security" level="INFO" />
     <logger name="org.springframework.cache" level="WARN" />
+    <logger name="org.springframework.security.oauth2.client" level="TRACE"></logger>
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>

@@ -33,7 +33,7 @@ import net.ccfish.jvue.vm.AclResource;
  * @since 1.0
  */
 @RestController
-@RequestMapping("api")
+@RequestMapping("/api/api")
 @AclResc(id = 5100)
 @Api(tags  = "接口管理")
 public class JvueApiController implements _BaseController<JvueApi, Integer> {

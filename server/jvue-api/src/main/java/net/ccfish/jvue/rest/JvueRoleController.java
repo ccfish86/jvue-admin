@@ -34,7 +34,7 @@ import net.ccfish.jvue.service.model.RolePageDetails;
  * @since  1.0
  */
 @RestController
-@RequestMapping("role")
+@RequestMapping("/api/role")
 @AclResc(id = 5300)
 @Api(tags  = "角色管理")
 public class JvueRoleController implements _BaseController<JvueRole, Integer> {

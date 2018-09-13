@@ -39,7 +39,7 @@ import net.ccfish.jvue.service.JvueDeptService;
  * @since 2018-07-04
  */
 @RestController
-@RequestMapping("dept")
+@RequestMapping("/api/dept")
 @AclResc(id = 4200)
 @Api(tags  = "部门管理")
 public class JvueDeptController {
