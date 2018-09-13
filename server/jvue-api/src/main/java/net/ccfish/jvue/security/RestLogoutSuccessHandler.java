@@ -5,6 +5,7 @@
 package net.ccfish.jvue.security;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +32,7 @@ import net.ccfish.common.web.BaseModel;
  * @since  1.0
  */
 @Component
-public class RestLogoutSuccessHandler implements LogoutSuccessHandler {
+public class RestLogoutSuccessHandler extends AbstractAuthenticationTargetUrlRequestHandler implements LogoutSuccessHandler {
 
 //    @Autowired
 //    private AuthService userService;
@@ -53,12 +55,18 @@ public class RestLogoutSuccessHandler implements LogoutSuccessHandler {
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
-        logger.debug(" Authentication {}", authentication);
         
-        String result = objectMapper.writeValueAsString(BaseModel.ok(""));
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-		response.getWriter().write(result);
-		
+        // 根据不同的Accept返回不同类型值
+    	String accept = response.getHeader("accept");
+        if (Objects.equals(MediaType.APPLICATION_JSON_UTF8_VALUE, accept)
+        		|| Objects.equals(MediaType.APPLICATION_JSON_VALUE, accept)) {
+	        String result = objectMapper.writeValueAsString(BaseModel.ok(""));
+	        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+			response.getWriter().write(result);
+        } else {
+        	// 画面跳转等处理 
+        	super.handle(request, response, authentication);
+        }
 		
         //jwtTokenUtil.expireToken(token);
 //        if (authorization != null) {
