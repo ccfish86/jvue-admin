@@ -42,8 +42,8 @@ public class RestAuthenticationSuccessHandler extends SavedRequestAwareAuthentic
 
         // 根据不同的Accept返回不同类型值
     	String accept = response.getHeader("accept");
-        if (Objects.equals(MediaType.APPLICATION_JSON_UTF8_VALUE, accept)
-        		|| Objects.equals(MediaType.APPLICATION_JSON_VALUE, accept)) {
+    	if (MediaType.APPLICATION_JSON_UTF8_VALUE.equalsIgnoreCase(accept)
+         		|| MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(accept)) {
     		Object principal = authentication.getPrincipal();
     		
     		// TODO 异步写登录日志等

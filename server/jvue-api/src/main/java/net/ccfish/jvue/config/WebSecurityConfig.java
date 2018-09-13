@@ -15,8 +15,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import net.ccfish.jvue.security.EntryPointUnauthorizedHandler;
 import net.ccfish.jvue.security.OAuth2AuthenticationSuccessHandler;
@@ -79,21 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
             .csrf().disable()	
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//            .and()			
-				.formLogin()
-//				.loginPage("/login")
-				.successHandler(authenticationSuccessHandler())
-				.failureHandler(authenticationFailureHandler())
-				.permitAll()
-            .and()
-            	.oauth2Login()
-            	.successHandler(oauth2SuccessHandler())
-			.and().
-				rememberMe()/* weex下cookie有问题 .alwaysRemember(true)*/
-				//.alwaysRemember(true)
-				.tokenValiditySeconds(840000)
-				.tokenRepository(tokenRepository())
-			.and()
+//            .and()		
 				.userDetailsService(userDetailsService)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -107,14 +96,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/","/admin/").permitAll()
                 .antMatchers("/admin/**","/**/favicon.ico", "/webjars/**").permitAll()
-                .antMatchers("/**").authenticated()
+                .antMatchers("/**").authenticated()	
+             .and()
+                .formLogin()
+//				.loginPage("/login")
+				.usernameParameter("username")
+				.passwordParameter("password")
+				.successHandler(authenticationSuccessHandler())
+				.failureHandler(authenticationFailureHandler())
+				.permitAll()
+            .and()
+            	.oauth2Login()
+            	.successHandler(oauth2SuccessHandler())
+			.and().
+				rememberMe()/* weex下cookie有问题 .alwaysRemember(true)*/
+				//.alwaysRemember(true)
+				.tokenValiditySeconds(840000)
+				.tokenRepository(tokenRepository())
             .and()
             	.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler)
             .and()
                 .headers().cacheControl();
         
 //        httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-//        httpSecurity.exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(restAccessDeniedHandler);
+        // authenticationEntryPoint(entryPointUnauthorizedHandler)
+        RequestMatcher preferredMatcher = new AntPathRequestMatcher("/api/**");
+        RequestMatcher allMatcher = new AntPathRequestMatcher("/**");
+		httpSecurity.exceptionHandling()
+				.defaultAuthenticationEntryPointFor(entryPointUnauthorizedHandler, preferredMatcher)
+				.defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"), allMatcher)
+				.accessDeniedHandler(restAccessDeniedHandler);
 
     }
     

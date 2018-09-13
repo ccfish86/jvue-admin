@@ -44,9 +44,12 @@ public class RestAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 		// TODO 处理登录失败N次后，账号锁定等
 
         // 根据不同的Accept返回不同类型值
+		
     	String accept = response.getHeader("accept");
-        if (Objects.equals(MediaType.APPLICATION_JSON_UTF8_VALUE, accept)
-        		|| Objects.equals(MediaType.APPLICATION_JSON_VALUE, accept)) {
+    	logger.info("accept {}",accept);
+    	
+        if (MediaType.APPLICATION_JSON_UTF8_VALUE.equalsIgnoreCase(accept)
+        		|| MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(accept)) {
 			logger.info("login faild ");
 			String result = objectMapper.writeValueAsString(BaseModel.error("1", exception.getMessage()));
 			response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);

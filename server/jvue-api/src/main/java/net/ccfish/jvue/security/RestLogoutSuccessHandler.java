@@ -58,8 +58,8 @@ public class RestLogoutSuccessHandler extends AbstractAuthenticationTargetUrlReq
         
         // 根据不同的Accept返回不同类型值
     	String accept = response.getHeader("accept");
-        if (Objects.equals(MediaType.APPLICATION_JSON_UTF8_VALUE, accept)
-        		|| Objects.equals(MediaType.APPLICATION_JSON_VALUE, accept)) {
+    	if (MediaType.APPLICATION_JSON_UTF8_VALUE.equalsIgnoreCase(accept)
+         		|| MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(accept)) {
 	        String result = objectMapper.writeValueAsString(BaseModel.ok(""));
 	        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
 			response.getWriter().write(result);
