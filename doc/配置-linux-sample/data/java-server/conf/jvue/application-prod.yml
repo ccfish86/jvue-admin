@@ -1,0 +1,29 @@
+spring:
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/jvue?useSSL=false&tinyInt1isBit=false&useUnicode=true&characterEncoding=UTF-8
+    username: jvue
+    password: ########################
+
+  cache:
+    type: hazelcast
+  security:
+    oauth2:
+      client:
+        registration:
+          github: 
+            client-id: d27a35ace86b4bc26d76
+            client-secret: ################################################  
+            client-name: jvue
+  resources:
+    static-locations:
+    - classpath:/resources/
+    - classpath:/static/
+    - classpath:/public/
+    - file:///data/nginx/
+logging:
+  path: /data/java-server/logs
+  file: /data/java-server/logs/jvue.log
+  config: /data/java-server/conf/jvue/logback-spring.xml
+  # hazelcast.spring.cache.prop

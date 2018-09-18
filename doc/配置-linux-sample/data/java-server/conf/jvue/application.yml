@@ -1,0 +1,26 @@
+server:
+  port: 8080
+  
+mybatis:
+  mapper-locations:
+  - classpath*:mapper/*.xml
+  - classpath*:mapper/**/*.xml
+mapper:
+  mappers:
+  - net.ccfish.common.mybatis.BaseMapper
+  - net.ccfish.common.mybatis.PgBaseMapper
+  notEmpty: true
+  
+spring:
+  application:
+    name: jvue-api
+  profiles:
+    active:
+    - prod
+    - swagger
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone:
+      GMT+8
+  thymeleaf:
+    enabled: true      
