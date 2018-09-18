@@ -31,6 +31,7 @@ export default {
       },
       async fetch () {
         // 登录时处理
+        await this.loadRouters()
       },
       async login (param) {
         let config = {
@@ -81,7 +82,7 @@ export default {
       async signout () {
         // 删除本地存储
         this.reset()
-        await ApiUtils.post('/api/logout')
+        await ApiUtils.post('/logout')
       },
       async changeModule (moduleId = 0) {
         if (this.moduleId !== moduleId) {

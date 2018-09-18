@@ -1,8 +1,6 @@
 <template>
-  <div>
-    home page
-    <v-html-panel src="1111"></v-html-panel>
-
+  <div>loading page.
+  正在跳转
   </div>
 </template>
 
@@ -11,9 +9,12 @@
   export default {
     mixins: [
       mapModules({self: 'user-self'}),
-      mapRules({once: 'user-self'})
+      mapRules({once: 'user-self', store: 'user-self'})
     ],
-    name: 'index'
+    name: 'index',
+    mounted() {
+        this.$router.replace('/user/list')
+    }
   }
 </script>
 

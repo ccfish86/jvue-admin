@@ -35,20 +35,20 @@ router.beforeEach(({meta, path, name}, from, next) => {
   NProgress.start()
   // let {meta, path, name} = to
   let userSelf = vuet.getModule('user-self')
-  let { auth = true } = meta
-  if (userSelf.user && userSelf.user) {
-    // 已登录
-    // return next()
-  } else {
-    if (auth) {
-      return next({ path: '/login' })
-    } else {
-      // return next()
-    }
-  }
+  // let { auth = true } = meta
+  // if (userSelf.user && userSelf.user) {
+  //   // 已登录
+  //   // return next()
+  // } else {
+  //   if (auth) {
+  //     return next({ path: '/login' })
+  //   } else {
+  //     // return next()
+  //   }
+  // }
   if (meta && from.meta && (meta.moduleId !== from.meta.moduleId || userSelf.moduleId !== meta.moduleId)) {
-    // 处理导航与画面同步
-    userSelf.changeModule(meta.moduleId)
+     // 处理导航与画面同步
+     userSelf.changeModule(meta.moduleId)
   }
   return next()
 })

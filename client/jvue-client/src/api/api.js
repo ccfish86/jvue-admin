@@ -56,7 +56,8 @@ axios.interceptors.response.use((response) => {
   if (error.response) {
     let {status} = error.response
     if (status === 401) {
-      global.app.$router.push('/login')
+      // global.app.$router.push('/login')
+      window.location.href = "/login"
     } else {
       // TODO: jhipster's format
       if (error.response.data) {

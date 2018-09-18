@@ -132,8 +132,7 @@ export default {
     },
     signout () {
       this.userSelf.signout().finally(() => {
-        // this.$router.push('/login?logout')
-        window.location.href = "/login"
+        this.$router.push('/login?logout')
       })
     },
     handleCommand (command) {

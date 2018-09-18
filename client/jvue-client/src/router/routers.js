@@ -10,12 +10,18 @@ export default [
     component: resolve => require(['@/pages/login'], resolve)
   },
   {
+    path: '',
+    name: 'loading',
+    meta: {auth: false, title: '加载'},
+    component: resolve => require(['@/pages/loading'], resolve)
+  },
+  {
     path: '/',
     name: 'main',
     meta: {title: '首页', active: 1},
     component: resolve => require(['@/pages/common/main'], resolve),
     children: [{
-      path: '',
+      path: 'home',
       meta: {auth: false, title: 'home'},
       name: 'home',
       component: resolve => require(['@/pages/home/index'], resolve)
