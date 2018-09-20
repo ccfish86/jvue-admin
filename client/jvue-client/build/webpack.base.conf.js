@@ -32,8 +32,8 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   externals: {
-    'vue': 'Vue',
-    'vue-router': 'VueRouter',
+    // 'vue': 'Vue',
+    // 'vue-router': 'VueRouter',
     'axios':'axios'
   },
   resolve: {
