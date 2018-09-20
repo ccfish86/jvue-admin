@@ -46,6 +46,7 @@ public class JvueOAuth2UserServiceImpl implements JvueOAuth2UserService {
 			user = new JvueUser();
 			user.setUsername(account + "#" + accountType);
 			user.setSuperUser(YesOrNoEnum.No.ordinal());
+			user.setStatus(1);
 			userMapper.insertSelective(user);
 			
 			oauthUser = new JvueOauthUser();
